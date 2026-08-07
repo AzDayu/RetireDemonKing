@@ -69,5 +69,8 @@ crashlytics-build.properties
 # 'Third Party Addressable' 폴더 내부의 에셋은 무시하되, 폴더 자체의 메타 파일은 추적합니다.
 # (만약 외부 폴더명을 다르게 하셨다면 아래 경로의 이름을 동일하게 수정해 주세요.)
 
+/[Aa]ssets/01_Scenes/test/
+/[Aa]ssets/01_Scenes/test.meta
+
 /[Aa]ssets/Thirdparty/
 !/[Aa]ssets/Thirdparty.meta
