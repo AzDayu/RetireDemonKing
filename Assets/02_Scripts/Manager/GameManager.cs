@@ -22,7 +22,7 @@ public class GameManager :MonoBehaviour
     [SerializeField] private StageManager _stageManager;
     [SerializeField] private CombatManager _combatManager;
     [SerializeField] private GrowthManager _growthManager;
-    [SerializeField] private SaveServerManager _saveServerManager; 
+    [SerializeField] private SaveServerManager _saveServerManager;
     [SerializeField] private OfflineManager _offlineManager;
     [SerializeField] private EventManager _eventManager;
 
