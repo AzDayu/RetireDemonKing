@@ -11,8 +11,6 @@ public enum StageMode
 
 public class StageManager : MonoBehaviour
 {
-    public static StageManager Instance { get; private set; }
-
     [Header("Stage Progress Settings")]
     [SerializeField] private int _currentStage = 1;
     [SerializeField] private bool _autoBossChallenge = true;
@@ -39,24 +37,12 @@ public class StageManager : MonoBehaviour
     public event Action<int> OnStageChanged;
     public event Action<StageMode> OnModeChanged;
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     private void Start()
     {
-        if (CombatManager.Instance != null)
+        if (GameManager.Instance != null && GameManager.Instance.Combat != null)
         {
-            CombatManager.Instance.OnBattleCleared += HandleBattleCleared;
-            CombatManager.Instance.OnBattleFailed += HandleBattleFailed;
+            GameManager.Instance.Combat.OnBattleCleared += HandleBattleCleared;
+            GameManager.Instance.Combat.OnBattleFailed += HandleBattleFailed;
         }
 
         InitStage(_currentStage);
@@ -64,10 +50,10 @@ public class StageManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (CombatManager.Instance != null)
+        if (GameManager.Instance != null && GameManager.Instance.Combat != null)
         {
-            CombatManager.Instance.OnBattleCleared -= HandleBattleCleared;
-            CombatManager.Instance.OnBattleFailed -= HandleBattleFailed;
+            GameManager.Instance.Combat.OnBattleCleared -= HandleBattleCleared;
+            GameManager.Instance.Combat.OnBattleFailed -= HandleBattleFailed;
         }
     }
 
@@ -81,9 +67,9 @@ public class StageManager : MonoBehaviour
 
         UpdateMainStageBGI(_currentStage);
 
-        if (CombatManager.Instance != null)
+        if (GameManager.Instance.Combat != null)
         {
-            CombatManager.Instance.StartNormalBattle(_currentStage);
+            GameManager.Instance.Combat.StartNormalBattle(_currentStage);
         }
     }
 
@@ -92,9 +78,9 @@ public class StageManager : MonoBehaviour
         CurrentMode = StageMode.BossStage;
         OnModeChanged?.Invoke(CurrentMode);
 
-        if (CombatManager.Instance != null)
+        if (GameManager.Instance.Combat != null)
         {
-            CombatManager.Instance.StartBossBattle(_currentStage);
+            GameManager.Instance.Combat.StartBossBattle(_currentStage);
         }
     }
 
@@ -116,7 +102,7 @@ public class StageManager : MonoBehaviour
             else
             {
                 // 자동 도전 off 일반 사냥 계속 진행
-                CombatManager.Instance.StartNormalBattle(_currentStage);
+                GameManager.Instance.Combat.StartNormalBattle(_currentStage);
             }
         }
     }
@@ -126,9 +112,9 @@ public class StageManager : MonoBehaviour
         CurrentMode = StageMode.NormalStage;
         OnModeChanged?.Invoke(CurrentMode);
 
-        if (CombatManager.Instance != null)
+        if (GameManager.Instance.Combat != null)
         {
-            CombatManager.Instance.StartNormalBattle(_currentStage);
+            GameManager.Instance.Combat.StartNormalBattle(_currentStage);
         }
     }
 

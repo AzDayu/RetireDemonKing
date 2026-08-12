@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
-    public static CombatManager Instance { get; private set; }
-
     [Header("Boss Timer Settings")]
     [SerializeField] private float _maxBossTime = 30f;
     private float _currentBossTimer;
@@ -30,18 +28,6 @@ public class CombatManager : MonoBehaviour
     public event Action OnBattleFailed;
     public event Action<int, int> OnWaveUpdated;
     public event Action<float, float> OnBossTimerUpdated;
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
     private void Update()
     {

@@ -25,7 +25,7 @@ public class GameManager :MonoBehaviour
     [SerializeField] private SaveServerManager _saveServerManager; 
     [SerializeField] private OfflineManager _offlineManager;
     [SerializeField] private EventManager _eventManager;
-
+    [SerializeField] private UIManager _uiManager;
 
     public StageManager Stage
     {
@@ -53,6 +53,13 @@ public class GameManager :MonoBehaviour
         get
         {
             return _saveServerManager;
+        }
+    }
+    public UIManager UI
+    {
+        get
+        {
+            return _uiManager;
         }
     }
 
