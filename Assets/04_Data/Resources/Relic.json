@@ -5,9 +5,9 @@
     "TargetStatType": "Attack",
     "BasePercentBonus": 8,
     "PercentBonusPerLevel": 1.6,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "용사 몰래 밥에 섞어 넣는 마왕 특제 영양제. 공격력이 증가합니다."
   },
   {
@@ -16,9 +16,9 @@
     "TargetStatType": "Attack",
     "BasePercentBonus": 8,
     "PercentBonusPerLevel": 1.5,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "한 숟갈만 먹어도 힘이 난다는 마왕성 특제 양념. 공격력이 증가합니다."
   },
   {
@@ -27,9 +27,9 @@
     "TargetStatType": "Attack",
     "BasePercentBonus": 15,
     "PercentBonusPerLevel": 3.12,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "정체를 알 수 없는 보충제. 일단 근육은 조금 생깁니다."
   },
   {
@@ -38,9 +38,9 @@
     "TargetStatType": "Attack",
     "BasePercentBonus": 13.95,
     "PercentBonusPerLevel": 3.1,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "마왕의 끊임없는 잔소리를 들으며 억지로 휘두르다 보니 공격력이 증가합니다."
   },
   {
@@ -49,9 +49,9 @@
     "TargetStatType": "MaxHp",
     "BasePercentBonus": 12,
     "PercentBonusPerLevel": 2.4,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "레온의 냄비 투구와 세트 느낌이 나는 뚜껑. 최대 체력이 증가합니다."
   },
   {
@@ -60,9 +60,9 @@
     "TargetStatType": "MaxHp",
     "BasePercentBonus": 18,
     "PercentBonusPerLevel": 3.5,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "맞는 건 용사가 담당하고 버티는 건 이 방패가 담당합니다. 최대 체력이 증가합니다."
   },
   {
@@ -71,9 +71,9 @@
     "TargetStatType": "MaxHp",
     "BasePercentBonus": 15,
     "PercentBonusPerLevel": 3.12,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "마왕이 용사의 허약함을 확인하고 작성한 건강검진표. 최대 체력이 증가합니다."
   },
   {
@@ -82,9 +82,9 @@
     "TargetStatType": "MaxHp",
     "BasePercentBonus": 21.7,
     "PercentBonusPerLevel": 4.65,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "너무 쉽게 죽는 용사를 위해 마왕이 직접 만든 영양제. 최대 체력이 증가합니다."
   },
   {
@@ -93,9 +93,9 @@
     "TargetStatType": "Defense",
     "BasePercentBonus": 8,
     "PercentBonusPerLevel": 2,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "몬스터에게 맞을 때 덜 아프라고 마왕이 건넨 베개. 방어력이 증가합니다."
   },
   {
@@ -104,9 +104,9 @@
     "TargetStatType": "Defense",
     "BasePercentBonus": 9,
     "PercentBonusPerLevel": 2,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "요리할 때 튀는 기름을 막아주던 앞치마. 의외로 튼튼합니다."
   },
   {
@@ -115,9 +115,9 @@
     "TargetStatType": "Defense",
     "BasePercentBonus": 13.75,
     "PercentBonusPerLevel": 3.12,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "냄비를 받치던 물건인데 용사가 방패로 쓰기 시작했습니다."
   },
   {
@@ -126,9 +126,9 @@
     "TargetStatType": "Defense",
     "BasePercentBonus": 18.6,
     "PercentBonusPerLevel": 4.65,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "매번 얻어맞는 용사를 보다 못한 마왕의 특단의 조치. 방어력이 증가합니다."
   },
   {
@@ -137,9 +137,9 @@
     "TargetStatType": "CriticalChance",
     "BasePercentBonus": 2.4,
     "PercentBonusPerLevel": 0.4,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "너무 눈부셔서 우연히 급소를 맞춥니다. 치명타 확률이 증가합니다."
   },
   {
@@ -148,9 +148,9 @@
     "TargetStatType": "CriticalChance",
     "BasePercentBonus": 2,
     "PercentBonusPerLevel": 0.5,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "앞면이 나오면 운이 좋다고 믿는 낡은 동전. 치명타 확률이 증가합니다."
   },
   {
@@ -159,9 +159,9 @@
     "TargetStatType": "CriticalChance",
     "BasePercentBonus": 4.38,
     "PercentBonusPerLevel": 0.75,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "급소 위치를 열심히 외우게 해주는 연습장. 실제로는 잘 못 맞힙니다."
   },
   {
@@ -170,9 +170,9 @@
     "TargetStatType": "CriticalChance",
     "BasePercentBonus": 3.88,
     "PercentBonusPerLevel": 0.78,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "마왕이 직접 급소에 동그라미를 쳐줍니다. 치명타 확률이 증가합니다."
   },
   {
@@ -181,9 +181,9 @@
     "TargetStatType": "CriticalDamage",
     "BasePercentBonus": 16,
     "PercentBonusPerLevel": 3.2,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "엉뚱하게 휘둘러도 대박 손상을 입힙니다. 치명타 피해량이 증가합니다."
   },
   {
@@ -192,9 +192,9 @@
     "TargetStatType": "CriticalDamage",
     "BasePercentBonus": 18,
     "PercentBonusPerLevel": 3.5,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "날은 무뎌졌지만 맞으면 여전히 아픕니다. 치명타 피해량이 증가합니다."
   },
   {
@@ -203,9 +203,9 @@
     "TargetStatType": "CriticalDamage",
     "BasePercentBonus": 27.5,
     "PercentBonusPerLevel": 5.62,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "마왕성에서 힘이 세다고 자랑하는 사람에게 주는 메달입니다."
   },
   {
@@ -214,9 +214,9 @@
     "TargetStatType": "CriticalDamage",
     "BasePercentBonus": 31,
     "PercentBonusPerLevel": 6.2,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "평소에는 폐급이지만 한 번 제대로 맞으면 제법 아픕니다."
   },
   {
@@ -225,9 +225,9 @@
     "TargetStatType": "AttackSpeed",
     "BasePercentBonus": 4,
     "PercentBonusPerLevel": 0.8,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "마왕이 급하게 만든 각성 음료. 손은 빨라지지만 정신은 그대로입니다."
   },
   {
@@ -236,9 +236,9 @@
     "TargetStatType": "AttackSpeed",
     "BasePercentBonus": 4,
     "PercentBonusPerLevel": 0.8,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "손을 조금 더 빠르게 움직일 수 있게 해주는 장갑입니다."
   },
   {
@@ -247,9 +247,9 @@
     "TargetStatType": "AttackSpeed",
     "BasePercentBonus": 7.5,
     "PercentBonusPerLevel": 1.5,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "모래가 떨어지는 걸 보면 괜히 마음이 급해집니다. 공격 속도가 증가합니다."
   },
   {
@@ -258,9 +258,9 @@
     "TargetStatType": "AttackSpeed",
     "BasePercentBonus": 7.75,
     "PercentBonusPerLevel": 1.55,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "생각하기 전에 손부터 움직이게 만드는 이상한 훈련법입니다."
   },
   {
@@ -269,9 +269,9 @@
     "TargetStatType": "CooldownReduction",
     "BasePercentBonus": 4,
     "PercentBonusPerLevel": 0.8,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "마왕의 칼퇴근 욕구가 용사의 스킬 쿨타임까지 줄여줍니다."
   },
   {
@@ -280,9 +280,9 @@
     "TargetStatType": "CooldownReduction",
     "BasePercentBonus": 4,
     "PercentBonusPerLevel": 0.8,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "마왕이 커피를 마시며 기다리는 시간이 아까워졌습니다."
   },
   {
@@ -291,9 +291,9 @@
     "TargetStatType": "CooldownReduction",
     "BasePercentBonus": 7.5,
     "PercentBonusPerLevel": 1.5,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "마왕이 용사에게 붙여놓은 재촉 메모. 스킬을 빨리 사용하게 합니다."
   },
   {
@@ -302,9 +302,9 @@
     "TargetStatType": "CooldownReduction",
     "BasePercentBonus": 7.75,
     "PercentBonusPerLevel": 1.55,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "용사의 할 일을 잔뜩 적어놓은 마왕의 업무분장표입니다."
   },
   {
@@ -313,9 +313,9 @@
     "TargetStatType": "Accuracy",
     "BasePercentBonus": 4,
     "PercentBonusPerLevel": 0.8,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "눈먼 칼질도 몬스터에게 정확히 맞게 해줍니다. 명중률이 증가합니다."
   },
   {
@@ -324,9 +324,9 @@
     "TargetStatType": "Accuracy",
     "BasePercentBonus": 4,
     "PercentBonusPerLevel": 0.8,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "적의 위치를 알려주는 아주 평범한 표적지입니다."
   },
   {
@@ -335,9 +335,9 @@
     "TargetStatType": "Accuracy",
     "BasePercentBonus": 7.5,
     "PercentBonusPerLevel": 1.5,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "마왕이 직접 만든 조준 교본. 읽어도 잘 맞지는 않지만 조금 나아집니다."
   },
   {
@@ -346,9 +346,9 @@
     "TargetStatType": "Accuracy",
     "BasePercentBonus": 7.75,
     "PercentBonusPerLevel": 1.55,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "마왕이 적을 손가락으로 가리켜 주면 용사도 그쪽을 봅니다."
   },
   {
@@ -357,9 +357,9 @@
     "TargetStatType": "Evasion",
     "BasePercentBonus": 2.4,
     "PercentBonusPerLevel": 0.4,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "엉덩방아를 찧으며 얼떨결에 공격을 피합니다. 회피율이 증가합니다."
   },
   {
@@ -368,9 +368,9 @@
     "TargetStatType": "Evasion",
     "BasePercentBonus": 2.5,
     "PercentBonusPerLevel": 0.5,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "신발에 구멍이 나 발이 자꾸 미끄러집니다. 이상하게 공격도 피합니다."
   },
   {
@@ -379,9 +379,9 @@
     "TargetStatType": "Evasion",
     "BasePercentBonus": 4.38,
     "PercentBonusPerLevel": 0.75,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "제대로 피하는 법 대신 이상하게 움직이는 법을 알려줍니다."
   },
   {
@@ -390,9 +390,9 @@
     "TargetStatType": "Evasion",
     "BasePercentBonus": 4.65,
     "PercentBonusPerLevel": 0.78,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "넘어지는 데에는 누구보다 진심인 용사의 인증서입니다."
   },
   {
@@ -401,9 +401,9 @@
     "TargetStatType": "LifeSteal",
     "BasePercentBonus": 2.4,
     "PercentBonusPerLevel": 0.4,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "적의 생명력을 쪽쪽 빨아먹습니다. 용사는 왜 빨대가 있는지 모릅니다."
   },
   {
@@ -412,9 +412,9 @@
     "TargetStatType": "LifeSteal",
     "BasePercentBonus": 2.5,
     "PercentBonusPerLevel": 0.5,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "먹으면 힘이 난다는 수상한 사탕. 적에게서 생명력을 빼앗습니다."
   },
   {
@@ -423,9 +423,9 @@
     "TargetStatType": "LifeSteal",
     "BasePercentBonus": 5,
     "PercentBonusPerLevel": 0.88,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "누구의 것인지 알 수 없는 손수건. 공격할 때 생명력을 조금 회복합니다."
   },
   {
@@ -434,9 +434,9 @@
     "TargetStatType": "LifeSteal",
     "BasePercentBonus": 4.65,
     "PercentBonusPerLevel": 0.78,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "적을 한 대 때리고 체력을 조금 가져옵니다. 정말 한 입만입니다."
   },
   {
@@ -445,9 +445,9 @@
     "TargetStatType": "MoveSpeed",
     "BasePercentBonus": 4,
     "PercentBonusPerLevel": 0.8,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "싸우기 싫을 때 도망치기 위한 운동화. 이동 속도가 증가합니다."
   },
   {
@@ -456,9 +456,9 @@
     "TargetStatType": "MoveSpeed",
     "BasePercentBonus": 4,
     "PercentBonusPerLevel": 0.8,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "마왕성 배달을 제시간에 끝내기 위해 만들어진 전표입니다."
   },
   {
@@ -467,9 +467,9 @@
     "TargetStatType": "MoveSpeed",
     "BasePercentBonus": 7.5,
     "PercentBonusPerLevel": 1.5,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "전투보다 도망칠 때 더 빛나는 신발입니다."
   },
   {
@@ -478,9 +478,9 @@
     "TargetStatType": "MoveSpeed",
     "BasePercentBonus": 7.75,
     "PercentBonusPerLevel": 1.55,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "퇴근 시간이 다가오면 용사의 발걸음도 빨라집니다."
   },
   {
@@ -489,9 +489,9 @@
     "TargetStatType": "GoldGainBonus",
     "BasePercentBonus": 12,
     "PercentBonusPerLevel": 2.4,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "용사의 찢어진 주머니에서 골드가 쏟아집니다. 골드 획득량이 증가합니다."
   },
   {
@@ -500,9 +500,9 @@
     "TargetStatType": "GoldGainBonus",
     "BasePercentBonus": 12,
     "PercentBonusPerLevel": 2.5,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "돈이 새는 용사의 지갑을 조금이나마 고쳐줍니다."
   },
   {
@@ -511,9 +511,9 @@
     "TargetStatType": "GoldGainBonus",
     "BasePercentBonus": 22.5,
     "PercentBonusPerLevel": 4.38,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "어째서인지 들고 있으면 몬스터가 골드를 더 많이 떨어뜨립니다."
   },
   {
@@ -522,9 +522,9 @@
     "TargetStatType": "GoldGainBonus",
     "BasePercentBonus": 21.7,
     "PercentBonusPerLevel": 4.65,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "마왕이 용사의 지출을 감시하기 위해 만든 장부입니다."
   },
   {
@@ -533,9 +533,9 @@
     "TargetStatType": "EquipmentDropRate",
     "BasePercentBonus": 8,
     "PercentBonusPerLevel": 1.6,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "몬스터들이 순순히 장비를 내놓습니다. 장비 드랍률이 증가합니다."
   },
   {
@@ -544,9 +544,9 @@
     "TargetStatType": "EquipmentDropRate",
     "BasePercentBonus": 8,
     "PercentBonusPerLevel": 1.5,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "몬스터들에게 장비를 하나씩 협조받기 위한 공문입니다."
   },
   {
@@ -555,9 +555,9 @@
     "TargetStatType": "EquipmentDropRate",
     "BasePercentBonus": 15,
     "PercentBonusPerLevel": 3.12,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "몬스터가 쓰던 장비를 반납하라는 마왕의 안내문입니다."
   },
   {
@@ -566,9 +566,9 @@
     "TargetStatType": "EquipmentDropRate",
     "BasePercentBonus": 13.95,
     "PercentBonusPerLevel": 3.1,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "읽지도 않고 서명하면 장비를 내놓게 된다는 수상한 계약서입니다."
   },
   {
@@ -577,9 +577,9 @@
     "TargetStatType": "ExpGainBonus",
     "BasePercentBonus": 8,
     "PercentBonusPerLevel": 1.6,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "레온의 멍청함도 극복시키는 마왕의 족집게 과외. 경험치 획득량이 증가합니다."
   },
   {
@@ -588,9 +588,9 @@
     "TargetStatType": "ExpGainBonus",
     "BasePercentBonus": 8,
     "PercentBonusPerLevel": 1.5,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "마왕이 직접 내준 숙제. 하기 싫어도 경험치는 얻습니다."
   },
   {
@@ -599,9 +599,9 @@
     "TargetStatType": "ExpGainBonus",
     "BasePercentBonus": 15,
     "PercentBonusPerLevel": 3.12,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "시험 직전에 모든 것을 외우려는 필사적인 공부법입니다."
   },
   {
@@ -610,9 +610,9 @@
     "TargetStatType": "ExpGainBonus",
     "BasePercentBonus": 13.95,
     "PercentBonusPerLevel": 3.1,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "계획만큼은 완벽하지만 실제 공부량은 알 수 없습니다."
   },
   {
@@ -621,9 +621,9 @@
     "TargetStatType": "RebirthPointBonus",
     "BasePercentBonus": 8,
     "PercentBonusPerLevel": 2,
-    "Level": 1,
-    "Grade": "일반",
+    "Grade": "Common",
     "DropWeight": 55,
+    "IconId": null,
     "Description": "마왕의 은퇴 열망이 담긴 전단지. 환생 포인트 획득량이 증가합니다."
   },
   {
@@ -632,9 +632,9 @@
     "TargetStatType": "RebirthPointBonus",
     "BasePercentBonus": 12,
     "PercentBonusPerLevel": 3,
-    "Level": 1,
-    "Grade": "고급",
+    "Grade": "Rare",
     "DropWeight": 28,
+    "IconId": null,
     "Description": "용사를 빨리 키워 은퇴하려는 마왕의 장기 계획입니다."
   },
   {
@@ -643,9 +643,9 @@
     "TargetStatType": "RebirthPointBonus",
     "BasePercentBonus": 10,
     "PercentBonusPerLevel": 2.5,
-    "Level": 1,
-    "Grade": "희귀",
+    "Grade": "Epic",
     "DropWeight": 12,
+    "IconId": null,
     "Description": "다시 시작하면 이번에는 조금 나아질지도 모른다는 안내서입니다."
   },
   {
@@ -654,9 +654,9 @@
     "TargetStatType": "RebirthPointBonus",
     "BasePercentBonus": 15.5,
     "PercentBonusPerLevel": 3.88,
-    "Level": 1,
-    "Grade": "전설",
+    "Grade": "Legendary",
     "DropWeight": 5,
+    "IconId": null,
     "Description": "환생 후에는 제발 제대로 살아보라는 마왕의 상담권입니다."
   }
 ]

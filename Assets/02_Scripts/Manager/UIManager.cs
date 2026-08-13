@@ -9,18 +9,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] Canvas Canvas_PopupRoot;
     [SerializeField] Canvas Canvas_VeryFrontRoot;
 
-    public static UIManager Instance { get; set; }
 
     // 얘는 생성과 제거에 관한 부분 -> Instancing과 가비지컬렉터와 연관이 있는 애
     private Dictionary<UIType, UIBase> _createdUIDic = new Dictionary<UIType, UIBase>();
     // 얘는 활성과 비활성에 관한 부분 -> SetActive
     private HashSet<UIType> _openedUIDic = new HashSet<UIType>();
 
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     private void Start()
     {

@@ -9,3 +9,12 @@
     Necklace,
     Belt
 }
+
+public enum EquipmentGrade
+{
+    Common,
+    Rare,
+    Epic,
+    Legendary,
+    Mythic
+}

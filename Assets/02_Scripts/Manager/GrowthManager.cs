@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GrowthManager : MonoBehaviour
 {
-    [Header("=== Sub Managers ===")]
     [SerializeField] private EquipmentManager _equipmentManager;
     [SerializeField] private RelicManager _relicManager;
 
@@ -16,14 +15,14 @@ public class GrowthManager : MonoBehaviour
     public event Action OnStatsUpdated;
     public event Action<int> OnLevelUpdated;
 
-    public void Initialize(PlayerModel playerModel)
+    public void Initialize(PlayerModel playerModel, List<EquipmentModel> savedEquipment = null, List<RelicModel> savedRelics = null)
     {
         _playerModel = playerModel ?? new PlayerModel();
 
         ApplyLevelBaseStats();
 
-        _equipmentManager?.Initialize();
-        _relicManager?.Initialize();
+        _equipmentManager?.Initialize(savedEquipment);
+        _relicManager?.Initialize(savedRelics);
 
         RecalculateTotalStats();
     }

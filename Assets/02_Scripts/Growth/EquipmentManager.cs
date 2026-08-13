@@ -3,77 +3,92 @@ using UnityEngine;
 
 public class EquipmentManager : MonoBehaviour
 {
-    [Header("=== 보유 장비 리스트 ===")]
-    [SerializeField] private List<EquipmentItem> _ownedEquipmentList = new List<EquipmentItem>();
+   private List<EquipmentModel> _ownedEquipmentList = new List<EquipmentModel>();
 
-    public void Initialize()
+    public void Initialize(List<EquipmentModel> savedEquipmentList)
     {
-        // 초기 장비 세팅 또는 로드 데이터 연결
+        _ownedEquipmentList = savedEquipmentList ?? new List<EquipmentModel>();
     }
 
     public Dictionary<StatType, float> GetTotalFlatStats()
     {
         var flatStatsMap = new Dictionary<StatType, float>();
 
-        foreach (var item in _ownedEquipmentList)
+        foreach (var itemModel in _ownedEquipmentList)
         {
-            if (item.IsEquipped)
-            {
-                float currentValue = item.BaseStatValue + ((item.Level - 1) * item.StatValuePerLevel);
+            if (itemModel.IsEquipped == false) continue;
 
-                if (flatStatsMap.ContainsKey(item.MainStatType))
-                {
-                    flatStatsMap[item.MainStatType] += currentValue;
-                }
-                else
-                {
-                    flatStatsMap[item.MainStatType] = currentValue;
-                }
+            EquipmentItem staticData = GameManager.Instance.Data.GetEquipmentData(itemModel.ItemDataId);
+            if (staticData == null) continue;
+
+            float levelBonus = (itemModel.Level - 1) * staticData.StatValuePerLevel;
+            float finalStatValue = (staticData.BaseStatValue + levelBonus) * staticData.GradeMultiplier;
+
+            if (flatStatsMap.ContainsKey(staticData.MainStatType))
+            {
+                flatStatsMap[staticData.MainStatType] += finalStatValue;
+            }
+            else
+            {
+                flatStatsMap[staticData.MainStatType] = finalStatValue;
             }
         }
 
         return flatStatsMap;
     }
 
-    public void EquipItem(EquipmentItem targetItem)
+    public void EquipItem(EquipmentModel targetItemModel)
     {
-        if (targetItem == null) return;
+        if (targetItemModel == null) return;
 
-        foreach (var item in _ownedEquipmentList)
+        EquipmentItem targetStaticData = GameManager.Instance.Data.GetEquipmentData(targetItemModel.ItemDataId);
+        if (targetStaticData == null) return;
+
+        foreach (var ownedItem in _ownedEquipmentList)
         {
-            if (item.Type == targetItem.Type && item.IsEquipped)
+            EquipmentItem ownedStaticData = GameManager.Instance.Data.GetEquipmentData(ownedItem.ItemDataId);
+            if (ownedStaticData != null && ownedStaticData.Type == targetStaticData.Type && ownedItem.IsEquipped)
             {
-                item.IsEquipped = false;
+                ownedItem.IsEquipped = false;
             }
         }
 
-        targetItem.IsEquipped = true;
+        targetItemModel.IsEquipped = true;
 
         GameManager.Instance.Growth.RecalculateTotalStats();
     }
 
-    public void DismantleItem(EquipmentItem targetItem, PlayerModel playerModel)
+    public bool TryEnhanceEquipment(EquipmentModel targetItemModel, PlayerModel playerModel)
     {
-        if (targetItem == null || targetItem.IsEquipped) return;
 
-        long rewardCurrency = targetItem.Level * 20L;
-        playerModel.EnhanceCurrency += rewardCurrency;
+        EquipmentItem staticData = GameManager.Instance.Data.GetEquipmentData(targetItemModel.ItemDataId);
+        if (staticData == null) return false;
 
-        _ownedEquipmentList.Remove(targetItem);
-
-        Debug.Log($"[EquipmentManager] 장비 분해 완료! 획득 육성 재화: {rewardCurrency}");
-    }
-
-    public bool TryEnhanceEquipment(EquipmentItem targetItem, PlayerModel playerModel)
-    {
-        long cost = targetItem.Level * 50L;
+        int gradeWeight = ((int)staticData.Grade + 1);
+        long cost = targetItemModel.Level * 50L * gradeWeight;
 
         if (playerModel.EnhanceCurrency < cost) return false;
 
         playerModel.EnhanceCurrency -= cost;
-        targetItem.Level++;
+        targetItemModel.Level++;
 
         GameManager.Instance.Growth.RecalculateTotalStats();
         return true;
+    }
+
+    public void DismantleItem(EquipmentModel targetItemModel, PlayerModel playerModel)
+    {
+        if (targetItemModel == null || targetItemModel.IsEquipped) return;
+
+        EquipmentItem staticData = GameManager.Instance.Data.GetEquipmentData(targetItemModel.ItemDataId);
+        if (staticData == null) return;
+
+        int gradeWeight = ((int)staticData.Grade + 1);
+        long rewardAmount = targetItemModel.Level * 20L * gradeWeight;
+
+        playerModel.EnhanceCurrency += rewardAmount;
+        _ownedEquipmentList.Remove(targetItemModel);
+
+        Debug.Log($"[EquipmentManager] 장비 분해 완료! 획득한 육성 재화: {rewardAmount}");
     }
 }

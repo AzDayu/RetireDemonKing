@@ -3,31 +3,40 @@ using UnityEngine;
 
 public class RelicManager : MonoBehaviour
 {
-    [Header("=== 유물 도감 리스트 ===")]
-    [SerializeField] private List<RelicItem> _relicList = new List<RelicItem>();
+    private List<RelicItem> _relicList = new List<RelicItem>();
 
-    public void Initialize()
+    private Dictionary<string, RelicModel> _ownedRelicMap = new Dictionary<string, RelicModel>();
+
+    public void Initialize(List<RelicModel> savedRelicList)
     {
-        // 유물 초기화
+        _ownedRelicMap.Clear();
+
+        if (savedRelicList != null)
+        {
+            foreach (var model in savedRelicList)
+            {
+                _ownedRelicMap[model.RelicId] = model;
+            }
+        }
     }
 
     public Dictionary<StatType, float> GetTotalPercentStats()
     {
         var percentStatsMap = new Dictionary<StatType, float>();
 
-        foreach (var relic in _relicList)
+        foreach (var relicStatic in _relicList)
         {
-            if (relic.Level > 0)
+            if (_ownedRelicMap.TryGetValue(relicStatic.Id, out RelicModel relicModel) && relicModel.Level > 0)
             {
-                float currentBonus = relic.BasePercentBonus + ((relic.Level - 1) * relic.PercentBonusPerLevel);
+                float currentBonus = relicStatic.BasePercentBonus + ((relicModel.Level - 1) * relicStatic.PercentBonusPerLevel);
 
-                if (percentStatsMap.ContainsKey(relic.TargetStatType))
+                if (percentStatsMap.ContainsKey(relicStatic.TargetStatType))
                 {
-                    percentStatsMap[relic.TargetStatType] += currentBonus;
+                    percentStatsMap[relicStatic.TargetStatType] += currentBonus;
                 }
                 else
                 {
-                    percentStatsMap[relic.TargetStatType] = currentBonus;
+                    percentStatsMap[relicStatic.TargetStatType] = currentBonus;
                 }
             }
         }
@@ -48,7 +57,7 @@ public class RelicManager : MonoBehaviour
 
         if (totalWeight <= 0)
         {
-            Debug.LogWarning("[RelicManager] 모든 유물의 DropWeight 합이 0 이하입니다. 데이터 세팅을 확인하세요.");
+            Debug.LogWarning("[RelicManager] 모든 유물의 DropWeight 합이 0 이하입니다.");
             return false;
         }
 
@@ -73,12 +82,24 @@ public class RelicManager : MonoBehaviour
             selectedRelic = _relicList[0];
         }
 
-        selectedRelic.Level++;
+        // 유물 데이터 갱신
+        if (!_ownedRelicMap.TryGetValue(selectedRelic.Id, out RelicModel model))
+        {
+            model = new RelicModel { RelicId = selectedRelic.Id, Level = 0 };
+            _ownedRelicMap[selectedRelic.Id] = model;
+        }
 
-        Debug.Log($"[RelicManager] 유물 뽑기 성공! [{selectedRelic.Grade}] {selectedRelic.Name} (현재 Lv.{selectedRelic.Level})");
+        model.Level++;
+
+        Debug.Log($"[RelicManager] 유물 뽑기 성공! [{selectedRelic.Grade}] {selectedRelic.Name} (현재 Lv.{model.Level})");
 
         GameManager.Instance.Growth.RecalculateTotalStats();
 
         return true;
+    }
+
+    public List<RelicModel> GetSavedRelicList()
+    {
+        return new List<RelicModel>(_ownedRelicMap.Values);
     }
 }

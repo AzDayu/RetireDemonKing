@@ -2,12 +2,12 @@
 
 public enum GameState
 {
-    Init,           // 서버 로그인 및 데이터 초기화 상태
-    Offline,        // 오프라인 상태
-    IdleStage,      // 일반 방치 / 무한 스폰 전투 상태
-    BossChallenge,  // 제한시간 보스전 진행 상태
-    Rebirth,        // 환생 진행 및 리셋 연출 상태
-    Pause           // 일시정지 / UI 팝업 상태
+    Init,
+    Offline,
+    IdleStage,
+    BossChallenge,
+    Rebirth,
+    Pause
 }
 
 public class GameManager :MonoBehaviour
@@ -25,6 +25,9 @@ public class GameManager :MonoBehaviour
     [SerializeField] private SaveServerManager _saveServerManager;
     [SerializeField] private OfflineManager _offlineManager;
     [SerializeField] private EventManager _eventManager;
+    [SerializeField] private UIManager _uiManager;
+    [SerializeField] private GameDataManager _gameDataManager;
+    
 
 
     public StageManager Stage
@@ -53,6 +56,22 @@ public class GameManager :MonoBehaviour
         get
         {
             return _saveServerManager;
+        }
+    }
+
+    public UIManager UI
+    {
+        get
+        {
+            return _uiManager;
+        }
+    }
+
+    public GameDataManager Data
+    {
+        get
+        {
+            return _gameDataManager;
         }
     }
 
@@ -116,18 +135,67 @@ public class GameManager :MonoBehaviour
 
     private void InitializeGameData()
     {
-        Debug.Log("게임 데이터 및 서버 로그인 처리 중");
-
-        bool isSuccess = true;
-
-        if (isSuccess)
+        Debug.Log("[GameManager] 1. 정적(Static) 데이터 로드 시작");
+        if (_gameDataManager != null)
         {
-            ChangeState(GameState.IdleStage);
+            _gameDataManager.LoadAllData();
         }
         else
         {
-            Debug.LogError("로그인/데이터 로드 실패!");
+            Debug.LogError("[GameManager] GameDataManager 참조가 누락되었습니다!");
+            return;
         }
+
+        Debug.Log("[GameManager] 2. 유저 세이브 데이터 로드 시작");
+        PlayerModel loadedPlayerModel = null;
+        var savedEquipments = new System.Collections.Generic.List<EquipmentModel>();
+        var savedRelics = new System.Collections.Generic.List<RelicModel>();
+
+        if (_saveServerManager != null)
+        {
+            // 세이브/서버 매니저를 통해 데이터를 읽어옴 (없을 경우 새로 생성)
+            // loadedPlayerModel = _saveServerManager.LoadPlayerData();
+            // savedEquipments = _saveServerManager.LoadEquipmentData();
+            // savedRelics = _saveServerManager.LoadRelicData();
+        }
+
+        if (loadedPlayerModel == null)
+        {
+            loadedPlayerModel = new PlayerModel
+            {
+                Level = 1,
+                CurrentExp = 0,
+                Gold = 0,
+                EnhanceCurrency = 0,
+                RebirthPoints = 0,
+                CurrentStage = 1,
+                MaxStage = 1
+            };
+        }
+
+        Debug.Log("[GameManager] 3. 성장 매니저(GrowthManager) 초기화 및 스탯 계산");
+        if (_growthManager != null)
+        {
+            _growthManager.Initialize(loadedPlayerModel, savedEquipments, savedRelics);
+        }
+
+        Debug.Log("[GameManager] 4. 스테이지 매니저(StageManager) 초기화");
+        if (_stageManager != null)
+        {
+            //_stageManager.Initialize(loadedPlayerModel.CurrentStage);
+        }
+
+        Debug.Log("[GameManager] 5. UI 및 오프라인 보상 처리");
+        if (_uiManager != null)
+        {
+            //_uiManager.Initialize();
+        }
+
+        // 오프라인 보상이 있다면 계산 후 팝업 띄우기
+        // _offlineManager?.CalculateOfflineReward();
+
+        Debug.Log("[GameManager] 모든 초기화 완료! 방치 스테이지 진입");
+        ChangeState(GameState.IdleStage);
     }
 
     public void OnClickBossChallenge()
