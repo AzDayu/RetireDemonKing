@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -118,22 +119,21 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    private void UpdateMainStageBGI(int stageIndex)
+    private async UniTaskVoid UpdateMainStageBGI(int stageIndex)
     {
         int targetThemeIndex = ((stageIndex - 1) / _stagesForChangeBGI) + 1;
 
         if (targetThemeIndex == _currentThemeIndex) return;
         if (_bgImage == null && _bgSpriteRenderer == null) return;
 
-        if (!_spritePool.TryGetValue(targetThemeIndex, out Sprite loadedSprite))
+        string addressKey = $"Theme_{targetThemeIndex}";
+
+        Sprite loadedSprite = await ResourceManager.Inst.LoadSprite(addressKey);
+
+        if (loadedSprite == null)
         {
-            loadedSprite = Resources.Load<Sprite>($"Sprites/Backgrounds/Theme_{targetThemeIndex}");
-            if (loadedSprite == null)
-            {
-                Debug.LogWarning($"[StageManager] 에셋을 찾을 수 없습니다: Theme_{targetThemeIndex}");
-                return;
-            }
-            _spritePool.Add(targetThemeIndex, loadedSprite);
+            Debug.LogWarning($"[StageManager] 에셋을 찾을 수 없습니다: {addressKey}");
+            return;
         }
 
         _currentThemeIndex = targetThemeIndex;
@@ -142,11 +142,41 @@ public class StageManager : MonoBehaviour
         {
             _bgImage.sprite = loadedSprite;
         }
+
         if (_bgSpriteRenderer != null)
         {
             _bgSpriteRenderer.sprite = loadedSprite;
         }
-
     }
+
+    //private void UpdateMainStageBGI(int stageIndex)
+    //{
+    //    int targetThemeIndex = ((stageIndex - 1) / _stagesForChangeBGI) + 1;
+
+    //    if (targetThemeIndex == _currentThemeIndex) return;
+    //    if (_bgImage == null && _bgSpriteRenderer == null) return;
+
+    //    if (!_spritePool.TryGetValue(targetThemeIndex, out Sprite loadedSprite))
+    //    {
+    //        loadedSprite = Resources.Load<Sprite>($"Sprites/Backgrounds/Theme_{targetThemeIndex}");
+    //        if (loadedSprite == null)
+    //        {
+    //            Debug.LogWarning($"[StageManager] 에셋을 찾을 수 없습니다: Theme_{targetThemeIndex}");
+    //            return;
+    //        }
+    //        _spritePool.Add(targetThemeIndex, loadedSprite);
+    //    }
+
+    //    _currentThemeIndex = targetThemeIndex;
+
+    //    if (_bgImage != null)
+    //    {
+    //        _bgImage.sprite = loadedSprite;
+    //    }
+    //    if (_bgSpriteRenderer != null)
+    //    {
+    //        _bgSpriteRenderer.sprite = loadedSprite;
+    //    }
+    //}
 }
 
