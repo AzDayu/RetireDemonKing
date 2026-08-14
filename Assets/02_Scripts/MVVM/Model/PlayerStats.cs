@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public enum StatType
+public enum StatTypeV2
 {
     BaseAttackPower,
     BaseMaxHP,

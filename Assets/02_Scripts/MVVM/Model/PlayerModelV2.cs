@@ -77,9 +77,9 @@ public class PlayerModelV2
 
     private void HandleStatUpdated(StatType type)
     {
-        if (type == StatType.BaseMaxHP)
+        if (type == StatType.MaxHp)
         {
-            float newMaxHp = _playerStats.GetValue(StatType.BaseMaxHP);
+            float newMaxHp = _playerStats.GetValue(StatType.MaxHp);
             if (CurHp > newMaxHp) CurHp = newMaxHp;
         }
     }
@@ -122,7 +122,7 @@ public class PlayerModelV2
     public void ChangeCurHp(float amount)
     {
         CurHp += amount;
-        float maxHp = _playerStats.GetValue(StatType.BaseMaxHP);
+        float maxHp = _playerStats.GetValue(StatType.MaxHp);
 
         if (CurHp > maxHp)
         {

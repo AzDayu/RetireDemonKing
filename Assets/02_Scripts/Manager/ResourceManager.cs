@@ -33,7 +33,6 @@ public class ResourceManager : MonoBehaviour
 
         // 로드 실행
         AsyncOperationHandle<Sprite> handle = Addressables.LoadAssetAsync<Sprite>(address);
-
         try
         {
             Sprite sprite = await handle.ToUniTask();

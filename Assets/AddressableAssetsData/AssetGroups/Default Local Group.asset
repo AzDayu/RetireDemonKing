@@ -14,7 +14,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Default Local Group
   m_GUID: b1f36638ee6448946a33f375f5a59b48
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 0fdf5b5fdcd6bdd478137ce2094fb77e
+    m_Address: Assets/05_Art/Background/snow2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 18d4c596b03ece047a9a463aa2dfc418
+    m_Address: Assets/05_Art/Background/Forest1.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4e6be439f0f158542868569c7ecfefb4
+    m_Address: Assets/05_Art/Background/passage1.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4fc46806d581017459053e1f6ee408ae
+    m_Address: Assets/05_Art/Background/Desert1.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8577d066fa1cf9943bd4208598feee12
+    m_Address: Assets/05_Art/Background/passage2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 93f6307bd533edb4c90bf852b89111dc
+    m_Address: Assets/05_Art/Background/Forest2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a3c9eb82d1031744a9722c5d4df611e9
+    m_Address: Assets/05_Art/Background/Desert2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a4447876a2b002a4e952912969234ec6
+    m_Address: Assets/05_Art/Background/sea1.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cacad7a7d6589de43888bbfce0153d06
+    m_Address: Assets/05_Art/Background/ruin.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e60d576aa308bef48b75b38da1ef9d06
+    m_Address: Assets/05_Art/Background/snow3.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eb6a6fc5d99c2e2498d65eab9757a8f7
+    m_Address: Assets/05_Art/Background/castle1.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ec2ebc88042c3a843b369c5d60ccb7fe
+    m_Address: Assets/05_Art/Background/snow1.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 3e85b09c119d68948be180652b4d9b96, type: 2}
   m_SchemaSet:

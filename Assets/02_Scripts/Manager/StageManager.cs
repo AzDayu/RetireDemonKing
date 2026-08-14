@@ -127,7 +127,6 @@ public class StageManager : MonoBehaviour
         if (_bgImage == null && _bgSpriteRenderer == null) return;
 
         string addressKey = $"Theme_{targetThemeIndex}";
-
         Sprite loadedSprite = await ResourceManager.Inst.LoadSprite(addressKey);
 
         if (loadedSprite == null)
