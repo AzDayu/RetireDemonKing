@@ -36,3 +36,34 @@ public class DropItemData
         MaxCount = maxCount;
     }
 }
+
+[Serializable]
+public class InventoryItemData
+{
+    public long SlotIndex;
+    public string ItemId;
+    public int Count;
+
+    public InventoryItemData(long slotIndex, string itemId, int count)
+    {
+        SlotIndex = slotIndex;
+        ItemId = itemId;
+        Count = count;
+    }
+}
+
+[Serializable]
+public class InventoryData
+{
+    public int MaxSlotCount;
+    public int MaxItemCount;
+
+    public List<InventoryItemData> InventoryItems;
+
+    public InventoryData()
+    {
+        MaxSlotCount = 30; // 임의
+        MaxItemCount = 50;
+    InventoryItems = new List<InventoryItemData>();
+    }
+}
