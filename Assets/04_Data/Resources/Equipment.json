@@ -1,9 +1,9 @@
 [
   {
-    "Id": "EQ_WEAPON_SWORD_NORMAL",
+    "Id": "EQ_WEAPON_SWORD_Common",
     "Name": "일반 낡은 철검",
     "Type": "Weapon",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "Attack",
     "BaseStatValue": 10,
     "StatValuePerLevel": 1.5,
@@ -70,10 +70,10 @@
     "Description": "검 계열 무기. 공격력이 증가합니다."
   },
   {
-    "Id": "EQ_WEAPON_AXE_NORMAL",
+    "Id": "EQ_WEAPON_AXE_Common",
     "Name": "일반 무딘 전투도끼",
     "Type": "Weapon",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "Attack",
     "BaseStatValue": 12,
     "StatValuePerLevel": 1.4,
@@ -126,10 +126,10 @@
     "Description": "도끼 계열 무기. 공격력이 증가합니다."
   },
   {
-    "Id": "EQ_WEAPON_SPEAR_NORMAL",
+    "Id": "EQ_WEAPON_SPEAR_Common",
     "Name": "일반 푸른 장식창",
     "Type": "Weapon",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "Attack",
     "BaseStatValue": 11,
     "StatValuePerLevel": 1.6,
@@ -182,10 +182,10 @@
     "Description": "창 계열 무기. 공격력이 증가합니다."
   },
   {
-    "Id": "EQ_CHEST_ICE_NORMAL",
+    "Id": "EQ_CHEST_ICE_Common",
     "Name": "일반 푸른 사슬갑옷",
     "Type": "Chest",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "Defense",
     "BaseStatValue": 10,
     "StatValuePerLevel": 1.2,
@@ -238,10 +238,10 @@
     "Description": "푸른 사슬갑옷. Defense 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_CHEST_DEMON_NORMAL",
+    "Id": "EQ_CHEST_DEMON_Common",
     "Name": "일반 뿔 달린 흑갑",
     "Type": "Chest",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "Defense",
     "BaseStatValue": 12,
     "StatValuePerLevel": 1.1,
@@ -294,10 +294,10 @@
     "Description": "뿔 달린 흑갑. Defense 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_CHEST_SILVER_NORMAL",
+    "Id": "EQ_CHEST_SILVER_Common",
     "Name": "일반 은빛 판금갑옷",
     "Type": "Chest",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "Defense",
     "BaseStatValue": 11,
     "StatValuePerLevel": 1.2,
@@ -350,10 +350,10 @@
     "Description": "은빛 판금갑옷. Defense 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_PANTS_GREEN_NORMAL",
+    "Id": "EQ_PANTS_GREEN_Common",
     "Name": "일반 질긴 가죽 바지",
     "Type": "Pants",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "MaxHp",
     "BaseStatValue": 8,
     "StatValuePerLevel": 1.3,
@@ -406,10 +406,10 @@
     "Description": "질긴 가죽 바지. MaxHp 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_PANTS_BLUE_NORMAL",
+    "Id": "EQ_PANTS_BLUE_Common",
     "Name": "일반 푸른 깃털 바지",
     "Type": "Pants",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "Evasion",
     "BaseStatValue": 3,
     "StatValuePerLevel": 0.4,
@@ -462,10 +462,10 @@
     "Description": "푸른 깃털 바지. Evasion 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_PANTS_DARK_NORMAL",
+    "Id": "EQ_PANTS_DARK_Common",
     "Name": "일반 중갑 각반",
     "Type": "Pants",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "Defense",
     "BaseStatValue": 9,
     "StatValuePerLevel": 1,
@@ -518,10 +518,10 @@
     "Description": "중갑 각반. Defense 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_GLOVE_LEATHER_NORMAL",
+    "Id": "EQ_GLOVE_LEATHER_Common",
     "Name": "일반 가죽 전투장갑",
     "Type": "Gloves",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "Attack",
     "BaseStatValue": 5,
     "StatValuePerLevel": 0.7,
@@ -574,10 +574,10 @@
     "Description": "가죽 전투장갑. Attack 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_GLOVE_CLAW_NORMAL",
+    "Id": "EQ_GLOVE_CLAW_Common",
     "Name": "일반 숨겨진 칼날 장갑",
     "Type": "Gloves",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "CriticalChance",
     "BaseStatValue": 2,
     "StatValuePerLevel": 0.3,
@@ -630,10 +630,10 @@
     "Description": "숨겨진 칼날 장갑. CriticalChance 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_GLOVE_SILVER_NORMAL",
+    "Id": "EQ_GLOVE_SILVER_Common",
     "Name": "일반 마력 강철 건틀릿",
     "Type": "Gloves",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "Defense",
     "BaseStatValue": 6,
     "StatValuePerLevel": 0.8,
@@ -686,10 +686,10 @@
     "Description": "마력 강철 건틀릿. Defense 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_BOOTS_BLACK_NORMAL",
+    "Id": "EQ_BOOTS_BLACK_Common",
     "Name": "일반 검은 깃털 장화",
     "Type": "Boots",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "MoveSpeed",
     "BaseStatValue": 4,
     "StatValuePerLevel": 0.5,
@@ -742,10 +742,10 @@
     "Description": "검은 깃털 장화. MoveSpeed 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_BOOTS_FIRE_NORMAL",
+    "Id": "EQ_BOOTS_FIRE_Common",
     "Name": "일반 불꽃 전투화",
     "Type": "Boots",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "AttackSpeed",
     "BaseStatValue": 4,
     "StatValuePerLevel": 0.5,
@@ -798,10 +798,10 @@
     "Description": "불꽃 전투화. AttackSpeed 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_BOOTS_BLUE_NORMAL",
+    "Id": "EQ_BOOTS_BLUE_Common",
     "Name": "일반 푸른 기동화",
     "Type": "Boots",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "MoveSpeed",
     "BaseStatValue": 5,
     "StatValuePerLevel": 0.6,
@@ -854,10 +854,10 @@
     "Description": "푸른 기동화. MoveSpeed 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_BELT_TOOL_NORMAL",
+    "Id": "EQ_BELT_TOOL_Common",
     "Name": "일반 도구 허리띠",
     "Type": "Belt",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "Accuracy",
     "BaseStatValue": 3,
     "StatValuePerLevel": 0.4,
@@ -910,10 +910,10 @@
     "Description": "도구 허리띠. Accuracy 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_BELT_GREEN_NORMAL",
+    "Id": "EQ_BELT_GREEN_Common",
     "Name": "일반 수호자의 가죽띠",
     "Type": "Belt",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "Defense",
     "BaseStatValue": 5,
     "StatValuePerLevel": 0.7,
@@ -966,10 +966,10 @@
     "Description": "수호자의 가죽띠. Defense 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_BELT_PURPLE_NORMAL",
+    "Id": "EQ_BELT_PURPLE_Common",
     "Name": "일반 마력 장식 허리띠",
     "Type": "Belt",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "CooldownReduction",
     "BaseStatValue": 3,
     "StatValuePerLevel": 0.4,
@@ -1022,10 +1022,10 @@
     "Description": "마력 장식 허리띠. CooldownReduction 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_NECK_GREEN_NORMAL",
+    "Id": "EQ_NECK_GREEN_Common",
     "Name": "일반 초록 보석 목걸이",
     "Type": "Necklace",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "MaxHp",
     "BaseStatValue": 6,
     "StatValuePerLevel": 0.8,
@@ -1078,10 +1078,10 @@
     "Description": "초록 보석 목걸이. MaxHp 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_NECK_BLUE_NORMAL",
+    "Id": "EQ_NECK_BLUE_Common",
     "Name": "일반 푸른 눈 목걸이",
     "Type": "Necklace",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "Accuracy",
     "BaseStatValue": 4,
     "StatValuePerLevel": 0.5,
@@ -1134,10 +1134,10 @@
     "Description": "푸른 눈 목걸이. Accuracy 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_NECK_GOLD_NORMAL",
+    "Id": "EQ_NECK_GOLD_Common",
     "Name": "일반 태양 문양 목걸이",
     "Type": "Necklace",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "CriticalChance",
     "BaseStatValue": 2,
     "StatValuePerLevel": 0.3,
@@ -1190,10 +1190,10 @@
     "Description": "태양 문양 목걸이. CriticalChance 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_RING_ICE_NORMAL",
+    "Id": "EQ_RING_ICE_Common",
     "Name": "일반 빙결의 반지",
     "Type": "Ring",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "CooldownReduction",
     "BaseStatValue": 3,
     "StatValuePerLevel": 0.4,
@@ -1246,10 +1246,10 @@
     "Description": "빙결의 반지. CooldownReduction 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_RING_FIRE_NORMAL",
+    "Id": "EQ_RING_FIRE_Common",
     "Name": "일반 화염의 반지",
     "Type": "Ring",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "CriticalDamage",
     "BaseStatValue": 8,
     "StatValuePerLevel": 1,
@@ -1302,10 +1302,10 @@
     "Description": "화염의 반지. CriticalDamage 관련 능력치가 증가합니다."
   },
   {
-    "Id": "EQ_RING_PURPLE_NORMAL",
+    "Id": "EQ_RING_PURPLE_Common",
     "Name": "일반 보라 마력 반지",
     "Type": "Ring",
-    "Grade": "Normal",
+    "Grade": "Common",
     "MainStatType": "LifeSteal",
     "BaseStatValue": 2,
     "StatValuePerLevel": 0.3,
