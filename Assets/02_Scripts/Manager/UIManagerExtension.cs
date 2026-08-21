@@ -15,6 +15,7 @@ public enum UIType
     StartTitleUI,
     LoadingUI,
     InventoryUI,
+    GrowthPopupUI
 }
 
 public static class UIManagerExtension

@@ -89,4 +89,48 @@ public class GameDataManager : MonoBehaviour
     {
         return _equipmentDataDict.Values.ToList();
     }
+
+
+    // 테스트용 임시 데이터
+    [ContextMenu("Test Equipment Data")]
+    private void TestEquipmentData()
+    {
+        LoadAllData();
+
+        EquipmentItem commonChest = GetEquipmentData("EQ_CHEST_ICE_Common");
+
+        EquipmentItem rareChest = GetEquipmentData("EQ_CHEST_ICE_RARE");
+
+        if (commonChest == null)
+        {
+            Debug.LogError("[장비 데이터 테스트] Common 상의 데이터를 찾지 못했습니다.");
+        }
+        else
+        {
+            Debug.Log(
+                $"[장비 데이터 테스트] " +
+                $"Id: {commonChest.Id}, " +
+                $"Name: {commonChest.Name}, " +
+                $"Type: {commonChest.Type}, " +
+                $"Grade: {commonChest.Grade}, " +
+                $"Stat: {commonChest.MainStatType}, " +
+                $"Base: {commonChest.BaseStatValue}"
+            );
+        }
+
+        if (rareChest == null)
+        {
+            Debug.LogError("[장비 데이터 테스트] Rare 상의 데이터를 찾지 못했습니다.");
+        }
+        else
+        {
+            Debug.Log(
+                $"[장비 데이터 테스트] " +
+                $"Id: {rareChest.Id}, " +
+                $"Type: {rareChest.Type}, " +
+                $"Grade: {rareChest.Grade}"
+            );
+        }
+    }
+    // 테스트용 임시 데이터끝
 }
