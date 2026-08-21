@@ -10,68 +10,93 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: BackGroundImages
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: Default Local Group
+  m_GroupName: BackGroundImages
   m_GUID: b1f36638ee6448946a33f375f5a59b48
   m_SerializeEntries:
   - m_GUID: 0fdf5b5fdcd6bdd478137ce2094fb77e
-    m_Address: Assets/05_Art/Background/snow2.png
+    m_Address: snow2
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 18d4c596b03ece047a9a463aa2dfc418
-    m_Address: Assets/05_Art/Background/Forest1.png
+    m_Address: forest1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 478d89dabd0c6c345b6fab552be00bb8
+    m_Address: sea2
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4e6be439f0f158542868569c7ecfefb4
-    m_Address: Assets/05_Art/Background/passage1.png
+    m_Address: passage1
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4fc46806d581017459053e1f6ee408ae
-    m_Address: Assets/05_Art/Background/Desert1.png
+    m_Address: desert1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7757fa130691f4347af313894e748ae8
+    m_Address: sea3
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8577d066fa1cf9943bd4208598feee12
-    m_Address: Assets/05_Art/Background/passage2.png
+    m_Address: passage2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8949cae2048f0084abdbbbc2a49b24f8
+    m_Address: nightforest1
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 93f6307bd533edb4c90bf852b89111dc
-    m_Address: Assets/05_Art/Background/Forest2.png
+    m_Address: forest2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 964ae52923d2e3943967cbd8ad90ecda
+    m_Address: snow4
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a3c9eb82d1031744a9722c5d4df611e9
-    m_Address: Assets/05_Art/Background/Desert2.png
+    m_Address: desert2
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a4447876a2b002a4e952912969234ec6
-    m_Address: Assets/05_Art/Background/sea1.png
+    m_Address: sea1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aaaf4adc9ec262d48a0016a45897f694
+    m_Address: nightforest2
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cacad7a7d6589de43888bbfce0153d06
-    m_Address: Assets/05_Art/Background/ruin.png
+    m_Address: ruin1
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e60d576aa308bef48b75b38da1ef9d06
-    m_Address: Assets/05_Art/Background/snow3.png
+    m_Address: snow3
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: eb6a6fc5d99c2e2498d65eab9757a8f7
-    m_Address: Assets/05_Art/Background/castle1.png
+    m_Address: castle1
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ec2ebc88042c3a843b369c5d60ccb7fe
-    m_Address: Assets/05_Art/Background/snow1.png
+    m_Address: snow1
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

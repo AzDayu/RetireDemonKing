@@ -4,7 +4,7 @@ public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager Instance { get; set; }
 
-    public InventoryNetworkService InventoryService { get; private set; }
+    //public InventoryNetworkService InventoryService { get; private set; }
 
     private void Awake()
     {
@@ -29,6 +29,6 @@ public class NetworkManager : MonoBehaviour
 
     private void InitNetworkService()
     {
-        InventoryService = new InventoryNetworkService();
+        //InventoryService = new InventoryNetworkService();
     }
 }
