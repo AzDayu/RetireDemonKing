@@ -10,7 +10,7 @@ public enum GameState
     Pause
 }
 
-public class GameManager :MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
@@ -27,53 +27,13 @@ public class GameManager :MonoBehaviour
     [SerializeField] private EventManager _eventManager;
     [SerializeField] private UIManager _uiManager;
     [SerializeField] private GameDataManager _gameDataManager;
-    
 
-
-    public StageManager Stage
-    {
-        get
-        {
-            return _stageManager;
-        }
-    }
-    public CombatManager Combat
-    {
-        get
-        {
-            return _combatManager;
-        }
-    }
-    public GrowthManager Growth
-    {
-        get
-        {
-            return _growthManager;
-        }
-    }
-    public SaveServerManager SaveServer
-    {
-        get
-        {
-            return _saveServerManager;
-        }
-    }
-
-    public UIManager UI
-    {
-        get
-        {
-            return _uiManager;
-        }
-    }
-
-    public GameDataManager Data
-    {
-        get
-        {
-            return _gameDataManager;
-        }
-    }
+    public StageManager Stage => _stageManager;
+    public CombatManager Combat => _combatManager;
+    public GrowthManager Growth => _growthManager;
+    public SaveServerManager SaveServer => _saveServerManager;
+    public UIManager UI => _uiManager;
+    public GameDataManager Data => _gameDataManager;
 
     private void Awake()
     {
@@ -95,7 +55,6 @@ public class GameManager :MonoBehaviour
 
     public void ChangeState(GameState newState)
     {
-
         OnStateExit(_currentState);
         _currentState = newState;
         OnStateEnter(_currentState);
@@ -107,7 +66,6 @@ public class GameManager :MonoBehaviour
         {
             case GameState.IdleStage:
                 break;
-
             case GameState.BossChallenge:
                 break;
         }
@@ -118,10 +76,18 @@ public class GameManager :MonoBehaviour
         switch (enterState)
         {
             case GameState.Init:
-                InitializeGameData();
+                if (_gameDataManager != null)
+                {
+                    _gameDataManager.LoadAllData();
+                }
+                if (_uiManager != null)
+                {
+                    _uiManager.OpenLoginPopupUI();
+                }
                 break;
 
             case GameState.IdleStage:
+                Debug.Log("[GameManager] 방치 모드 시작");
                 break;
 
             case GameState.BossChallenge:
@@ -133,69 +99,55 @@ public class GameManager :MonoBehaviour
         }
     }
 
-    private void InitializeGameData()
+    public async void OnLoginSuccessAndStartGame()
     {
-        Debug.Log("[GameManager] 1. 정적(Static) 데이터 로드 시작");
-        if (_gameDataManager != null)
-        {
-            _gameDataManager.LoadAllData();
-        }
-        else
-        {
-            Debug.LogError("[GameManager] GameDataManager 참조가 누락되었습니다!");
-            return;
-        }
+        Debug.Log("[GameManager] 로그인 성공 -> 서버/로컬 세이브 데이터 로드 시작");
 
-        Debug.Log("[GameManager] 2. 유저 세이브 데이터 로드 시작");
-        PlayerModel loadedPlayerModel = null;
-        var savedEquipments = new System.Collections.Generic.List<EquipmentModel>();
-        var savedRelics = new System.Collections.Generic.List<RelicModel>();
-
-        if (_saveServerManager != null)
+        if (SaveServer != null)
         {
-            // 세이브/서버 매니저를 통해 데이터를 읽어옴 (없을 경우 새로 생성)
-            // loadedPlayerModel = _saveServerManager.LoadPlayerData();
-            // savedEquipments = _saveServerManager.LoadEquipmentData();
-            // savedRelics = _saveServerManager.LoadRelicData();
-        }
-
-        if (loadedPlayerModel == null)
-        {
-            loadedPlayerModel = new PlayerModel
+            bool isLoaded = await SaveServer.LoadGameDataAsync();
+            if (!isLoaded)
             {
-                Level = 1,
-                CurrentExp = 0,
-                Gold = 0,
-                EnhanceCurrency = 0,
-                RebirthPoints = 0,
-                CurrentStage = 1,
-                MaxStage = 1
-            };
+                Debug.LogError("[GameManager] 세이브 데이터를 불러오지 못했습니다.");
+                return;
+            }
         }
 
-        Debug.Log("[GameManager] 3. 성장 매니저(GrowthManager) 초기화 및 스탯 계산");
+        PlayerModel playerModel = SaveServer != null ? SaveServer.GetPlayerModel() : null;
+        var savedEquipments = SaveServer != null ? SaveServer.GetEquipments() : null;
+        var savedRelics = SaveServer != null ? SaveServer.GetRelics() : null;
+
         if (_growthManager != null)
         {
-            _growthManager.Initialize(loadedPlayerModel, savedEquipments, savedRelics);
+            _growthManager.Initialize(playerModel, savedEquipments, savedRelics);
         }
 
-        Debug.Log("[GameManager] 4. 스테이지 매니저(StageManager) 초기화");
-        if (_stageManager != null)
+        if (_stageManager != null && playerModel != null)
         {
-            //_stageManager.Initialize(loadedPlayerModel.CurrentStage);
+            // _stageManager.Initialize(playerModel.CurrentStage);
         }
 
-        Debug.Log("[GameManager] 5. UI 및 오프라인 보상 처리");
-        if (_uiManager != null)
+        if (_offlineManager != null && playerModel != null && SaveServer != null)
         {
-            //_uiManager.Initialize();
+            long lastSaveTicks = SaveServer.GetLastSaveUnixMinutes();
+            // _offlineManager.CalculateOfflineReward(lastSaveTicks, playerModel.CurrentStage);
         }
 
-        // 오프라인 보상이 있다면 계산 후 팝업 띄우기
-        // _offlineManager?.CalculateOfflineReward();
-
-        Debug.Log("[GameManager] 모든 초기화 완료! 방치 스테이지 진입");
+        Debug.Log("[GameManager] 모든 초기화 완료 -> 방치 전투(IdleStage) 진입");
         ChangeState(GameState.IdleStage);
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveServer?.SaveGameData();
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            SaveServer?.SaveGameData();
+        }
     }
 
     public void OnClickBossChallenge()
@@ -214,7 +166,7 @@ public class GameManager :MonoBehaviour
 
     public void OnBossCleared()
     {
-        Debug.Log("s보스전 승리! 다음 스테이지로 이동합니다.");
+        Debug.Log("보스전 승리! 다음 스테이지로 이동합니다.");
         ChangeState(GameState.IdleStage);
     }
 }

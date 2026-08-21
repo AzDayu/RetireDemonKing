@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using UnityEngine;
 
-public class InventoryUI : UIBase
+/*public class InventoryUI : UIBase
 {
     [Header("Buttons")]
     [SerializeField] private UIButton Button_UseSelectItem;
@@ -152,4 +152,4 @@ public class InventoryUI : UIBase
             _invenVm = null;
         }
     }
-}
+}*/

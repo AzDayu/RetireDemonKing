@@ -15,6 +15,7 @@ public enum UIType
     StartTitleUI,
     LoadingUI,
     InventoryUI,
+    LoginPopupUI
 }
 
 public static class UIManagerExtension
@@ -23,7 +24,7 @@ public static class UIManagerExtension
     {
         string path = string.Empty;
 
-        path = $"UIPrefabs/{uiRootType}/{uiType}";
+        path = $"{uiRootType}/{uiType}";
         return path;
     }
 
@@ -47,5 +48,13 @@ public static class UIManagerExtension
         uiManager.CloseUI(UIRootType.VeryFrontUI, UIType.LoadingUI);
     }
 
-
+    public static void OpenLoginPopupUI(this UIManager uiManager)
+    {
+        uiManager.OpenUI(UIRootType.VeryFrontUI, UIType.LoginPopupUI);
+       
+    }
+    public static void CloseLoginPopupUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIRootType.VeryFrontUI, UIType.LoginPopupUI);
+    }
 }
