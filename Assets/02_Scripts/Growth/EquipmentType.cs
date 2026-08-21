@@ -1,13 +1,26 @@
 ﻿public enum EquipmentType
 {
     Weapon,
-    Helmet,
-    Armor,
+    Chest,
+    Pants,
     Gloves,
     Boots,
-    Ring,
+    Belt,
     Necklace,
-    Belt
+    Ring
+}
+
+public enum EquipmentSlotType
+{
+    Weapon,
+    Chest,
+    Pants,
+    Gloves,
+    Boots,
+    Belt,
+    Necklace,
+    Ring1,
+    Ring2
 }
 
 public enum EquipmentGrade
