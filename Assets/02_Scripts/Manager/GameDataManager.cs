@@ -7,6 +7,8 @@ public class GameDataManager : MonoBehaviour
 {
     private Dictionary<string, RelicItem> _relicDataDict = new Dictionary<string, RelicItem>();
     private Dictionary<string, EquipmentItem> _equipmentDataDict = new Dictionary<string, EquipmentItem>();
+    private Dictionary<string, MonsterData> _monsterDataDict = new Dictionary<string, MonsterData>();
+    private Dictionary<string, MonsterData> _monsterDataByPrefabDict = new Dictionary<string, MonsterData>();
 
     [Serializable]
     private class SerializationWrapper<T>
@@ -90,6 +92,15 @@ public class GameDataManager : MonoBehaviour
         return _equipmentDataDict.Values.ToList();
     }
 
+    public MonsterData GetMonsterData(string monsterId)
+    {
+        return _monsterDataDict.TryGetValue(monsterId, out var data) ? data : null;
+    }
+
+    public MonsterData GetMonsterDataByPrefabName(string prefabName)
+    {
+        return _monsterDataByPrefabDict.TryGetValue(prefabName, out var data) ? data : null;
+    }
 
     // 테스트용 임시 데이터
     [ContextMenu("Test Equipment Data")]

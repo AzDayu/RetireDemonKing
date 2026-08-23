@@ -66,6 +66,15 @@ public class CombatManager : MonoBehaviour
         SpawnMonsterForStage(stageIndex, true);
     }
 
+    public MonsterController GetActiveMonster()
+    {
+        foreach (var kv in _activeMonsters)
+        {
+            return kv.Key.GetComponent<MonsterController>();
+        }
+        return null;
+    }
+
     // 몬스터가 사망했을 때 호출
     public void OnMonsterKilled(GameObject monsterObj)
     {
@@ -128,6 +137,17 @@ public class CombatManager : MonoBehaviour
 
         _activeMonsters[monster] = key;
 
+        MonsterData data = GameManager.Instance.Data.GetMonsterDataByPrefabName(key);
+        if (data != null)
+        {
+            MonsterController controller = monster.GetComponent<MonsterController>();
+            controller?.Setup(data);
+        }
+        else
+        {
+            Debug.LogWarning($"[CombatManager] 몬스터 데이터를 찾을 수 없습니다: {key}");
+        }
+
         return monster;
     }
 
@@ -159,6 +179,4 @@ public class CombatManager : MonoBehaviour
             DespawnMonster(monster);
         }
     }
-
 }
-

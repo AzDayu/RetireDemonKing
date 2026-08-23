@@ -1,32 +1,51 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+
+public enum StageTheme
+{
+    Forest1, Forest2,
+    NightForest1, NightForest2,
+    Desert1, Desert2,
+    Ruin1, Passage1, Passage2,
+    Sea1, Sea2, Sea3,
+    Snow1, Snow2, Snow3, Snow4,
+    Castle1,
+}
 
 public static class StageManagerExtension
 {
-    public static readonly List<string> BgThemeKeys = new List<string>()
+    private static readonly Dictionary<StageTheme, string> ThemeAddressKeys = new()
     {
-        "forest1", "forest2",
-        "nightForest1", "nightForest2",
-        "desert1", "desert2",
-        "ruin1", "passage1", "passage2",
-        "sea1", "sea2", "sea3",
-        "snow1", "snow2", "snow3", "snow4",
-        "castle1",
+        { StageTheme.Forest1, "forest1" },
+        { StageTheme.Forest2, "forest2" },
+        { StageTheme.NightForest1, "nightForest1" },
+        { StageTheme.NightForest2, "nightForest2" },
+        { StageTheme.Desert1, "desert1" },
+        { StageTheme.Desert2, "desert2" },
+        { StageTheme.Ruin1, "ruin1" },
+        { StageTheme.Passage1, "passage1" },
+        { StageTheme.Passage2, "passage2" },
+        { StageTheme.Sea1, "sea1" },
+        { StageTheme.Sea2, "sea2" },
+        { StageTheme.Sea3, "sea3" },
+        { StageTheme.Snow1, "snow1" },
+        { StageTheme.Snow2, "snow2" },
+        { StageTheme.Snow3, "snow3" },
+        { StageTheme.Snow4, "snow4" },
+        { StageTheme.Castle1, "castle1" },
     };
 
-    
-    public static string GetThemeAddressKey(this StageManager stageManager, int stageIndex, int stagesPerChange = 10)
+    public static StageTheme GetTheme(this int stageIndex, int stagesPerChange)
     {
-        if (BgThemeKeys == null || BgThemeKeys.Count == 0)
-        {
-            return string.Empty;
-        }
-
         int themeIndex = (stageIndex - 1) / stagesPerChange;
-        
-        // 등록된 테마 개수를 초과하면 테마 유지 (루프 시 : % _bgThemeKeys.Count 사용)
-        themeIndex = Mathf.Clamp(themeIndex, 0, BgThemeKeys.Count - 1);
+        int maxIndex = Enum.GetValues(typeof(StageTheme)).Length - 1;
+        return (StageTheme)Mathf.Clamp(themeIndex, 0, maxIndex);
+    }
 
-        return BgThemeKeys[themeIndex];
+    public static string GetThemeAddressKey(this StageManager stageManager, int stageIndex, int stagesPerChange)
+    {
+        return ThemeAddressKeys.TryGetValue(stageIndex.GetTheme(stagesPerChange), out var key)
+            ? key : string.Empty;
     }
 }
