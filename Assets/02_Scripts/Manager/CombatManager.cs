@@ -15,10 +15,10 @@ public class CombatManager : MonoBehaviour
     [SerializeField] private MonsterSpawnTable _monsterSpawnTable;
 
     [Header("Wave & Target Settings")]
-    public const int WaveMaxCount = 10;
     private int _currentKillCount = 0;
     private int _currentWaveTotal = 0;
     private bool _isBossBattle = false;
+    public const int WaveMaxCount = 10;
 
     private Queue<string> _waveQueue = new Queue<string>();
     private Dictionary<string, Queue<GameObject>> _monsterPool = new Dictionary<string, Queue<GameObject>>();
@@ -85,7 +85,7 @@ public class CombatManager : MonoBehaviour
     public void OnMonsterKilled(GameObject monsterObj)
     {
         if (!DespawnMonster(monsterObj)) return;
-
+        Debug.Log($"[CombatManager] 몬스터 사망 처리됨: {monsterObj.name}");
         if (_isBossBattle)
         {
             _isTimerRunning = false;
@@ -98,6 +98,7 @@ public class CombatManager : MonoBehaviour
 
             if (_currentKillCount >= _currentWaveTotal)
             {
+                Debug.Log($"[CombatManager] 웨이브 전체 처치 완료 ({_currentKillCount}/{_currentWaveTotal}) -> 전투 클리어");
                 OnBattleCleared?.Invoke();
             }
             else
@@ -125,7 +126,7 @@ public class CombatManager : MonoBehaviour
 
         if (expanded.Count == 0)
         {
-            Debug.LogWarning($"[CombatManager] 테마 {theme}에 등록된 몬스터가 없습니다. 폴백값({WaveMaxCount})으로 처리합니다.");
+            Debug.LogWarning($"[CombatManager] 테마 {theme}에 등록된 몬스터가 없습니다. MonsterSpawnTable 설정을 확인하세요.");
             _currentWaveTotal = WaveMaxCount;
             return;
         }

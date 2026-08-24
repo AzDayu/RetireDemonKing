@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour
         float damage = _growthManager.GetStat(StatType.Attack);
         target.Model.ChangeCurHp(-damage);
 
+        // 임시 로그. 나중에 제거
+        Debug.Log($"[PlayerController] 공격! 데미지: {damage}, 남은 HP: {target.Model.CurHp}");
+
         if (target.Model.CurHp <= 0f)
         {
             _combatManager.OnMonsterKilled(target.gameObject);
