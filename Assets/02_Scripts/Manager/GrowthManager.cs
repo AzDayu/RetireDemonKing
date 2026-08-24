@@ -38,7 +38,7 @@ public class GrowthManager : MonoBehaviour
         _calculator.SetBaseStat(StatType.Attack, baseAtk);
         _calculator.SetBaseStat(StatType.MaxHp, baseHp);
         _calculator.SetBaseStat(StatType.Defense, baseDef);
-
+        _calculator.SetBaseStat(StatType.AttackSpeed, 1f);
         _calculator.SetBaseStat(StatType.CriticalDamage, 100f);
         _calculator.SetBaseStat(StatType.Accuracy, 100f);
         _calculator.SetBaseStat(StatType.MoveSpeed, 5f);

@@ -1,8 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public enum StageMode
 {
@@ -19,8 +17,7 @@ public class StageManager : MonoBehaviour
     [Header("Map Environment Settings")]
     [SerializeField] private int _stagesForChangeBGI = 10;
 
-    [SerializeField] private Image _bgImage;
-    [SerializeField] private SpriteRenderer _bgSpriteRenderer;
+    [SerializeField] private BGIScroller _bgScroller;
 
     public int CurrentStage => _currentStage;
     public bool AutoBossChallenge
@@ -30,8 +27,6 @@ public class StageManager : MonoBehaviour
     }
 
     public StageMode CurrentMode { get; private set; } = StageMode.NormalStage;
-
-    private Dictionary<int, Sprite> _spritePool = new Dictionary<int, Sprite>();
 
     private int _currentThemeIndex = -1;
 
@@ -121,12 +116,12 @@ public class StageManager : MonoBehaviour
 
     private async UniTaskVoid UpdateMainStageBGI(int stageIndex)
     {
-        int targetThemeIndex = ((stageIndex - 1) / _stagesForChangeBGI) + 1;
+        if (_bgScroller == null) return;
 
+        int targetThemeIndex = ((stageIndex - 1) / _stagesForChangeBGI);
         if (targetThemeIndex == _currentThemeIndex) return;
-        if (_bgImage == null && _bgSpriteRenderer == null) return;
 
-        string addressKey = $"Theme_{targetThemeIndex}";
+        string addressKey = this.GetThemeAddressKey(stageIndex, _stagesForChangeBGI);
         Sprite loadedSprite = await ResourceManager.Inst.LoadSprite(addressKey);
 
         if (loadedSprite == null)
@@ -137,45 +132,6 @@ public class StageManager : MonoBehaviour
 
         _currentThemeIndex = targetThemeIndex;
 
-        if (_bgImage != null)
-        {
-            _bgImage.sprite = loadedSprite;
-        }
-
-        if (_bgSpriteRenderer != null)
-        {
-            _bgSpriteRenderer.sprite = loadedSprite;
-        }
+        _bgScroller.SetBackgroundSprite(loadedSprite);
     }
-
-    //private void UpdateMainStageBGI(int stageIndex)
-    //{
-    //    int targetThemeIndex = ((stageIndex - 1) / _stagesForChangeBGI) + 1;
-
-    //    if (targetThemeIndex == _currentThemeIndex) return;
-    //    if (_bgImage == null && _bgSpriteRenderer == null) return;
-
-    //    if (!_spritePool.TryGetValue(targetThemeIndex, out Sprite loadedSprite))
-    //    {
-    //        loadedSprite = Resources.Load<Sprite>($"Sprites/Backgrounds/Theme_{targetThemeIndex}");
-    //        if (loadedSprite == null)
-    //        {
-    //            Debug.LogWarning($"[StageManager] 에셋을 찾을 수 없습니다: Theme_{targetThemeIndex}");
-    //            return;
-    //        }
-    //        _spritePool.Add(targetThemeIndex, loadedSprite);
-    //    }
-
-    //    _currentThemeIndex = targetThemeIndex;
-
-    //    if (_bgImage != null)
-    //    {
-    //        _bgImage.sprite = loadedSprite;
-    //    }
-    //    if (_bgSpriteRenderer != null)
-    //    {
-    //        _bgSpriteRenderer.sprite = loadedSprite;
-    //    }
-    //}
 }
-

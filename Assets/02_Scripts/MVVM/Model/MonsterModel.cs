@@ -109,14 +109,6 @@ public class MonsterModel
     public void ChangeCurHp(float amount)
     {
         CurHp += amount;
-
-        if (CurHp > MaxHp)
-        {
-            CurHp = MaxHp;
-        }
-        if (CurHp < 0f)
-        {
-            CurHp = 0f;
-        }
     }
+
 }

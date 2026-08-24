@@ -12,12 +12,13 @@ public class MonsterData
 {
     public string MonsterId;
     public string MonsterName;
+    public string PrefabName;
     public float MaxHp;
-    public float AttackPower;
-    public float AttackSpeed;
     public int DropCoins;
     public float DropExp;
     public List<DropItemData> DropTable;
+    public float AttackPower;
+    public float AttackSpeed;
 }
 
 [Serializable]
@@ -37,33 +38,3 @@ public class DropItemData
     }
 }
 
-[Serializable]
-public class InventoryItemData
-{
-    public long SlotIndex;
-    public string ItemId;
-    public int Count;
-
-    public InventoryItemData(long slotIndex, string itemId, int count)
-    {
-        SlotIndex = slotIndex;
-        ItemId = itemId;
-        Count = count;
-    }
-}
-
-[Serializable]
-public class InventoryData
-{
-    public int MaxSlotCount;
-    public int MaxItemCount;
-
-    public List<InventoryItemData> InventoryItems;
-
-    public InventoryData()
-    {
-        MaxSlotCount = 30; // 임의
-        MaxItemCount = 50;
-    InventoryItems = new List<InventoryItemData>();
-    }
-}
