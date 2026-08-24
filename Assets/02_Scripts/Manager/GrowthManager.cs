@@ -7,7 +7,14 @@ public class GrowthManager : MonoBehaviour
     [SerializeField] private EquipmentManager _equipmentManager;
     [SerializeField] private RelicManager _relicManager;
 
-    private PlayerModel _playerModel;
+    private const long InitialEnhanceCurrency = 20000;
+
+    private PlayerModel _playerModel = new PlayerModel
+    {
+        EnhanceCurrency = InitialEnhanceCurrency
+    };
+
+    public PlayerModel PlayerModel => _playerModel;
 
     private StatCalculator _calculator = new StatCalculator();
     private Dictionary<StatType, float> _cachedFinalStats = new Dictionary<StatType, float>();
@@ -17,7 +24,7 @@ public class GrowthManager : MonoBehaviour
 
     public void Initialize(PlayerModel playerModel, List<EquipmentModel> savedEquipment = null, List<RelicModel> savedRelics = null)
     {
-        _playerModel = playerModel ?? new PlayerModel();
+        _playerModel = playerModel ?? _playerModel;
 
         ApplyLevelBaseStats();
 

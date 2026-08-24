@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class EquipmentEnhancePanelUI : MonoBehaviour
 {
-    private const long InitialEnhanceCurrency = 1000;
     private const long BasePromotionCost = 50;
 
     [Header("장비 현재 등급 정보")]
@@ -57,6 +56,8 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
     {
         yield return new WaitUntil(() =>
             GameManager.Instance != null &&
+            GameManager.Instance.Growth != null &&
+            GameManager.Instance.Growth.PlayerModel != null &&
             GameManager.Instance.Data != null &&
             GameManager.Instance.Data.GetEquipmentData(
                 "EQ_WEAPON_SWORD_Common"
@@ -104,6 +105,7 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
 
     private void InitializeEquipmentData()
     {
+        _playerModel = GameManager.Instance.Growth.PlayerModel;
         // 이미 9개 장비가 준비됐다면 강화 상태 유지
         if (_equipmentDataMap.Count == 9)
         {
@@ -112,14 +114,6 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
 
         _equipmentDataMap.Clear();
         _equipmentModelMap.Clear();
-
-        if (_playerModel == null)
-        {
-            _playerModel = new PlayerModel
-            {
-                EnhanceCurrency = InitialEnhanceCurrency
-            };
-        }
 
         RegisterEquipment(
             EquipmentSlotType.Weapon,

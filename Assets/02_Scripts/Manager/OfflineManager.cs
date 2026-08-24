@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 public enum OfflineManagerState
@@ -60,49 +60,54 @@ public class OfflineManager : MonoBehaviour
             maximumOfflineMinutes);
     }
 
-    [ContextMenu("Test Offline Reward")]
-    private void TestOfflineReward()
+    public void ProcessOfflineReward(long lastSaveUnixMinutes, int currentStage)
     {
-        OfflineRewardSnapshot snapshot =
-            new OfflineRewardSnapshot
-            {
-                LastActiveUnixTime = 1000,
-                GoldPerMinute = 100,
-                ExperiencePerMinute = 50
-            };
+        long currentUnixMinutes = DateTimeOffset.UtcNow.ToUnixTimeSeconds() / 60;
 
-        long currentUnixTime =
-            snapshot.LastActiveUnixTime +
-            (24 * 60 * 60);
+        double goldPerMin = currentStage * 60.0;
+        double expPerMin = currentStage * 30.0;
 
-        OfflineRewardResult result =
-            CalculateReward(
-                currentUnixTime,
-                snapshot);
+        var snapshot = new OfflineRewardSnapshot
+        {
+            LastActiveUnixTime = lastSaveUnixMinutes,
+            GoldPerMinute = goldPerMin,
+            ExperiencePerMinute = expPerMin
+        };
 
-        Debug.Log(
-            $"시간: {result.ElapsedMinutes}분, " +
-            $"골드: {result.Gold}, " +
-            $"경험치: {result.Experience}, " +
-            $"제한 적용: {result.WasTimeCapped}");
+        PendingReward = CalculateReward(currentUnixMinutes, snapshot);
 
-        Debug.Assert(
-            result.ElapsedMinutes == 1260,
-            "최대 오프라인 시간 계산 실패");
-
-        Debug.Assert(
-            result.Gold == 126000,
-            "골드 계산 실패");
-
-        Debug.Assert(
-            result.Experience == 63000,
-            "경험치 계산 실패");
-
-        Debug.Assert(
-            result.WasTimeCapped,
-            "최대 시간 제한 판정 실패");
+        if (PendingReward != null && PendingReward.ElapsedMinutes >= _minimumOfflineMinutes)
+        {
+            _currentState = OfflineManagerState.RewardReady;
+            Debug.Log($"[OfflineManager] 오프라인 보상 계산 완료 - 방치: {PendingReward.ElapsedMinutes}분 (Gold: {PendingReward.Gold}, Exp: {PendingReward.Experience})");
+            RewardPrepared?.Invoke(PendingReward);
+        }
+        else
+        {
+            _currentState = OfflineManagerState.Ready;
+            Debug.Log("[OfflineManager] 오프라인 시간이 최소 기준치(1분) 미만입니다.");
+        }
     }
 
+    public void ClaimPendingReward(PlayerModel playerModel)
+    {
+        if (!HasPendingReward || playerModel == null) return;
+
+        playerModel.Gold += PendingReward.Gold;
+
+        if (GameManager.Instance != null && GameManager.Instance.Growth != null)
+        {
+            GameManager.Instance.Growth.AddExp(PendingReward.Experience);
+        }
+
+        Debug.Log($"[OfflineManager] 오프라인 보상 지급 완료 - Gold: {PendingReward.Gold}, Exp: {PendingReward.Experience}");
+
+        PendingReward = null;
+        _currentState = OfflineManagerState.Ready;
+        RewardClaimed?.Invoke();
+
+        GameManager.Instance.SaveServer?.SaveGameData();
+    }
 }
 
 public static class OfflineRewardCalculator
