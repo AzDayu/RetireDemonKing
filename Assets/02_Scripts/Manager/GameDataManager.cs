@@ -8,7 +8,7 @@ public class GameDataManager : MonoBehaviour
     private Dictionary<string, RelicItem> _relicDataDict = new Dictionary<string, RelicItem>();
     private Dictionary<string, EquipmentItem> _equipmentDataDict = new Dictionary<string, EquipmentItem>();
     private Dictionary<string, MonsterData> _monsterDataDict = new Dictionary<string, MonsterData>();
-    private Dictionary<string, MonsterData> _monsterDataByPrefabDict = new Dictionary<string, MonsterData>();
+   
 
     [Serializable]
     private class SerializationWrapper<T>
@@ -20,6 +20,7 @@ public class GameDataManager : MonoBehaviour
     {
         _relicDataDict = LoadData<RelicItem>("Relic", data => data.Id);
         _equipmentDataDict = LoadData<EquipmentItem>("Equipment", data => data.Id);
+        _monsterDataDict = LoadData<MonsterData>("Monster", data => data.MonsterId);
 
         Debug.Log($"[GameDataManager] 데이터 로드 완료 - 유물: {_relicDataDict.Count}개, 장비: {_equipmentDataDict.Count}개");
     }
@@ -95,11 +96,6 @@ public class GameDataManager : MonoBehaviour
     public MonsterData GetMonsterData(string monsterId)
     {
         return _monsterDataDict.TryGetValue(monsterId, out var data) ? data : null;
-    }
-
-    public MonsterData GetMonsterDataByPrefabName(string prefabName)
-    {
-        return _monsterDataByPrefabDict.TryGetValue(prefabName, out var data) ? data : null;
     }
 
     // 테스트용 임시 데이터

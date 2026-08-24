@@ -45,7 +45,7 @@ public static class StageManagerExtension
 
     public static string GetThemeAddressKey(this StageManager stageManager, int stageIndex, int stagesPerChange)
     {
-        return ThemeAddressKeys.TryGetValue(stageIndex.GetTheme(stagesPerChange), out var key)
-            ? key : string.Empty;
+        StageTheme theme = stageIndex.GetTheme(stagesPerChange);
+        return ThemeAddressKeys.TryGetValue(theme, out var key) ? key : string.Empty;
     }
 }
