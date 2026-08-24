@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,15 +12,15 @@ public class CombatManager : MonoBehaviour
 
     [Header("Monster Spawn Settings")]
     [SerializeField] private Transform _monsterSpawnPoint;
-    [SerializeField] private List<GameObject> _normalMonsterPrefabs;
-    [SerializeField] private List<GameObject> _bossMonsterPrefabs;
+    [SerializeField] private MonsterSpawnTable _monsterSpawnTable;
 
     [Header("Wave & Target Settings")]
     public const int WaveMaxCount = 10;
     private int _currentKillCount = 0;
+    private int _currentWaveTotal = 0;
     private bool _isBossBattle = false;
-    private int _activeStageIndex = 1;
 
+    private Queue<string> _waveQueue = new Queue<string>();
     private Dictionary<string, Queue<GameObject>> _monsterPool = new Dictionary<string, Queue<GameObject>>();
     private Dictionary<GameObject, string> _activeMonsters = new Dictionary<GameObject, string>();
 
@@ -40,30 +41,35 @@ public class CombatManager : MonoBehaviour
             {
                 _isTimerRunning = false;
                 DespawnAllActiveMonsters();
-                OnBattleFailed?.Invoke(); // 보스전 제한시간 초과 패배 알림
+                OnBattleFailed?.Invoke();
             }
         }
     }
 
     public void StartNormalBattle(int stageIndex)
     {
-        _activeStageIndex = stageIndex;
         _isBossBattle = false;
         _isTimerRunning = false;
         _currentKillCount = 0;
 
-        OnWaveUpdated?.Invoke(_currentKillCount, WaveMaxCount);
-        SpawnMonsterForStage(stageIndex, false);
+        StageTheme theme = stageIndex.GetTheme(GameManager.Instance.Stage.StagesForChange);
+        BuildWaveQueue(theme);
+
+        OnWaveUpdated?.Invoke(_currentKillCount, _currentWaveTotal);
+        SpawnNextWaveMonster();
     }
 
     public void StartBossBattle(int stageIndex)
     {
-        _activeStageIndex = stageIndex;
         _isBossBattle = true;
         _currentBossTimer = _maxBossTime;
         _isTimerRunning = true;
 
-        SpawnMonsterForStage(stageIndex, true);
+        StageTheme theme = stageIndex.GetTheme(GameManager.Instance.Stage.StagesForChange);
+        string bossId = _monsterSpawnTable.GetBossMonsterId(theme);
+        if (bossId == null) return;
+
+        SpawnMonsterById(bossId);
     }
 
     public MonsterController GetActiveMonster()
@@ -88,43 +94,91 @@ public class CombatManager : MonoBehaviour
         else
         {
             _currentKillCount++;
-            OnWaveUpdated?.Invoke(_currentKillCount, WaveMaxCount);
+            OnWaveUpdated?.Invoke(_currentKillCount, _currentWaveTotal);
 
-            if (_currentKillCount >= WaveMaxCount)
+            if (_currentKillCount >= _currentWaveTotal)
             {
                 OnBattleCleared?.Invoke();
             }
             else
             {
-                SpawnMonsterForStage(_activeStageIndex, false);
+                SpawnNextWaveMonster();
             }
         }
     }
 
-    private void SpawnMonsterForStage(int stageIndex, bool isBoss)
+    // 테마의 몬스터 그룹(수량 포함)을 펼쳐서 셔플된 큐로 구성
+    private void BuildWaveQueue(StageTheme theme)
     {
-        List<GameObject> prefabs = isBoss ? _bossMonsterPrefabs : _normalMonsterPrefabs;
-        if (prefabs == null || prefabs.Count == 0) return;
+        _waveQueue.Clear();
 
-        int prefabIndex = (stageIndex - 1) % prefabs.Count;
-        GetMonsterFromPool(prefabs[prefabIndex]);
+        List<MonsterSpawnEntry> entries = _monsterSpawnTable.GetMonsters(theme);
+        List<string> expanded = new List<string>();
+
+        foreach (var entry in entries)
+        {
+            for (int i = 0; i < entry.count; i++)
+            {
+                expanded.Add(entry.monsterId);
+            }
+        }
+
+        if (expanded.Count == 0)
+        {
+            Debug.LogWarning($"[CombatManager] 테마 {theme}에 등록된 몬스터가 없습니다. 폴백값({WaveMaxCount})으로 처리합니다.");
+            _currentWaveTotal = WaveMaxCount;
+            return;
+        }
+
+        // 셔플 (Fisher-Yates)
+        for (int i = expanded.Count - 1; i > 0; i--)
+        {
+            int j = UnityEngine.Random.Range(0, i + 1);
+            (expanded[i], expanded[j]) = (expanded[j], expanded[i]);
+        }
+
+        foreach (var id in expanded)
+        {
+            _waveQueue.Enqueue(id);
+        }
+
+        _currentWaveTotal = expanded.Count;
+    }
+
+    private void SpawnNextWaveMonster()
+    {
+        if (_waveQueue.Count == 0)
+        {
+            Debug.LogWarning("[CombatManager] 웨이브 큐가 비어있는데 스폰이 호출되었습니다.");
+            return;
+        }
+        string monsterId = _waveQueue.Dequeue();
+        SpawnMonsterById(monsterId);
+    }
+
+    private async void SpawnMonsterById(string monsterId)
+    {
+        MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
+        if (data == null) return;
+
+        GameObject prefab = await ResourceManager.Instance.LoadPrefab(data.PrefabName);
+        if (prefab == null) return;
+
+        SpawnMonsterFromPool(prefab, data, monsterId);
     }
 
     // 몬스터 풀
-    private GameObject GetMonsterFromPool(GameObject prefab)
+    private void SpawnMonsterFromPool(GameObject prefab, MonsterData data, string monsterId)
     {
-        string key = prefab.name;
-
-        if (!_monsterPool.ContainsKey(key))
+        if (!_monsterPool.ContainsKey(monsterId))
         {
-            _monsterPool[key] = new Queue<GameObject>();
+            _monsterPool[monsterId] = new Queue<GameObject>();
         }
 
         GameObject monster;
-
-        if (_monsterPool[key].Count > 0)
+        if (_monsterPool[monsterId].Count > 0)
         {
-            monster = _monsterPool[key].Dequeue();
+            monster = _monsterPool[monsterId].Dequeue();
         }
         else
         {
@@ -135,20 +189,10 @@ public class CombatManager : MonoBehaviour
         monster.transform.rotation = Quaternion.identity;
         monster.SetActive(true);
 
-        _activeMonsters[monster] = key;
+        _activeMonsters[monster] = monsterId;
 
-        MonsterData data = GameManager.Instance.Data.GetMonsterDataByPrefabName(key);
-        if (data != null)
-        {
-            MonsterController controller = monster.GetComponent<MonsterController>();
-            controller?.Setup(data);
-        }
-        else
-        {
-            Debug.LogWarning($"[CombatManager] 몬스터 데이터를 찾을 수 없습니다: {key}");
-        }
-
-        return monster;
+        MonsterController controller = monster.GetComponent<MonsterController>();
+        controller?.Setup(data);
     }
 
     public bool DespawnMonster(GameObject monsterObj)

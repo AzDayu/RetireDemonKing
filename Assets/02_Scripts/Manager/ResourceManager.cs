@@ -6,19 +6,20 @@ using Cysharp.Threading.Tasks;
 
 public class ResourceManager : MonoBehaviour
 {
-    public static ResourceManager Inst { get; private set; }
+    public static ResourceManager Instance { get; private set; }
 
     private readonly Dictionary<string, AsyncOperationHandle<Sprite>> _handles = new();
+    private readonly Dictionary<string, AsyncOperationHandle<GameObject>> _prefabHandles = new();
 
     private void Awake()
     {
-        if (Inst != null && Inst != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
 
-        Inst = this;
+        Instance = this;
         DontDestroyOnLoad(gameObject);
     }
 
@@ -52,6 +53,32 @@ public class ResourceManager : MonoBehaviour
         }
     }
 
+    // 프리랩 로드
+    public async UniTask<GameObject> LoadPrefab(string address)
+    {
+        if (_prefabHandles.TryGetValue(address, out AsyncOperationHandle<GameObject> cachedHandle) && cachedHandle.IsValid())
+        {
+            return cachedHandle.Result;
+        }
+
+        AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(address);
+        try
+        {
+            GameObject prefab = await handle.ToUniTask();
+            _prefabHandles[address] = handle;
+            return prefab;
+        }
+        catch (System.Exception)
+        {
+            Debug.LogError($"[ResourceManager] 프리팹 로드 실패: {address}");
+            if (handle.IsValid())
+            {
+                Addressables.Release(handle);
+            }
+            return null;
+        }
+    }
+
     // 메모리 해제
     public void Release(string address)
     {
@@ -62,6 +89,17 @@ public class ResourceManager : MonoBehaviour
                 Addressables.Release(handle);
             }
             _handles.Remove(address);
+        }
+    }
+    public void ReleasePrefab(string address)
+    {
+        if (_prefabHandles.TryGetValue(address, out AsyncOperationHandle<GameObject> handle))
+        {
+            if (handle.IsValid())
+            {
+                Addressables.Release(handle);
+            }
+            _prefabHandles.Remove(address);
         }
     }
 }

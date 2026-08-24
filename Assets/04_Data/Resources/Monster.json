@@ -1,0 +1,12 @@
+﻿[
+  {
+    "MonsterId": "Monster_Hyena",
+    "MonsterName": "HyenaWarrior",
+    "PrefabName": "Mob_Hyena",
+    "MaxHp": 10,
+    "DropCoins": 50,
+    "DropExp": 50,
+    "AttackPower": 0,
+    "AttackSpeed": 0
+  }
+]

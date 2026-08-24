@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 public enum GameState
 {
@@ -13,6 +14,8 @@ public enum GameState
 public class GameManager :MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+
+    public event Action OnGameDataReady;
 
     [Header("=== 현재 게임 상태 ===")]
     [SerializeField] private GameState _currentState = GameState.Init;
@@ -139,6 +142,7 @@ public class GameManager :MonoBehaviour
         if (_gameDataManager != null)
         {
             _gameDataManager.LoadAllData();
+            OnGameDataReady?.Invoke();  // 데이터 로드 마침 알림
         }
         else
         {

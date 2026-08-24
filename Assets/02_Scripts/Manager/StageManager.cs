@@ -15,11 +15,13 @@ public class StageManager : MonoBehaviour
     [SerializeField] private bool _autoBossChallenge = true;
 
     [Header("Map Environment Settings")]
-    [SerializeField] private int _stagesForChangeBGI = 10;
+    [SerializeField] private int _stagesForChange = 10;
 
     [SerializeField] private BGIScroller _bgScroller;
 
     public int CurrentStage => _currentStage;
+    public int StagesForChange => _stagesForChange;
+
     public bool AutoBossChallenge
     {
         get => _autoBossChallenge;
@@ -35,12 +37,17 @@ public class StageManager : MonoBehaviour
 
     private void Start()
     {
-        if (GameManager.Instance != null && GameManager.Instance.Combat != null)
+        if (GameManager.Instance != null)
         {
             GameManager.Instance.Combat.OnBattleCleared += HandleBattleCleared;
             GameManager.Instance.Combat.OnBattleFailed += HandleBattleFailed;
+            GameManager.Instance.OnGameDataReady += HandleGameDataReady;
         }
+    }
 
+    private void HandleGameDataReady()
+    {
+        GameManager.Instance.OnGameDataReady -= HandleGameDataReady;
         InitStage(_currentStage);
     }
 
@@ -50,6 +57,7 @@ public class StageManager : MonoBehaviour
         {
             GameManager.Instance.Combat.OnBattleCleared -= HandleBattleCleared;
             GameManager.Instance.Combat.OnBattleFailed -= HandleBattleFailed;
+            GameManager.Instance.OnGameDataReady -= HandleGameDataReady;
         }
     }
 
@@ -118,11 +126,11 @@ public class StageManager : MonoBehaviour
     {
         if (_bgScroller == null) return;
 
-        int targetThemeIndex = ((stageIndex - 1) / _stagesForChangeBGI);
+        int targetThemeIndex = ((stageIndex - 1) / _stagesForChange);
         if (targetThemeIndex == _currentThemeIndex) return;
 
-        string addressKey = this.GetThemeAddressKey(stageIndex, _stagesForChangeBGI);
-        Sprite loadedSprite = await ResourceManager.Inst.LoadSprite(addressKey);
+        string addressKey = this.GetThemeAddressKey(stageIndex, _stagesForChange);
+        Sprite loadedSprite = await ResourceManager.Instance.LoadSprite(addressKey);
 
         if (loadedSprite == null)
         {
