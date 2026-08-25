@@ -32,6 +32,6 @@ public class UserInformationUI : MonoBehaviour
             enhanceCurrency;
 
         Text_Gold.text =
-            enhanceCurrency.ToString("X");
+            enhanceCurrency.ToString("N0");
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 public class GrowthPopupUI : UIBase
 {
     [SerializeField] private UIButton Button_Close;
-    [SerializeField] private GameObject Popup_Growth;
+    [SerializeField] private GameObject Popup_root;
 
     private void OnEnable()
     {
@@ -23,9 +23,9 @@ public class GrowthPopupUI : UIBase
 
     private void OnClick_Close()
     {
-        if (Popup_Growth != null)
+        if (Popup_root != null)
         {
-            Popup_Growth.SetActive(false);
+            Popup_root.SetActive(false);
         }
     }
 }
