@@ -10,6 +10,13 @@ public enum StageMode
 
 public class StageManager : MonoBehaviour
 {
+    // 세이브 매니저 미구현, 테스트용
+    [ContextMenu("테스트: 스테이지 강제 시작")]
+    public void DebugForceInitStage()
+    {
+        InitStage(_currentStage);
+    }
+
     [Header("Stage Progress Settings")]
     [SerializeField] private int _currentStage = 1;
     [SerializeField] private bool _autoBossChallenge = true;

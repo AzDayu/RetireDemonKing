@@ -160,10 +160,18 @@ public class CombatManager : MonoBehaviour
     private async void SpawnMonsterById(string monsterId)
     {
         MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
-        if (data == null) return;
+        if (data == null)
+        {
+            Debug.LogWarning($"[CombatManager] MonsterData를 찾을 수 없음: {monsterId}");
+            return;
+        }
 
         GameObject prefab = await GameManager.Instance.Resource.LoadPrefab(data.PrefabName);
-        if (prefab == null) return;
+        if (prefab == null)
+        {
+            Debug.LogWarning($"[CombatManager] 프리팹 로드 실패: {data.PrefabName}");
+            return;
+        }
 
         SpawnMonsterFromPool(prefab, data, monsterId);
     }
