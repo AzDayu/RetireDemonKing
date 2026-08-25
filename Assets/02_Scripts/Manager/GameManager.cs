@@ -1,5 +1,4 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum GameState
 {
@@ -82,7 +81,6 @@ public class GameManager : MonoBehaviour
                 if (_gameDataManager != null)
                 {
                     _gameDataManager.LoadAllData();
-                    OnLoginSuccessAndStartGame(); // 테스트용. 로딩ui 생기면 제거
                 }
                 if (_uiManager != null)
                 {
