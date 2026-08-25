@@ -6,22 +6,8 @@ using Cysharp.Threading.Tasks;
 
 public class ResourceManager : MonoBehaviour
 {
-    public static ResourceManager Instance { get; private set; }
-
     private readonly Dictionary<string, AsyncOperationHandle<Sprite>> _handles = new();
     private readonly Dictionary<string, AsyncOperationHandle<GameObject>> _prefabHandles = new();
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
 
     // 스프라이트 로드
     public async UniTask<Sprite> LoadSprite(string address)

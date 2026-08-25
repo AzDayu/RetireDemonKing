@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 
 public enum GameState
 {
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private EventManager _eventManager;
     [SerializeField] private UIManager _uiManager;
     [SerializeField] private GameDataManager _gameDataManager;
+    [SerializeField] private ResourceManager _resourceManager;
 
     public StageManager Stage => _stageManager;
     public CombatManager Combat => _combatManager;
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviour
     public SaveServerManager SaveServer => _saveServerManager;
     public UIManager UI => _uiManager;
     public GameDataManager Data => _gameDataManager;
+    public ResourceManager Resource => _resourceManager;
 
     private void Awake()
     {
@@ -79,6 +82,7 @@ public class GameManager : MonoBehaviour
                 if (_gameDataManager != null)
                 {
                     _gameDataManager.LoadAllData();
+                    OnLoginSuccessAndStartGame(); // 테스트용. 로딩ui 생기면 제거
                 }
                 if (_uiManager != null)
                 {
@@ -124,7 +128,7 @@ public class GameManager : MonoBehaviour
 
         if (_stageManager != null && playerModel != null)
         {
-            // _stageManager.Initialize(playerModel.CurrentStage);
+            _stageManager.Initialize(playerModel.CurrentStage);
         }
 
         if (_offlineManager != null && playerModel != null && SaveServer != null)

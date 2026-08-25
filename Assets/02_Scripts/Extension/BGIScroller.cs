@@ -27,10 +27,10 @@ public class BGIScroller : MonoBehaviour
         _bg1.anchoredPosition -= new Vector2(moveDelta, 0f);
         _bg2.anchoredPosition -= new Vector2(moveDelta, 0f);
 
-        if (_bg1.anchoredPosition.x >= _imageWidth)
+        if (_bg1.anchoredPosition.x <= -_imageWidth)
             _bg1.anchoredPosition = new Vector2(_bg2.anchoredPosition.x + _imageWidth, _bg1.anchoredPosition.y);
 
-        if (_bg2.anchoredPosition.x >= _imageWidth)
+        if (_bg2.anchoredPosition.x <= -_imageWidth)
             _bg2.anchoredPosition = new Vector2(_bg1.anchoredPosition.x + _imageWidth, _bg2.anchoredPosition.y);
     }
 

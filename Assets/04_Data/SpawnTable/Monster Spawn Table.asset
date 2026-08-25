@@ -16,10 +16,55 @@ MonoBehaviour:
   - theme: 0
     monsters:
     - monsterId: Monster_Hyena
-      count: 10
+      count: 1
     bossMonsterId: Monster_Hyena
   - theme: 1
     monsters:
     - monsterId: Monster_Hyena
-      count: 10
+      count: 1
+    bossMonsterId: Monster_Hyena
+  - theme: 1
+    monsters:
+    - monsterId: Monster_Hyena
+      count: 1
+    bossMonsterId: Monster_Hyena
+  - theme: 1
+    monsters:
+    - monsterId: Monster_Hyena
+      count: 1
+    bossMonsterId: Monster_Hyena
+  - theme: 1
+    monsters:
+    - monsterId: Monster_Hyena
+      count: 1
+    bossMonsterId: Monster_Hyena
+  - theme: 1
+    monsters:
+    - monsterId: Monster_Hyena
+      count: 1
+    bossMonsterId: Monster_Hyena
+  - theme: 1
+    monsters:
+    - monsterId: Monster_Hyena
+      count: 1
+    bossMonsterId: Monster_Hyena
+  - theme: 1
+    monsters:
+    - monsterId: Monster_Hyena
+      count: 1
+    bossMonsterId: Monster_Hyena
+  - theme: 1
+    monsters:
+    - monsterId: Monster_Hyena
+      count: 1
+    bossMonsterId: Monster_Hyena
+  - theme: 1
+    monsters:
+    - monsterId: Monster_Hyena
+      count: 1
+    bossMonsterId: Monster_Hyena
+  - theme: 1
+    monsters:
+    - monsterId: Monster_Hyena
+      count: 1
     bossMonsterId: Monster_Hyena

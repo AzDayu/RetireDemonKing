@@ -162,7 +162,7 @@ public class CombatManager : MonoBehaviour
         MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
         if (data == null) return;
 
-        GameObject prefab = await ResourceManager.Instance.LoadPrefab(data.PrefabName);
+        GameObject prefab = await GameManager.Instance.Resource.LoadPrefab(data.PrefabName);
         if (prefab == null) return;
 
         SpawnMonsterFromPool(prefab, data, monsterId);

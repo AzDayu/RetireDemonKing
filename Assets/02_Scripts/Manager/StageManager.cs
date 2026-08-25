@@ -41,13 +41,12 @@ public class StageManager : MonoBehaviour
         {
             GameManager.Instance.Combat.OnBattleCleared += HandleBattleCleared;
             GameManager.Instance.Combat.OnBattleFailed += HandleBattleFailed;
-            GameManager.Instance.OnGameDataReady += HandleGameDataReady;
         }
     }
 
-    private void HandleGameDataReady()
+    public void Initialize(int CurrentStage)
     {
-        GameManager.Instance.OnGameDataReady -= HandleGameDataReady;
+        //_currentStage = CurrentStage;
         InitStage(_currentStage);
     }
 
@@ -57,7 +56,6 @@ public class StageManager : MonoBehaviour
         {
             GameManager.Instance.Combat.OnBattleCleared -= HandleBattleCleared;
             GameManager.Instance.Combat.OnBattleFailed -= HandleBattleFailed;
-            GameManager.Instance.OnGameDataReady -= HandleGameDataReady;
         }
     }
 
@@ -130,7 +128,7 @@ public class StageManager : MonoBehaviour
         if (targetThemeIndex == _currentThemeIndex) return;
 
         string addressKey = this.GetThemeAddressKey(stageIndex, _stagesForChange);
-        Sprite loadedSprite = await ResourceManager.Instance.LoadSprite(addressKey);
+        Sprite loadedSprite = await GameManager.Instance.Resource.LoadSprite(addressKey);
 
         if (loadedSprite == null)
         {
