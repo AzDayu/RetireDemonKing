@@ -31,13 +31,14 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
     [SerializeField] private UIButton Button_Ring1;
     [SerializeField] private UIButton Button_Ring2;
 
+    // 장비 원본 데이터 연결
     private readonly Dictionary<EquipmentSlotType, EquipmentItem>
-        _equipmentDataMap =
-            new Dictionary<EquipmentSlotType, EquipmentItem>();
+        _equipmentDataMap = new Dictionary<EquipmentSlotType, EquipmentItem>();
 
+
+    // 장비 상태 연결
     private readonly Dictionary<EquipmentSlotType, EquipmentModel>
-        _equipmentModelMap =
-            new Dictionary<EquipmentSlotType, EquipmentModel>();
+        _equipmentModelMap = new Dictionary<EquipmentSlotType, EquipmentModel>();
 
     private EquipmentSlotType _selectedSlotType;
     private EquipmentItem _selectedEquipmentData;
