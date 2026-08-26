@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class GrowthManager : MonoBehaviour
 {
+    // 세이브 매니저 미구현, 테스트용
+    [ContextMenu("테스트: 스탯 강제 초기화")]
+    public void DebugForceInitialize()
+    {
+        Initialize(null);
+    }
     [SerializeField] private EquipmentManager _equipmentManager;
     [SerializeField] private RelicManager _relicManager;
 

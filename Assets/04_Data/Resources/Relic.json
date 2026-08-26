@@ -529,7 +529,7 @@
   },
   {
     "Id": "RELIC_EQUIPMENTDROPRATE_01",
-    "Name": "마왕의 스카우트 제안서",
+    "Name": "마왕의 스카우트 증표",
     "TargetStatType": "EquipmentDropRate",
     "BasePercentBonus": 8,
     "PercentBonusPerLevel": 1.6,
@@ -540,36 +540,36 @@
   },
   {
     "Id": "RELIC_EQUIPMENTDROPRATE_02",
-    "Name": "몬스터 협조 공문",
+    "Name": "까마귀 깃털",
     "TargetStatType": "EquipmentDropRate",
     "BasePercentBonus": 8,
     "PercentBonusPerLevel": 1.5,
     "Grade": "Rare",
     "DropWeight": 28,
     "IconId": null,
-    "Description": "몬스터들에게 장비를 하나씩 협조받기 위한 공문입니다."
+    "Description": "장비의 기운을 감지해 찾아내는 직관적인 탐색 도구입니다. "
   },
   {
     "Id": "RELIC_EQUIPMENTDROPRATE_03",
-    "Name": "장비 반납 안내문",
+    "Name": "보물 탐지 나침반",
     "TargetStatType": "EquipmentDropRate",
     "BasePercentBonus": 15,
     "PercentBonusPerLevel": 3.12,
     "Grade": "Epic",
     "DropWeight": 12,
     "IconId": null,
-    "Description": "몬스터가 쓰던 장비를 반납하라는 마왕의 안내문입니다."
+    "Description": "장비의 기운을 감지해 찾아내는 직관적인 탐색 도구입니다. "
   },
   {
     "Id": "RELIC_EQUIPMENTDROPRATE_04",
-    "Name": "수상한 계약서",
+    "Name": "마왕의 명패",
     "TargetStatType": "EquipmentDropRate",
     "BasePercentBonus": 13.95,
     "PercentBonusPerLevel": 3.1,
     "Grade": "Legendary",
     "DropWeight": 5,
     "IconId": null,
-    "Description": "읽지도 않고 서명하면 장비를 내놓게 된다는 수상한 계약서입니다."
+    "Description": "마왕의 무장해제 명령에 따라 몬스터들이 장비를 벗습니다."
   },
   {
     "Id": "RELIC_EXPGAINBONUS_01",
@@ -580,51 +580,51 @@
     "Grade": "Common",
     "DropWeight": 55,
     "IconId": null,
-    "Description": "레온의 멍청함도 극복시키는 마왕의 족집게 과외. 경험치 획득량이 증가합니다."
+    "Description": "매우 유용한 팁이 적힌 요약 노트. 경험치 획득량이 증가합니다."
   },
   {
     "Id": "RELIC_EXPGAINBONUS_02",
-    "Name": "마왕의 과외 숙제",
+    "Name": "고카페인 커피",
     "TargetStatType": "ExpGainBonus",
     "BasePercentBonus": 8,
     "PercentBonusPerLevel": 1.5,
     "Grade": "Rare",
     "DropWeight": 28,
     "IconId": null,
-    "Description": "마왕이 직접 내준 숙제. 하기 싫어도 경험치는 얻습니다."
+    "Description": "잠을 쫓고 뇌세포를 강제로 깨워 사냥하게 만듭니다."
   },
   {
     "Id": "RELIC_EXPGAINBONUS_03",
-    "Name": "시험 전날 벼락치기",
+    "Name": "컨닝 페이퍼",
     "TargetStatType": "ExpGainBonus",
     "BasePercentBonus": 15,
     "PercentBonusPerLevel": 3.12,
     "Grade": "Epic",
     "DropWeight": 12,
     "IconId": null,
-    "Description": "시험 직전에 모든 것을 외우려는 필사적인 공부법입니다."
+    "Description": "실전에서 바로 써먹을 수 있는 팁들이 적혀 있어 경험치를 빨르게 획득합니다."
   },
   {
     "Id": "RELIC_EXPGAINBONUS_04",
-    "Name": "레온의 공부 계획표",
+    "Name": "마왕의 비밀 노트",
     "TargetStatType": "ExpGainBonus",
     "BasePercentBonus": 13.95,
     "PercentBonusPerLevel": 3.1,
     "Grade": "Legendary",
     "DropWeight": 5,
     "IconId": null,
-    "Description": "계획만큼은 완벽하지만 실제 공부량은 알 수 없습니다."
+    "Description": "레온의 멍청함도 극복시키는 마왕의 족집게 비밀 노트."
   },
   {
     "Id": "RELIC_REBIRTHPOINTBONUS_01",
-    "Name": "남쪽 빵집 전단지",
+    "Name": "남쪽 휴양지 사진",
     "TargetStatType": "RebirthPointBonus",
     "BasePercentBonus": 8,
     "PercentBonusPerLevel": 2,
     "Grade": "Common",
     "DropWeight": 55,
     "IconId": null,
-    "Description": "마왕의 은퇴 열망이 담긴 전단지. 환생 포인트 획득량이 증가합니다."
+    "Description": "마왕이 은퇴 후 가보고 싶은 장소입니다. 환생 포인트 획득량이 증가합니다."
   },
   {
     "Id": "RELIC_REBIRTHPOINTBONUS_02",
@@ -635,18 +635,18 @@
     "Grade": "Rare",
     "DropWeight": 28,
     "IconId": null,
-    "Description": "용사를 빨리 키워 은퇴하려는 마왕의 장기 계획입니다."
+    "Description": "마왕의 은퇴 열망이 담긴 마왕의 장기 계획입니다."
   },
   {
     "Id": "RELIC_REBIRTHPOINTBONUS_03",
-    "Name": "다시 시작 안내서",
+    "Name": "환생 소설",
     "TargetStatType": "RebirthPointBonus",
     "BasePercentBonus": 10,
     "PercentBonusPerLevel": 2.5,
     "Grade": "Epic",
     "DropWeight": 12,
     "IconId": null,
-    "Description": "다시 시작하면 이번에는 조금 나아질지도 모른다는 안내서입니다."
+    "Description": "다시 시작하면 다음 번에는 다른 삶이 나를 기다리고 있다는 내용의 소설입니다."
   },
   {
     "Id": "RELIC_REBIRTHPOINTBONUS_04",
