@@ -15,6 +15,36 @@ MonoBehaviour:
   m_GroupName: MonsterPrefabs
   m_GUID: f2d1907d8a327ef4cb6a2c8dcbcc9171
   m_SerializeEntries:
+  - m_GUID: 06329ae3953aeaf4e91c7ceac5ba21a1
+    m_Address: Mob_Ork
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 15eae2732d91e8d44951cff3e774d184
+    m_Address: Mob_Knight
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 23bd23f2f71c53045b926d4016f0a390
+    m_Address: Mob_WareWolf
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5ab1ace388870214bb627ebee3331688
+    m_Address: Mob_LittleDevil
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 91e371599e64c7b4c9cd4a2a3e616990
+    m_Address: Mob_Pharaoh
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: afdad1eeef26b1e4e8343ac4d89e68cc
+    m_Address: Mob_BlueSlime
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b5e6750095c46014e89bbfc73d67f69a
     m_Address: Mob_Hyena
     m_ReadOnly: 0

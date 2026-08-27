@@ -584,14 +584,14 @@
   },
   {
     "Id": "RELIC_EXPGAINBONUS_02",
-    "Name": "고카페인 커피",
+    "Name": "마왕의 과외 숙제",
     "TargetStatType": "ExpGainBonus",
     "BasePercentBonus": 8,
     "PercentBonusPerLevel": 1.5,
     "Grade": "Rare",
     "DropWeight": 28,
     "IconId": null,
-    "Description": "잠을 쫓고 뇌세포를 강제로 깨워 사냥하게 만듭니다."
+    "Description": "마왕이 직접 내준 숙제. 하기 싫어도 경험치는 얻습니다."
   },
   {
     "Id": "RELIC_EXPGAINBONUS_03",
