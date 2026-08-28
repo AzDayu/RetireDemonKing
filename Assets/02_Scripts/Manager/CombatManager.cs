@@ -108,7 +108,6 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    // 테마의 몬스터 그룹(수량 포함)을 펼쳐서 셔플된 큐로 구성
     private void BuildWaveQueue(StageTheme theme)
     {
         _waveQueue.Clear();
@@ -131,12 +130,7 @@ public class CombatManager : MonoBehaviour
             return;
         }
 
-        // 셔플 (Fisher-Yates)
-        for (int i = expanded.Count - 1; i > 0; i--)
-        {
-            int j = UnityEngine.Random.Range(0, i + 1);
-            (expanded[i], expanded[j]) = (expanded[j], expanded[i]);
-        }
+        GameUtil.Shuffle(expanded); //셔플
 
         foreach (var id in expanded)
         {

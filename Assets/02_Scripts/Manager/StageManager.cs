@@ -14,7 +14,7 @@ public class StageManager : MonoBehaviour
     [ContextMenu("테스트: 스테이지 강제 시작")]
     public void DebugForceInitStage()
     {
-        InitStage(_currentStage);
+        Initialize(_currentStage);
     }
 
     [Header("Stage Progress Settings")]
@@ -55,6 +55,7 @@ public class StageManager : MonoBehaviour
     {
         //_currentStage = CurrentStage;
         InitStage(_currentStage);
+        GameManager.Instance.UI.OpenMainUI(UIType.StageProgressUI);
     }
 
     private void OnDestroy()
@@ -97,29 +98,46 @@ public class StageManager : MonoBehaviour
     {
         if (CurrentMode == StageMode.BossStage)
         {
-            // 보스 처치 성공 -> 다음 스테이지로 진행
             _currentStage++;
             InitStage(_currentStage);
         }
         else if (CurrentMode == StageMode.NormalStage)
         {
-            // 일반 몬스터 목표 수량 달성시
-            if (_autoBossChallenge)
+            _currentStage++;
+
+            if (_currentStage % _stagesForChange == 0)
             {
-                StartBossChallenge();
+                if (_autoBossChallenge)
+                {
+                    StartBossChallenge();
+                }
+                else
+                {
+                    // 자동 도전 off. 주제 첫 스테이지로 복귀
+                    _currentStage = GetThemeFirstStage(_currentStage);
+                    InitStage(_currentStage);
+                }
             }
             else
             {
-                // 자동 도전 off 일반 사냥 계속 진행
+                OnStageChanged?.Invoke(_currentStage);
                 GameManager.Instance.Combat.StartNormalBattle(_currentStage);
             }
         }
     }
 
+    private int GetThemeFirstStage(int stageIndex)
+    {
+        int themeIndex = (int)stageIndex.GetTheme(_stagesForChange);
+        return themeIndex * _stagesForChange + 1;
+    }
+
     private void HandleBattleFailed()
     {
         CurrentMode = StageMode.NormalStage;
+        _currentStage = GetThemeFirstStage(_currentStage);
         OnModeChanged?.Invoke(CurrentMode);
+        OnStageChanged?.Invoke(_currentStage);
 
         if (GameManager.Instance.Combat != null)
         {
@@ -131,7 +149,7 @@ public class StageManager : MonoBehaviour
     {
         if (_bgScroller == null) return;
 
-        int targetThemeIndex = ((stageIndex - 1) / _stagesForChange);
+        int targetThemeIndex = (int)stageIndex.GetTheme(_stagesForChange);
         if (targetThemeIndex == _currentThemeIndex) return;
 
         string addressKey = this.GetThemeAddressKey(stageIndex, _stagesForChange);
