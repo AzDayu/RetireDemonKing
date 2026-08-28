@@ -15,7 +15,9 @@ public enum UIType
     StartTitleUI,
     LoadingUI,
     InventoryUI,
-    LoginPopupUI
+    LoginPopupUI,
+    StageProgressUI,
+
 }
 
 public static class UIManagerExtension

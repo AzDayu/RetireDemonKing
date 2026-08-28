@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         float attackSpeed = _growthManager.GetStat(StatType.AttackSpeed);
+        if (attackSpeed <= 0f) attackSpeed = 1f; ////
         float attackInterval = 1f / Mathf.Max(0.01f, attackSpeed);
 
         _attackTimer += Time.deltaTime;
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
         if (target == null || target.Model == null) return;
 
         float damage = _growthManager.GetStat(StatType.Attack);
+        if (damage <= 0f) damage = 100; ////
         target.Model.ChangeCurHp(-damage);
 
         // 임시 로그. 나중에 제거
