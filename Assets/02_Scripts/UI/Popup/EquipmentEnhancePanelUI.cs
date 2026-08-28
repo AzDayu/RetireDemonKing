@@ -58,11 +58,12 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
         yield return new WaitUntil(() =>
             GameManager.Instance != null &&
             GameManager.Instance.Growth != null &&
+            GameManager.Instance.Growth.IsInitialized &&
             GameManager.Instance.Growth.PlayerModel != null &&
+            GameManager.Instance.Growth.Equipment != null &&
             GameManager.Instance.Data != null &&
-            GameManager.Instance.Data.GetEquipmentData(
-                "EQ_WEAPON_SWORD_Common"
-            ) != null
+            GameManager.Instance.Data
+                .GetAllEquipmentDataList().Count > 0
         );
 
         InitializeEquipmentData();
@@ -80,13 +81,14 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
             );
         }
 
-        if (_selectedEquipmentData == null)
+        if (_selectedEquipmentData == null ||
+            !_equipmentDataMap.ContainsKey(_selectedSlotType))
         {
-            SelectEquipment(EquipmentSlotType.Chest);
+            SelectDefaultEquipment();
         }
         else
         {
-            RefreshUI();
+            SelectEquipment(_selectedSlotType);
         }
 
         _initializeCoroutine = null;
@@ -107,99 +109,104 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
     private void InitializeEquipmentData()
     {
         _playerModel = GameManager.Instance.Growth.PlayerModel;
-        // 이미 9개 장비가 준비됐다면 강화 상태 유지
-        if (_equipmentDataMap.Count == 9)
-        {
-            return;
-        }
 
         _equipmentDataMap.Clear();
         _equipmentModelMap.Clear();
 
         RegisterEquipment(
             EquipmentSlotType.Weapon,
-            "EQ_WEAPON_SWORD_Common",
-            1
+            EquipmentType.Weapon
         );
-
         RegisterEquipment(
             EquipmentSlotType.Chest,
-            "EQ_CHEST_ICE_Common",
-            2
+            EquipmentType.Chest
         );
-
         RegisterEquipment(
             EquipmentSlotType.Pants,
-            "EQ_PANTS_GREEN_Common",
-            3
+            EquipmentType.Pants
         );
-
         RegisterEquipment(
             EquipmentSlotType.Gloves,
-            "EQ_GLOVE_LEATHER_Common",
-            4
+            EquipmentType.Gloves
         );
-
         RegisterEquipment(
             EquipmentSlotType.Boots,
-            "EQ_BOOTS_BLACK_Common",
-            5
+            EquipmentType.Boots
         );
-
         RegisterEquipment(
             EquipmentSlotType.Belt,
-            "EQ_BELT_TOOL_Common",
-            6
+            EquipmentType.Belt
         );
-
         RegisterEquipment(
             EquipmentSlotType.Necklace,
-            "EQ_NECK_GREEN_Common",
-            7
+            EquipmentType.Necklace
         );
-
         RegisterEquipment(
             EquipmentSlotType.Ring1,
-            "EQ_RING_ICE_Common",
-            8
+            EquipmentType.Ring,
+            0
         );
-
         RegisterEquipment(
             EquipmentSlotType.Ring2,
-            "EQ_RING_FIRE_Common",
-            9
+            EquipmentType.Ring,
+            1
         );
     }
 
     private void RegisterEquipment(
         EquipmentSlotType slotType,
-        string equipmentDataId,
-        long uniqueId)
+        EquipmentType equipmentType,
+        int typeIndex = 0)
     {
+        EquipmentModel equipmentModel =
+            GameManager.Instance.Growth.Equipment
+                .GetEquippedEquipment(
+                    equipmentType,
+                    typeIndex
+                );
+
+        if (equipmentModel == null)
+        {
+            return;
+        }
+
         EquipmentItem equipmentData =
             GameManager.Instance.Data.GetEquipmentData(
-                equipmentDataId
+                equipmentModel.ItemDataId
             );
 
         if (equipmentData == null)
         {
-            Debug.LogError(
+            Debug.LogWarning(
                 $"[장비 승급] 장비 데이터를 찾지 못했습니다: " +
-                $"{equipmentDataId}"
+                $"{equipmentModel.ItemDataId}"
             );
 
             return;
         }
 
         _equipmentDataMap[slotType] = equipmentData;
+        _equipmentModelMap[slotType] = equipmentModel;
+    }
 
-        _equipmentModelMap[slotType] = new EquipmentModel
+    private void SelectDefaultEquipment()
+    {
+        if (_equipmentDataMap.ContainsKey(
+                EquipmentSlotType.Chest))
         {
-            ItemUniqueId = uniqueId,
-            ItemDataId = equipmentDataId,
-            Level = 1,
-            IsEquipped = true
-        };
+            SelectEquipment(EquipmentSlotType.Chest);
+            return;
+        }
+
+        foreach (EquipmentSlotType slotType in
+                 Enum.GetValues(typeof(EquipmentSlotType)))
+        {
+            if (_equipmentDataMap.ContainsKey(slotType))
+            {
+                SelectEquipment(slotType);
+                return;
+            }
+        }
     }
 
     private void BindEquipmentSlotButtons()
@@ -367,6 +374,8 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
         _selectedEquipmentData = nextGradeData;
 
         _equipmentDataMap[_selectedSlotType] = nextGradeData;
+
+        GameManager.Instance.Growth.RecalculateTotalStats();
 
         RefreshUI();
     }
@@ -583,7 +592,9 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
             CalculateStat(_selectedEquipmentData);
 
         string statName =
-            GetStatDisplayName(_selectedSlotType);
+            GetStatDisplayName(
+                _selectedEquipmentData.MainStatType
+            );
 
         if (Text_EquipmentName != null)
         {
@@ -713,39 +724,34 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
     }
 
     private string GetStatDisplayName(
-        EquipmentSlotType slotType)
+        StatType statType)
     {
-        switch (slotType)
+        switch (statType)
         {
-            case EquipmentSlotType.Weapon:
+            case StatType.Attack:
                 return "공격력";
-
-            case EquipmentSlotType.Chest:
+            case StatType.MaxHp:
+                return "체력";
+            case StatType.Defense:
                 return "방어력";
-
-            case EquipmentSlotType.Pants:
-                return "체력";
-
-            case EquipmentSlotType.Gloves:
-                return "공격력";
-
-            case EquipmentSlotType.Boots:
-                return "이동 속도";
-
-            case EquipmentSlotType.Belt:
-                return "명중률";
-
-            case EquipmentSlotType.Necklace:
-                return "체력";
-
-            case EquipmentSlotType.Ring1:
-                return "재사용 대기시간 감소";
-
-            case EquipmentSlotType.Ring2:
+            case StatType.CriticalChance:
+                return "치명타 확률";
+            case StatType.CriticalDamage:
                 return "치명타 피해";
-
+            case StatType.AttackSpeed:
+                return "공격 속도";
+            case StatType.CooldownReduction:
+                return "재사용 대기시간 감소";
+            case StatType.Accuracy:
+                return "명중률";
+            case StatType.Evasion:
+                return "회피율";
+            case StatType.LifeSteal:
+                return "생명력 흡수";
+            case StatType.MoveSpeed:
+                return "이동 속도";
             default:
-                return "능력치";
+                return statType.ToString();
         }
     }
 }
