@@ -16,10 +16,30 @@ public class GameDataManager : MonoBehaviour
         public List<T> items;
     }
 
+    // JsonUtility가 리플렉션으로 채우는 DTO 필드입니다.
+#pragma warning disable CS0649
+    [Serializable]
+    private class EquipmentItemJson
+    {
+        public string Id;
+        public string Name;
+        public string Type;
+        public string Grade;
+        public string MainStatType;
+        public float BaseStatValue;
+        public float StatValuePerLevel;
+        public float GradeMultiplier = 1f;
+        public int DropWeight;
+        public string PrefabId;
+        public string IconId;
+        public string Description;
+    }
+#pragma warning restore CS0649
+
     public void LoadAllData()
     {
         _relicDataDict = LoadData<RelicItem>("Relic", data => data.Id);
-        _equipmentDataDict = LoadData<EquipmentItem>("Equipment", data => data.Id);
+        _equipmentDataDict = LoadEquipmentData();
         _monsterDataDict = LoadData<MonsterData>("Monster", data => data.MonsterId);
 
         Debug.Log($"[GameDataManager] 데이터 로드 완료 - 유물: {_relicDataDict.Count}개, 장비: {_equipmentDataDict.Count}개");
@@ -71,6 +91,64 @@ public class GameDataManager : MonoBehaviour
         }
 
         return dict;
+    }
+
+    private Dictionary<string, EquipmentItem> LoadEquipmentData()
+    {
+        Dictionary<string, EquipmentItemJson> jsonDataDict =
+            LoadData<EquipmentItemJson>(
+                "Equipment",
+                data => data.Id
+            );
+
+        var equipmentDataDict =
+            new Dictionary<string, EquipmentItem>();
+
+        foreach (EquipmentItemJson jsonData in
+                 jsonDataDict.Values)
+        {
+            if (!Enum.TryParse(
+                    jsonData.Type,
+                    true,
+                    out EquipmentType equipmentType) ||
+                !Enum.TryParse(
+                    jsonData.Grade,
+                    true,
+                    out EquipmentGrade equipmentGrade) ||
+                !Enum.TryParse(
+                    jsonData.MainStatType,
+                    true,
+                    out StatType mainStatType))
+            {
+                Debug.LogError(
+                    $"[GameDataManager] 장비 enum 파싱 실패: " +
+                    $"{jsonData.Id}"
+                );
+
+                continue;
+            }
+
+            equipmentDataDict.Add(
+                jsonData.Id,
+                new EquipmentItem
+                {
+                    Id = jsonData.Id,
+                    Name = jsonData.Name,
+                    Type = equipmentType,
+                    Grade = equipmentGrade,
+                    MainStatType = mainStatType,
+                    BaseStatValue = jsonData.BaseStatValue,
+                    StatValuePerLevel = jsonData.StatValuePerLevel,
+                    GradeMultiplier = jsonData.GradeMultiplier,
+                    DropWeight = jsonData.DropWeight,
+                    PrefabId = jsonData.PrefabId,
+                    IconId = jsonData.IconId,
+                    Description = jsonData.Description
+                }
+            );
+        }
+
+        return equipmentDataDict;
     }
 
     public RelicItem GetRelicData(string id)

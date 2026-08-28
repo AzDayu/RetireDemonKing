@@ -13,6 +13,21 @@ public class GrowthManager : MonoBehaviour
     [SerializeField] private EquipmentManager _equipmentManager;
     [SerializeField] private RelicManager _relicManager;
 
+    [Header("=== 전투 미완성 테스트 장비 ===")]
+    [SerializeField] private bool _useTestEquipmentLoadout = true;
+    [SerializeField] private string[] _testEquipmentDataIds =
+    {
+        "EQ_WEAPON_SWORD_Common",
+        "EQ_CHEST_ICE_Common",
+        "EQ_PANTS_GREEN_Common",
+        "EQ_GLOVE_LEATHER_Common",
+        "EQ_BOOTS_BLACK_Common",
+        "EQ_BELT_TOOL_Common",
+        "EQ_NECK_GREEN_Common",
+        "EQ_RING_ICE_Common",
+        "EQ_RING_FIRE_Common"
+    };
+
     private const long InitialEnhanceCurrency = 20000;
 
     private PlayerModel _playerModel = new PlayerModel
@@ -21,6 +36,8 @@ public class GrowthManager : MonoBehaviour
     };
 
     public PlayerModel PlayerModel => _playerModel;
+    public EquipmentManager Equipment => _equipmentManager;
+    public bool IsInitialized { get; private set; }
 
     private StatCalculator _calculator = new StatCalculator();
     private Dictionary<StatType, float> _cachedFinalStats = new Dictionary<StatType, float>();
@@ -30,14 +47,51 @@ public class GrowthManager : MonoBehaviour
 
     public void Initialize(PlayerModel playerModel, List<EquipmentModel> savedEquipment = null, List<RelicModel> savedRelics = null)
     {
+        IsInitialized = false;
         _playerModel = playerModel ?? _playerModel;
 
         ApplyLevelBaseStats();
 
         _equipmentManager?.Initialize(savedEquipment);
+        InitializeTestEquipmentLoadout();
         _relicManager?.Initialize(savedRelics);
 
         RecalculateTotalStats();
+        IsInitialized = true;
+    }
+
+    private void InitializeTestEquipmentLoadout()
+    {
+        if (!_useTestEquipmentLoadout ||
+            _equipmentManager == null ||
+            _testEquipmentDataIds == null ||
+            _equipmentManager.HasEquippedEquipment())
+        {
+            return;
+        }
+
+        int addedEquipmentCount = 0;
+
+        for (int i = 0; i < _testEquipmentDataIds.Length; i++)
+        {
+            EquipmentModel equipmentModel = new EquipmentModel
+            {
+                ItemUniqueId = i + 1,
+                ItemDataId = _testEquipmentDataIds[i],
+                Level = 1,
+                IsEquipped = true
+            };
+
+            if (_equipmentManager.TryAddEquipment(equipmentModel))
+            {
+                addedEquipmentCount++;
+            }
+        }
+
+        Debug.Log(
+            $"[GrowthManager] 테스트 장비 장착 완료: " +
+            $"{addedEquipmentCount}개"
+        );
     }
 
     private void ApplyLevelBaseStats()

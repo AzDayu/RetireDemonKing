@@ -10,6 +10,107 @@ public class EquipmentManager : MonoBehaviour
         _ownedEquipmentList = savedEquipmentList ?? new List<EquipmentModel>();
     }
 
+    public bool HasEquippedEquipment()
+    {
+        foreach (EquipmentModel equipmentModel in
+                 _ownedEquipmentList)
+        {
+            if (equipmentModel != null &&
+                equipmentModel.IsEquipped)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public EquipmentModel GetEquippedEquipment(
+        EquipmentType equipmentType,
+        int typeIndex = 0)
+    {
+        if (typeIndex < 0 ||
+            GameManager.Instance == null ||
+            GameManager.Instance.Data == null)
+        {
+            return null;
+        }
+
+        int currentTypeIndex = 0;
+
+        foreach (EquipmentModel equipmentModel in
+                 _ownedEquipmentList)
+        {
+            if (equipmentModel == null ||
+                !equipmentModel.IsEquipped)
+            {
+                continue;
+            }
+
+            EquipmentItem equipmentData =
+                GameManager.Instance.Data.GetEquipmentData(
+                    equipmentModel.ItemDataId
+                );
+
+            if (equipmentData == null ||
+                equipmentData.Type != equipmentType)
+            {
+                continue;
+            }
+
+            if (currentTypeIndex == typeIndex)
+            {
+                return equipmentModel;
+            }
+
+            currentTypeIndex++;
+        }
+
+        return null;
+    }
+
+    public bool TryAddEquipment(EquipmentModel equipmentModel)
+    {
+        if (equipmentModel == null ||
+            string.IsNullOrEmpty(equipmentModel.ItemDataId))
+        {
+            return false;
+        }
+
+        if (GameManager.Instance == null ||
+            GameManager.Instance.Data == null ||
+            GameManager.Instance.Data.GetEquipmentData(
+                equipmentModel.ItemDataId
+            ) == null)
+        {
+            Debug.LogError(
+                $"[EquipmentManager] 존재하지 않는 장비 데이터입니다: " +
+                $"{equipmentModel.ItemDataId}"
+            );
+
+            return false;
+        }
+
+        foreach (EquipmentModel ownedEquipment in
+                 _ownedEquipmentList)
+        {
+            if (ownedEquipment != null &&
+                ownedEquipment.ItemUniqueId ==
+                equipmentModel.ItemUniqueId)
+            {
+                Debug.LogWarning(
+                    $"[EquipmentManager] 중복된 장비 고유 ID입니다: " +
+                    $"{equipmentModel.ItemUniqueId}"
+                );
+
+                return false;
+            }
+        }
+
+        _ownedEquipmentList.Add(equipmentModel);
+        return true;
+    }
+
     public Dictionary<StatType, float> GetTotalFlatStats()
     {
         var flatStatsMap = new Dictionary<StatType, float>();
