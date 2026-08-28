@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     public UIManager UI => _uiManager;
     public GameDataManager Data => _gameDataManager;
     public ResourceManager Resource => _resourceManager;
+    public EventManager Event => _eventManager;
 
     private void Awake()
     {

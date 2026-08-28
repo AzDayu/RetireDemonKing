@@ -8,7 +8,8 @@ public class GameDataManager : MonoBehaviour
     private Dictionary<string, RelicItem> _relicDataDict = new Dictionary<string, RelicItem>();
     private Dictionary<string, EquipmentItem> _equipmentDataDict = new Dictionary<string, EquipmentItem>();
     private Dictionary<string, MonsterData> _monsterDataDict = new Dictionary<string, MonsterData>();
-   
+    private Dictionary<string, RandomEventStaticData> _randomEventDataDict = new Dictionary<string, RandomEventStaticData>();
+
 
     [Serializable]
     private class SerializationWrapper<T>
@@ -21,8 +22,9 @@ public class GameDataManager : MonoBehaviour
         _relicDataDict = LoadData<RelicItem>("Relic", data => data.Id);
         _equipmentDataDict = LoadData<EquipmentItem>("Equipment", data => data.Id);
         _monsterDataDict = LoadData<MonsterData>("Monster", data => data.MonsterId);
+        _randomEventDataDict = LoadData<RandomEventStaticData>("RandomEvent", data => data.Id);
 
-        Debug.Log($"[GameDataManager] 데이터 로드 완료 - 유물: {_relicDataDict.Count}개, 장비: {_equipmentDataDict.Count}개");
+        Debug.Log($"[GameDataManager] 데이터 로드 완료 - 유물: {_relicDataDict.Count}개, 장비: {_equipmentDataDict.Count}개. 몬스터: {_monsterDataDict.Count}개,이벤트:{_randomEventDataDict.Count}개");
     }
 
     private Dictionary<string, T> LoadData<T>(string fileName, Func<T, string> keySelector)
@@ -139,5 +141,13 @@ public class GameDataManager : MonoBehaviour
             );
         }
     }
-    // 테스트용 임시 데이터끝
+    public RandomEventStaticData GetRandomEventData(string id)
+    {
+        return _randomEventDataDict.TryGetValue(id, out var data) ? data : null;
+    }
+
+    public List<RandomEventStaticData> GetAllRandomEventDataList()
+    {
+        return _randomEventDataDict.Values.ToList();
+    }
 }

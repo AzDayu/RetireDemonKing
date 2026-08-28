@@ -90,12 +90,19 @@ public class GrowthManager : MonoBehaviour
     public void RecalculateTotalStats()
     {
         Dictionary<StatType, float> flatBonuses = _equipmentManager != null ? _equipmentManager.GetTotalFlatStats() : null;
-        Dictionary<StatType, float> percentBonuses = _relicManager != null ? _relicManager.GetTotalPercentStats() : null;
+        Dictionary<StatType, float> percentBonuses = _relicManager != null ? _relicManager.GetTotalPercentStats() : new Dictionary<StatType, float>();
+
+        if (GameManager.Instance.Event != null)
+        {
+            var buffBonuses = GameManager.Instance.Event.GetTotalBuffPercentStats();
+            foreach (var kvp in buffBonuses)
+            {
+                if (percentBonuses.ContainsKey(kvp.Key)) percentBonuses[kvp.Key] += kvp.Value;
+                else percentBonuses[kvp.Key] = kvp.Value;
+            }
+        }
 
         _cachedFinalStats = _calculator.CalculateAllStats(flatBonuses, percentBonuses);
-
-        Debug.Log($"[GrowthManager] 최종 스탯 갱신 - ATK: {GetStat(StatType.Attack)}, HP: {GetStat(StatType.MaxHp)}");
-
         OnStatsUpdated?.Invoke();
     }
 
@@ -110,4 +117,6 @@ public class GrowthManager : MonoBehaviour
     }
 
     public int CurrentLevel => _playerModel != null ? _playerModel.Level : 1;
+
+
 }
