@@ -92,6 +92,7 @@ public class GameManager : MonoBehaviour
 
             case GameState.IdleStage:
                 Debug.Log("[GameManager] 방치 모드 시작");
+                _uiManager.OpenMainHUDUI();
                 break;
 
             case GameState.BossChallenge:
@@ -134,7 +135,7 @@ public class GameManager : MonoBehaviour
         if (_offlineManager != null && playerModel != null && SaveServer != null)
         {
             long lastSaveTicks = SaveServer.GetLastSaveUnixMinutes();
-            // _offlineManager.CalculateOfflineReward(lastSaveTicks, playerModel.CurrentStage);
+            _offlineManager.ProcessOfflineReward(lastSaveTicks, playerModel.CurrentStage);
         }
 
         Debug.Log("[GameManager] 모든 초기화 완료 -> 방치 전투(IdleStage) 진입");
