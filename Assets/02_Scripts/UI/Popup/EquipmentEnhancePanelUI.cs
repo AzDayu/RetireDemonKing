@@ -318,9 +318,7 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
         }
 
         EquipmentItem nextGradeData =
-            FindNextGradeEquipment(
-                _selectedEquipmentData
-            );
+            FindNextGradeEquipment(_selectedEquipmentData);
 
         if (nextGradeData == null)
         {
@@ -338,14 +336,37 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
 
         _playerModel.EnhanceCurrency -= promotionCost;
 
+        int successRatePercent =
+            GetPromotionSuccessRatePercent();
+
+        int randomValue =
+            UnityEngine.Random.Range(0, 100);
+
+        if (randomValue >= successRatePercent)
+        {
+            Debug.Log(
+                $"[장비 승급] 실패! " +
+                $"성공 확률: {successRatePercent}%, " +
+                $"판정값: {randomValue}"
+            );
+
+            RefreshUI();
+            return;
+        }
+
+        Debug.Log(
+            $"[장비 승급] 성공! " +
+            $"성공 확률: {successRatePercent}%, " +
+            $"판정값: {randomValue}"
+        );
+
+
         // 같은 장비 모델의 데이터 ID만 다음 등급으로 교체
-        _selectedEquipmentModel.ItemDataId =
-            nextGradeData.Id;
+        _selectedEquipmentModel.ItemDataId = nextGradeData.Id;
 
         _selectedEquipmentData = nextGradeData;
 
-        _equipmentDataMap[_selectedSlotType] =
-            nextGradeData;
+        _equipmentDataMap[_selectedSlotType] = nextGradeData;
 
         RefreshUI();
     }
@@ -515,6 +536,33 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
             (int)currentGrade + 1;
 
         return BasePromotionCost * gradeWeight;
+    }
+
+    private int GetPromotionSuccessRatePercent()
+    {
+        if (_selectedEquipmentData == null)
+        {
+            return 0;
+        }
+
+        switch (GetGradeFromId(_selectedEquipmentData.Id))
+        {
+            case EquipmentGrade.Common:
+                return 20;
+
+            case EquipmentGrade.Rare:
+                return 10;
+
+            case EquipmentGrade.Epic:
+                return 5;
+
+            case EquipmentGrade.Legendary:
+                return 3;
+
+            case EquipmentGrade.Mythic:
+            default:
+                return 0;
+        }
     }
 
     private void RefreshUI()

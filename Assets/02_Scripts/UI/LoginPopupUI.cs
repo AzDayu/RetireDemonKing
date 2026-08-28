@@ -118,6 +118,7 @@ public class LoginPopupUI : UIBase
         if (GameManager.Instance != null && GameManager.Instance.UI != null)
         {
             GameManager.Instance.UI.CloseLoginPopupUI();
+            GameManager.Instance.UI.OpenMainUI(UIType.MainHUDUI);
         }
         else
         {
