@@ -181,7 +181,10 @@ public class SkillEnhancePanelUI : MonoBehaviour
 
     private void OnClickClose()
     {
-        gameObject.SetActive(false);
+        if (GameManager.Instance != null && GameManager.Instance.UI != null)
+        {
+            GameManager.Instance.UI.ClosePopupUI(UIType.PopupRootUI);
+        }
     }
 
 }
