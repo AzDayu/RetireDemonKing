@@ -15,56 +15,86 @@ MonoBehaviour:
   entries:
   - theme: 0
     monsters:
-    - monsterId: Monster_Hyena
+    - monsterId: Monster_BlueSlime
       count: 1
-    bossMonsterId: Monster_Hyena
+    bossMonsterId: Monster_BlueSlime
   - theme: 1
+    monsters:
+    - monsterId: Monster_BlueSlime
+      count: 1
+    bossMonsterId: Monster_BlueSlime
+  - theme: 2
     monsters:
     - monsterId: Monster_Hyena
       count: 1
     bossMonsterId: Monster_Hyena
-  - theme: 1
+  - theme: 3
     monsters:
     - monsterId: Monster_Hyena
       count: 1
     bossMonsterId: Monster_Hyena
-  - theme: 1
+  - theme: 4
+    monsters:
+    - monsterId: Monster_Pharaoh
+      count: 1
+    bossMonsterId: Monster_Pharaoh
+  - theme: 5
+    monsters:
+    - monsterId: Monster_Pharaoh
+      count: 1
+    bossMonsterId: Monster_Pharaoh
+  - theme: 6
     monsters:
     - monsterId: Monster_Hyena
       count: 1
     bossMonsterId: Monster_Hyena
-  - theme: 1
+  - theme: 7
     monsters:
-    - monsterId: Monster_Hyena
+    - monsterId: Monster_Ork
       count: 1
-    bossMonsterId: Monster_Hyena
-  - theme: 1
+    bossMonsterId: Monster_Ork
+  - theme: 8
     monsters:
-    - monsterId: Monster_Hyena
+    - monsterId: Monster_Ork
       count: 1
-    bossMonsterId: Monster_Hyena
-  - theme: 1
+    bossMonsterId: Monster_Ork
+  - theme: 9
     monsters:
-    - monsterId: Monster_Hyena
+    - monsterId: Monster_LittleDevil
       count: 1
-    bossMonsterId: Monster_Hyena
-  - theme: 1
+    bossMonsterId: Monster_LittleDevil
+  - theme: 10
     monsters:
-    - monsterId: Monster_Hyena
+    - monsterId: Monster_LittleDevil
       count: 1
-    bossMonsterId: Monster_Hyena
-  - theme: 1
+    bossMonsterId: Monster_LittleDevil
+  - theme: 11
     monsters:
-    - monsterId: Monster_Hyena
+    - monsterId: Monster_LittleDevil
       count: 1
-    bossMonsterId: Monster_Hyena
-  - theme: 1
+    bossMonsterId: Monster_LittleDevil
+  - theme: 12
     monsters:
-    - monsterId: Monster_Hyena
+    - monsterId: Monster_WareWolf
       count: 1
-    bossMonsterId: Monster_Hyena
-  - theme: 1
+    bossMonsterId: Monster_WareWolf
+  - theme: 13
     monsters:
-    - monsterId: Monster_Hyena
+    - monsterId: Monster_WareWolf
       count: 1
-    bossMonsterId: Monster_Hyena
+    bossMonsterId: Monster_WareWolf
+  - theme: 14
+    monsters:
+    - monsterId: Monster_WareWolf
+      count: 1
+    bossMonsterId: Monster_WareWolf
+  - theme: 15
+    monsters:
+    - monsterId: Monster_WareWolf
+      count: 1
+    bossMonsterId: Monster_WareWolf
+  - theme: 16
+    monsters:
+    - monsterId: Monster_Knight
+      count: 1
+    bossMonsterId: Monster_Knight

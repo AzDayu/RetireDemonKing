@@ -3,9 +3,69 @@
     "MonsterId": "Monster_Hyena",
     "MonsterName": "HyenaWarrior",
     "PrefabName": "Mob_Hyena",
-    "MaxHp": 10,
+    "MaxHp": 200,
+    "DropCoins": 100,
+    "DropExp": 100,
+    "AttackPower": 0,
+    "AttackSpeed": 0
+  },
+  {
+    "MonsterId": "Monster_BlueSlime",
+    "MonsterName": "BlueSlime",
+    "PrefabName": "Mob_BlueSlime",
+    "MaxHp": 100,
     "DropCoins": 50,
     "DropExp": 50,
+    "AttackPower": 0,
+    "AttackSpeed": 0
+  },
+  {
+    "MonsterId": "Monster_WareWolf",
+    "MonsterName": "WareWolf",
+    "PrefabName": "Mob_WareWolf",
+    "MaxHp": 300,
+    "DropCoins": 150,
+    "DropExp": 150,
+    "AttackPower": 0,
+    "AttackSpeed": 0
+  },
+  {
+    "MonsterId": "Monster_Ork",
+    "MonsterName": "Ork",
+    "PrefabName": "Mob_Ork",
+    "MaxHp": 400,
+    "DropCoins": 200,
+    "DropExp": 200,
+    "AttackPower": 0,
+    "AttackSpeed": 0
+  },
+  {
+    "MonsterId": "Monster_Pharaoh",
+    "MonsterName": "Pharaoh",
+    "PrefabName": "Mob_Pharaoh",
+    "MaxHp": 500,
+    "DropCoins": 250,
+    "DropExp": 250,
+    "AttackPower": 0,
+    "AttackSpeed": 0
+  },
+  {
+    "MonsterId": "Monster_LittleDevil",
+    "MonsterName": "LittleDevil",
+    "PrefabName": "Mob_LittleDevil",
+    "MaxHp": 600,
+    "DropCoins": 300,
+    "DropExp": 300,
+    "AttackPower": 0,
+    "AttackSpeed": 0
+  },
+  {
+    "MonsterId": "Monster_Knight",
+    "MonsterName": "Knight",
+    "PrefabName": "Mob_Knight",
+    "MaxHp": 700,
+    "DropCoins": 350,
+    "DropExp": 350,
     "AttackPower": 0,
     "AttackSpeed": 0
   }

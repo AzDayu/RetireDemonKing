@@ -51,12 +51,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8949cae2048f0084abdbbbc2a49b24f8
-    m_Address: nightforest1
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 8b8beb8d4069ff64892df4abfa261796
-    m_Address: Assets/03_Prefabs/MonsterPrefabs/Mob_hyena.fbx
+    m_Address: nightForest1
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -81,7 +76,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: aaaf4adc9ec262d48a0016a45897f694
-    m_Address: nightforest2
+    m_Address: nightForest2
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

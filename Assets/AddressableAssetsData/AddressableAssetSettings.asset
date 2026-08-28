@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468a46d0ae32c3544b7d98094e6448a9, type: 3}
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetSettings
-  m_DefaultGroup: b1f36638ee6448946a33f375f5a59b48
+  m_DefaultGroup: f2d1907d8a327ef4cb6a2c8dcbcc9171
   m_currentHash:
     serializedVersion: 2
-    Hash: 7deea1956761e077c8fdad27af670905
+    Hash: 934b5fd6cf6f30cfff8cc2def3260b9c
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
