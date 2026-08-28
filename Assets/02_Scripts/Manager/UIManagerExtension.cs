@@ -15,7 +15,8 @@ public enum UIType
     StartTitleUI,
     LoadingUI,
     InventoryUI,
-    LoginPopupUI
+    LoginPopupUI,
+    RandomEventPopupUI
 }
 
 public static class UIManagerExtension
@@ -43,6 +44,7 @@ public static class UIManagerExtension
             return;
         }
     }
+
     public static void CloseLoadingUI(this UIManager uiManager)
     {
         uiManager.CloseUI(UIRootType.VeryFrontUI, UIType.LoadingUI);
@@ -53,8 +55,29 @@ public static class UIManagerExtension
         uiManager.OpenUI(UIRootType.VeryFrontUI, UIType.LoginPopupUI);
        
     }
+
     public static void CloseLoginPopupUI(this UIManager uiManager)
     {
         uiManager.CloseUI(UIRootType.VeryFrontUI, UIType.LoginPopupUI);
+    }
+
+    public static void OpenRandomEventPopupUI(this UIManager uiManager, RandomEventStaticData eventData)
+    {
+        var uiBase = uiManager.OpenPopupUI(UIType.RandomEventPopupUI);
+        if (uiBase == null)
+        {
+            Debug.LogWarning("[UIManager] RandomEventPopupUI 생성 실패!");
+            return;
+        }
+
+        if (uiBase is RandomEventPopupUI popupUI)
+        {
+            popupUI.SetUI(eventData);
+        }
+    }
+
+    public static void CloseRandomEventPopupUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIRootType.PopupUI, UIType.RandomEventPopupUI);
     }
 }
