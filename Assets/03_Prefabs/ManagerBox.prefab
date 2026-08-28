@@ -614,7 +614,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1364860923597233936}
-  - component: {fileID: 2830679949603842017}
   m_Layer: 0
   m_Name: CombatManager
   m_TagString: Untagged
@@ -637,21 +636,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4634041316688594820}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2830679949603842017
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5986515113233989095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b353daa05501af24c8cb2ad31201ecb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CombatManager
-  _maxBossTime: 30
-  _monsterSpawnPoint: {fileID: 0}
-  _monsterSpawnTable: {fileID: 11400000, guid: bae7f2e580caea34794960c57767a8f1, type: 2}
 --- !u!1 &6781087572966293068
 GameObject:
   m_ObjectHideFlags: 0
@@ -991,6 +975,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GrowthManager
   _equipmentManager: {fileID: 8747260285965394081}
   _relicManager: {fileID: 5552028106715496433}
+  _useTestEquipmentLoadout: 1
+  _testEquipmentDataIds:
+  - EQ_WEAPON_SWORD_Common
+  - EQ_CHEST_ICE_Common
+  - EQ_PANTS_GREEN_Common
+  - EQ_GLOVE_LEATHER_Common
+  - EQ_BOOTS_BLACK_Common
+  - EQ_BELT_TOOL_Common
+  - EQ_NECK_GREEN_Common
+  - EQ_RING_ICE_Common
+  - EQ_RING_FIRE_Common
 --- !u!1 &8369523466375852335
 GameObject:
   m_ObjectHideFlags: 0
@@ -1147,7 +1142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   _currentState: 0
   _stageManager: {fileID: 8114787299685543830}
-  _combatManager: {fileID: 2830679949603842017}
+  _combatManager: {fileID: 0}
   _growthManager: {fileID: 3865161032368769887}
   _saveServerManager: {fileID: 3624594122524213341}
   _offlineManager: {fileID: 5400473780528366726}

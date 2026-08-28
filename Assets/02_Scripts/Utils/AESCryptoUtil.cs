@@ -8,7 +8,7 @@ public static class AESCryptoUtil
 {
     // 32바이트(256비트) 암호화 키 & 16바이트 IV (프로젝트 고유 32자/16자 문자열 설정)
     private static readonly byte[] Key = Encoding.UTF8.GetBytes("OzProjectDemonKingHeroSecretKey32");
-    private static readonly byte[] IV = Encoding.UTF8.GetBytes("OzProjectInitIV16");
+    private static readonly byte[] IV = Encoding.UTF8.GetBytes("OzProjectInitIV");
 
     /// <summary>
     /// 평문 JSON 문자열을 AES로 암호화하여 Base64 문자열로 반환

@@ -18,6 +18,7 @@ public enum UIType
     LoginPopupUI,
     MainHUDUI,
     PopupRootUI,
+    StageProgressUI,
     RandomEventPopupUI
 }
 

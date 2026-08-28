@@ -86,7 +86,8 @@ public class GameManager : MonoBehaviour
                 }
                 if (_uiManager != null)
                 {
-                    _uiManager.OpenLoginPopupUI();
+                    OnLoginSuccessAndStartGame();
+                    //_uiManager.OpenLoginPopupUI();
                 }
                 break;
 

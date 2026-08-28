@@ -581,7 +581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5799b09227cb8f34d9dcf0a8cba6f924, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  _combatManager: {fileID: 1064246984}
+  _combatManager: {fileID: 0}
   _growthManager: {fileID: 268242015}
 --- !u!1 &832575517
 GameObject:
@@ -632,17 +632,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1064246984 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2830679949603842017, guid: ac86e89df693d84458a2c2b102171c04, type: 3}
+--- !u!1 &1449431421 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5986515113233989095, guid: ac86e89df693d84458a2c2b102171c04, type: 3}
   m_PrefabInstance: {fileID: 2167046711800818217}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+--- !u!114 &1449431423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1449431421}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b353daa05501af24c8cb2ad31201ecb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ee8cfe7464c8654193d08599d388ea3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CombatManager
+  _maxBossTime: 30
+  _monsterSpawnPoint: {fileID: 464390924}
+  _monsterSpawnTable: {fileID: 11400000, guid: bae7f2e580caea34794960c57767a8f1, type: 2}
 --- !u!1001 &1973835465
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -847,6 +856,14 @@ PrefabInstance:
       propertyPath: _monsterSpawnPoint
       value: 
       objectReference: {fileID: 464390924}
+    - target: {fileID: 2830679949603842017, guid: ac86e89df693d84458a2c2b102171c04, type: 3}
+      propertyPath: _monsterSpawnTable
+      value: 
+      objectReference: {fileID: 11400000, guid: bae7f2e580caea34794960c57767a8f1, type: 2}
+    - target: {fileID: 3624594122524213341, guid: ac86e89df693d84458a2c2b102171c04, type: 3}
+      propertyPath: _useServerSync
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4634041316688594820, guid: ac86e89df693d84458a2c2b102171c04, type: 3}
       propertyPath: m_LocalPosition.x
       value: 960
@@ -931,10 +948,17 @@ PrefabInstance:
       propertyPath: m_ReferenceResolution.y
       value: 1920
       objectReference: {fileID: 0}
+    - target: {fileID: 8710299511355388618, guid: ac86e89df693d84458a2c2b102171c04, type: 3}
+      propertyPath: _combatManager
+      value: 
+      objectReference: {fileID: 1449431423}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5986515113233989095, guid: ac86e89df693d84458a2c2b102171c04, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1449431423}
   m_SourcePrefab: {fileID: 100100000, guid: ac86e89df693d84458a2c2b102171c04, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
