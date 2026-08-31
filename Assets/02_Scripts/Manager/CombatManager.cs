@@ -11,7 +11,7 @@ public class CombatManager : MonoBehaviour
     private bool _isTimerRunning;
 
     [Header("Monster Spawn Settings")]
-    [SerializeField] private Transform _monsterSpawnPoint;
+    [SerializeField] private Transform[] _monsterSpawnPoints;
     [SerializeField] private MonsterSpawnTable _monsterSpawnTable;
 
     [Header("Wave & Target Settings")]
@@ -188,7 +188,8 @@ public class CombatManager : MonoBehaviour
             monster = Instantiate(prefab, transform);
         }
 
-        monster.transform.position = _monsterSpawnPoint != null ? _monsterSpawnPoint.position : Vector3.zero;
+        Transform spawnPoint = GameUtil.GetRandomElement(_monsterSpawnPoints);
+        monster.transform.position = spawnPoint != null ? spawnPoint.position : Vector3.zero;
         monster.transform.rotation = Quaternion.identity;
         monster.SetActive(true);
 

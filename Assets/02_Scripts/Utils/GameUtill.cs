@@ -12,4 +12,13 @@ public class GameUtil
             (list[i], list[j]) = (list[j], list[i]);
         }
     }
+
+    public static T GetRandomElement<T>(T[] array)
+    {
+        if (array == null || array.Length == 0)
+        { 
+            return default; 
+        }
+        return array[UnityEngine.Random.Range(0, array.Length)];
+    }
 }

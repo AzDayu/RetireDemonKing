@@ -18,8 +18,9 @@ public enum UIType
     LoginPopupUI,
     MainHUDUI,
     PopupRootUI,
+    RandomEventPopupUI,
     StageProgressUI,
-    RandomEventPopupUI
+    BossTimerUI,
 }
 
 public static class UIManagerExtension
