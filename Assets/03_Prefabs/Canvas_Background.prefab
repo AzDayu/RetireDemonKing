@@ -34,10 +34,10 @@ RectTransform:
   - {fileID: 5602978766200530504}
   m_Father: {fileID: 3761792750135402030}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 120}
-  m_SizeDelta: {x: 3000, y: 500}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0.000061035156, y: 235}
+  m_SizeDelta: {x: 2510, y: -530}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6637401696118377448
 CanvasRenderer:
@@ -224,7 +224,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3761792750135402030}
   - component: {fileID: 633737461901946559}
-  - component: {fileID: 4122272600318635184}
+  - component: {fileID: 3002801239708285781}
   - component: {fileID: 770061467144235311}
   m_Layer: 5
   m_Name: Canvas_Background
@@ -262,7 +262,7 @@ Canvas:
   m_GameObject: {fileID: 8892256235610428439}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -274,9 +274,9 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: -100
+  m_SortingOrder: -10
   m_TargetDisplay: 0
---- !u!114 &4122272600318635184
+--- !u!114 &3002801239708285781
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -291,7 +291,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 490, y: 870}
+  m_ReferenceResolution: {x: 1080, y: 1920}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
