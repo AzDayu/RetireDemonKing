@@ -16,7 +16,7 @@ MonoBehaviour:
   - theme: 0
     monsters:
     - monsterId: Monster_BlueSlime
-      count: 1
+      count: 4
     bossMonsterId: Monster_BlueSlime
   - theme: 1
     monsters:

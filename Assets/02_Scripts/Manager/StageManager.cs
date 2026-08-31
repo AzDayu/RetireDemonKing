@@ -53,7 +53,7 @@ public class StageManager : MonoBehaviour
 
     public void Initialize(int CurrentStage)
     {
-        //_currentStage = CurrentStage;
+        //_currentStage = CurrentStage;  //나중에 주석 지우기
         InitStage(_currentStage);
         GameManager.Instance.UI.OpenMainUI(UIType.StageProgressUI);
     }
@@ -88,6 +88,8 @@ public class StageManager : MonoBehaviour
         CurrentMode = StageMode.BossStage;
         OnModeChanged?.Invoke(CurrentMode);
 
+        GameManager.Instance.UI.OpenContentUI(UIType.BossTimerUI);
+
         if (GameManager.Instance.Combat != null)
         {
             GameManager.Instance.Combat.StartBossBattle(_currentStage);
@@ -98,6 +100,8 @@ public class StageManager : MonoBehaviour
     {
         if (CurrentMode == StageMode.BossStage)
         {
+            GameManager.Instance.UI.CloseContentUI(UIType.BossTimerUI);
+
             _currentStage++;
             InitStage(_currentStage);
         }
@@ -134,6 +138,8 @@ public class StageManager : MonoBehaviour
 
     private void HandleBattleFailed()
     {
+        GameManager.Instance.UI.CloseContentUI(UIType.BossTimerUI);
+
         CurrentMode = StageMode.NormalStage;
         _currentStage = GetThemeFirstStage(_currentStage);
         OnModeChanged?.Invoke(CurrentMode);
