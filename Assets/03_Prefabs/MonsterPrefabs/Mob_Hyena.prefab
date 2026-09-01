@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mob_Hyena
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 8b8beb8d4069ff64892df4abfa261796, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 39e30169de127a54eac80b6c1992c711, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -60,6 +64,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 6289816216451203304}
   m_SourcePrefab: {fileID: 100100000, guid: 8b8beb8d4069ff64892df4abfa261796, type: 3}
+--- !u!95 &133480142200646829 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 8b8beb8d4069ff64892df4abfa261796, type: 3}
+  m_PrefabInstance: {fileID: 5814326144307073340}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6661328539544824941 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8b8beb8d4069ff64892df4abfa261796, type: 3}
@@ -77,3 +86,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f2a159f78f60a54fa399b4899d5e32e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterController
+  _animator: {fileID: 133480142200646829}

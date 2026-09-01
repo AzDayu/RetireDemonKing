@@ -2,39 +2,43 @@
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private CombatManager _combatManager;
-    [SerializeField] private GrowthManager _growthManager;
+    [Header("=== 애니메이터 참조 ===")]
+    [SerializeField] private Animator _animator;
+
     private float _attackTimer;
 
-    private void Update()
-    {
-        float attackSpeed = _growthManager.GetStat(StatType.AttackSpeed);
-        if (attackSpeed <= 0f) attackSpeed = 1f; ////
-        float attackInterval = 1f / Mathf.Max(0.01f, attackSpeed);
+    private static readonly int HashIsMoving = Animator.StringToHash("IsMoving");
+    private static readonly int HashAttack = Animator.StringToHash("Attack");
+    private static readonly int HashDie = Animator.StringToHash("Die");
 
-        _attackTimer += Time.deltaTime;
-        if (_attackTimer >= attackInterval)
+    private void Awake()
+    {
+        if (_animator == null)
         {
-            _attackTimer -= attackInterval;
-            PerformAttack();
+            _animator = GetComponentInChildren<Animator>();
         }
     }
 
-    private void PerformAttack()
+    private void Update()
     {
-        MonsterController target = _combatManager.GetActiveMonster();
-        if (target == null || target.Model == null) return;
+        // 예시: 공격 속도 스탯이 필요할 때는 GameManager를 통해 조회
+        float attackSpeed = GameManager.Instance.Growth.GetStat(StatType.AttackSpeed);
 
-        float damage = _growthManager.GetStat(StatType.Attack);
-        if (damage <= 0f) damage = 100; ////
-        target.Model.ChangeCurHp(-damage);
+        // 공격 쿨타임 및 공격 모션 제어 로직...
+    }
 
-        // 임시 로그. 나중에 제거
-        Debug.Log($"[PlayerController] 공격! 데미지: {damage}, 남은 HP: {target.Model.CurHp}");
-
-        if (target.Model.CurHp <= 0f)
+    public void PlayAttackAnimation()
+    {
+        if (_animator != null)
         {
-            _combatManager.OnMonsterKilled(target.gameObject);
+            _animator.SetTrigger(HashAttack);
         }
+    }
+
+    // 애니메이션 타격 프레임 이벤트
+    public void OnAttackHitEvent()
+    {
+        // 타격 판정은 CombatManager에 위임
+        // GameManager.Instance.Combat.OnPlayerHitTarget();
     }
 }
