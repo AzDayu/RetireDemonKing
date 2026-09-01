@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("=== 무기 슬롯 설정 ===")]
     [SerializeField] private List<WeaponSlot> _weaponSlots = new List<WeaponSlot>();
-    [SerializeField] private WeaponType _currentWeapon = WeaponType.Sword;
+    [SerializeField] private WeaponType _currentWeapon = WeaponType.Spear;
 
     [Header("=== 전투 설정 ===")]
     [SerializeField] private float _attackRange = 3f;
