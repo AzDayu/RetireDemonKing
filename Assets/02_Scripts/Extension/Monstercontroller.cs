@@ -10,6 +10,7 @@ public class MonsterController : MonoBehaviour
     public void Setup(MonsterData data)
     {
         Model = new MonsterModel(data);
+        Model.OnDied += HandleDied;
         MoveToPlayer();
     }
 
@@ -33,6 +34,19 @@ public class MonsterController : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, MoveSpeed * Time.deltaTime);
             yield return null;
+        }
+    }
+
+    private void HandleDied()
+    {
+        GameManager.Instance.Combat.OnMonsterKilled(gameObject);
+    }
+
+    private void OnDisable()
+    {
+        if (Model != null)
+        {
+            Model.OnDied -= HandleDied;
         }
     }
 }

@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class GameUtil
 {
+    public static int GetThemeFirstStage(int stageIndex, int stagesForChange)
+    {
+        int themeIndex = (int)stageIndex.GetTheme(stagesForChange);
+        return themeIndex * stagesForChange + 1;
+    }
+
     // Fisher-Yates 셔플
     public static void Shuffle<T>(List<T> list)
     {
@@ -21,4 +27,6 @@ public class GameUtil
         }
         return array[UnityEngine.Random.Range(0, array.Length)];
     }
+
+    
 }
