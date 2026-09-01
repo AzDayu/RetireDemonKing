@@ -53,7 +53,7 @@ public class StageManager : MonoBehaviour
 
     public void Initialize(int CurrentStage)
     {
-        //_currentStage = CurrentStage;  //나중에 주석 지우기
+        _currentStage = CurrentStage;
         InitStage(_currentStage);
         GameManager.Instance.UI.OpenMainUI(UIType.StageProgressUI);
     }

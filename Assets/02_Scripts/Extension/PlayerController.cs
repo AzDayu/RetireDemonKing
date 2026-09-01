@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         float attackSpeed = GameManager.Instance.Growth.GetStat(StatType.AttackSpeed);
-        if (attackSpeed <= 0f) attackSpeed = 1f; //// 삭제
         float attackInterval = 1f / Mathf.Max(0.01f, attackSpeed);
         _attackTimer += Time.deltaTime;
         if (_attackTimer >= attackInterval)
@@ -30,7 +29,6 @@ public class PlayerController : MonoBehaviour
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, _attackRange, _monsterLayer);
         float damage = GameManager.Instance.Growth.GetStat(StatType.Attack);
-        if (damage <= 0f) damage = 50; //// 삭제
 
         foreach (var hit in hits)
         {
@@ -38,7 +36,6 @@ public class PlayerController : MonoBehaviour
             if (target == null || target.Model == null) continue;
 
             target.Model.ChangeCurHp(-damage);
-            // 임시 로그. 나중에 제거
             Debug.Log($"[PlayerController] 공격! 데미지: {damage}, 남은 HP: {target.Model.CurHp}");
 
             if (target.Model.CurHp <= 0f)
