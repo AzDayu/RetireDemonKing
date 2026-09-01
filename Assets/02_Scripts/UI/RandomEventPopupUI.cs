@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RandomEventPopupUI : UIBase
 {
@@ -10,38 +11,36 @@ public class RandomEventPopupUI : UIBase
     [SerializeField] private TextMeshProUGUI Text_Choice2Desc;
 
     [Header("=== Buttons ===")]
-    [SerializeField] private UIButton Button_Choice1;
-    [SerializeField] private UIButton Button_Choice2;
-    [SerializeField] private UIButton Button_CloseSelf;
+    [SerializeField] private Button Button_Choice1;
+    [SerializeField] private Button Button_Choice2;
+    [SerializeField] private Button Button_CloseSelf;
 
     private RandomEventStaticData _currentEventData;
-    private bool _isInitialized = false;
 
     private void Awake()
     {
-        InitButtonEvents();
+        InitUIButton();
     }
 
-    private void InitButtonEvents()
+    private void InitUIButton()
     {
-        if (_isInitialized) return;
-
         if (Button_Choice1 != null)
         {
-            Button_Choice1.BindOnClickButtonEvent(OnClickChoice1);
+            Button_Choice1.onClick.RemoveAllListeners();
+            Button_Choice1.onClick.AddListener(OnClickChoice1);
         }
 
         if (Button_Choice2 != null)
         {
-            Button_Choice2.BindOnClickButtonEvent(OnClickChoice2);
+            Button_Choice2.onClick.RemoveAllListeners();
+            Button_Choice2.onClick.AddListener(OnClickChoice2);
         }
 
         if (Button_CloseSelf != null)
         {
-            Button_CloseSelf.BindOnClickButtonEvent(OnClickClose);
+            Button_CloseSelf.onClick.RemoveAllListeners();
+            Button_CloseSelf.onClick.AddListener(OnClickClose);
         }
-
-        _isInitialized = true;
     }
 
     public void SetUI(RandomEventStaticData eventData)
@@ -94,7 +93,7 @@ public class RandomEventPopupUI : UIBase
     {
         if (GameManager.Instance != null && GameManager.Instance.UI != null)
         {
-            GameManager.Instance.UI.CloseRandomEventPopupUI();
+            GameManager.Instance.UI.ClosePopupUI(UIType.RandomEventPopupUI);
         }
         else
         {
