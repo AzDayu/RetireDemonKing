@@ -5,6 +5,7 @@ using UnityEngine;
 public class MonsterModel
 {
     public event Action<string> OnInfoChanged;
+    public event Action OnDied;
 
     private string _monsterId;
     private string _monsterName;
@@ -109,6 +110,10 @@ public class MonsterModel
     public void ChangeCurHp(float amount)
     {
         CurHp += amount;
+        if (CurHp <= 0f)
+        {
+            OnDied?.Invoke();
+        }
     }
 
 }

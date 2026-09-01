@@ -37,11 +37,6 @@ public class PlayerController : MonoBehaviour
 
             target.Model.ChangeCurHp(-damage);
             Debug.Log($"[PlayerController] 공격! 데미지: {damage}, 남은 HP: {target.Model.CurHp}");
-
-            if (target.Model.CurHp <= 0f)
-            {
-                GameManager.Instance.Combat.OnMonsterKilled(target.gameObject);
-            }
         }
     }
 }

@@ -10,20 +10,12 @@ public enum StageMode
 
 public class StageManager : MonoBehaviour
 {
-    // 세이브 매니저 미구현, 테스트용
-    [ContextMenu("테스트: 스테이지 강제 시작")]
-    public void DebugForceInitStage()
-    {
-        Initialize(_currentStage);
-    }
-
     [Header("Stage Progress Settings")]
     [SerializeField] private int _currentStage = 1;
     [SerializeField] private bool _autoBossChallenge = true;
 
     [Header("Map Environment Settings")]
     [SerializeField] private int _stagesForChange = 10;
-
     [SerializeField] private BGIScroller _bgScroller;
 
     public int CurrentStage => _currentStage;
@@ -51,13 +43,6 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    public void Initialize(int CurrentStage)
-    {
-        _currentStage = CurrentStage;
-        InitStage(_currentStage);
-        GameManager.Instance.UI.OpenMainUI(UIType.StageProgressUI);
-    }
-
     private void OnDestroy()
     {
         if (GameManager.Instance != null && GameManager.Instance.Combat != null)
@@ -65,6 +50,13 @@ public class StageManager : MonoBehaviour
             GameManager.Instance.Combat.OnBattleCleared -= HandleBattleCleared;
             GameManager.Instance.Combat.OnBattleFailed -= HandleBattleFailed;
         }
+    }
+
+    public void Initialize(int CurrentStage)
+    {
+        _currentStage = CurrentStage;
+        InitStage(_currentStage);
+        GameManager.Instance.UI.OpenMainUI(UIType.StageProgressUI);
     }
 
     public void InitStage(int stageIndex)
@@ -89,6 +81,7 @@ public class StageManager : MonoBehaviour
         OnModeChanged?.Invoke(CurrentMode);
 
         GameManager.Instance.UI.OpenContentUI(UIType.BossTimerUI);
+        GameManager.Instance.UI.OpenContentUI(UIType.BossHudUI);
 
         if (GameManager.Instance.Combat != null)
         {
@@ -101,6 +94,7 @@ public class StageManager : MonoBehaviour
         if (CurrentMode == StageMode.BossStage)
         {
             GameManager.Instance.UI.CloseContentUI(UIType.BossTimerUI);
+            GameManager.Instance.UI.CloseContentUI(UIType.BossHudUI);
 
             _currentStage++;
             InitStage(_currentStage);
@@ -118,7 +112,7 @@ public class StageManager : MonoBehaviour
                 else
                 {
                     // 자동 도전 off. 주제 첫 스테이지로 복귀
-                    _currentStage = GetThemeFirstStage(_currentStage);
+                    _currentStage = GameUtil.GetThemeFirstStage(_currentStage, _stagesForChange);
                     InitStage(_currentStage);
                 }
             }
@@ -130,18 +124,13 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    private int GetThemeFirstStage(int stageIndex)
-    {
-        int themeIndex = (int)stageIndex.GetTheme(_stagesForChange);
-        return themeIndex * _stagesForChange + 1;
-    }
-
     private void HandleBattleFailed()
     {
         GameManager.Instance.UI.CloseContentUI(UIType.BossTimerUI);
+        GameManager.Instance.UI.CloseContentUI(UIType.BossHudUI);
 
         CurrentMode = StageMode.NormalStage;
-        _currentStage = GetThemeFirstStage(_currentStage);
+        _currentStage = GameUtil.GetThemeFirstStage(_currentStage, _stagesForChange);
         OnModeChanged?.Invoke(CurrentMode);
         OnStageChanged?.Invoke(_currentStage);
 
