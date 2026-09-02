@@ -1,20 +1,23 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BottomBarUI : UIBase
 {
     [SerializeField] private UIButton Button_Growth;
     [SerializeField] private UIButton Button_Skill;
+    [SerializeField] private UIButton Button_Relic;
 
     private void OnEnable()
     {
         Button_Growth?.BindOnClickButtonEvent(OnClick_Growth);
         Button_Skill?.BindOnClickButtonEvent(OnClick_Skill);
+        Button_Relic?.BindOnClickButtonEvent(OnClick_Relic);
     }
 
     private void OnDisable()
     {
         Button_Growth?.UnBindAllOnClickButtonEvent();
         Button_Skill?.UnBindAllOnClickButtonEvent();
+        Button_Relic?.UnBindAllOnClickButtonEvent();
     }
 
     private void OnClick_Growth()
@@ -36,31 +39,28 @@ public class BottomBarUI : UIBase
             popup.ShowSkill();
         }
     }
+    private void OnClick_Relic()
+    {
+        GameManager.Instance.UI.OpenPopupUI(UIType.RelicUI);
+    }
 
     private PopupRootUI OpenPopupRoot()
     {
-        if (GameManager.Instance == null ||
-            GameManager.Instance.UI == null)
+        if (GameManager.Instance == null || GameManager.Instance.UI == null)
         {
-            Debug.LogWarning(
-                "[BottomBarUI] UIManager를 찾을 수 없습니다."
-            );
+            Debug.LogWarning("[BottomBarUI] UIManager를 찾을 수 없습니다.");
 
             return null;
         }
 
-        UIBase popup = GameManager.Instance.UI.OpenPopupUI(
-            UIType.PopupRootUI
-        );
+        UIBase popup = GameManager.Instance.UI.OpenPopupUI(UIType.PopupRootUI);
 
         if (popup is PopupRootUI popupRoot)
         {
             return popupRoot;
         }
 
-        Debug.LogWarning(
-            "[BottomBarUI] PopupRootUI를 생성하지 못했습니다."
-        );
+        Debug.LogWarning("[BottomBarUI] PopupRootUI를 생성하지 못했습니다.");
 
         return null;
     }

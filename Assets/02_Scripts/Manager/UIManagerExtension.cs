@@ -38,7 +38,7 @@ public static class UIManagerExtension
 
     public static void ShowStartupUIOnGameStart(this UIManager uiManager)
     {
-        //uiManager.OpenUI(UIRootType.MainUI, UIType.RelicUI);
+        
     }
 
 
