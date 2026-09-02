@@ -19,7 +19,8 @@ public class GameDataManager : MonoBehaviour
 
     public void LoadAllData()
     {
-        _relicDataDict = LoadData<RelicItem>("Relic", data => data.Id);
+        //_relicDataDict = LoadData<RelicItem>("Relic", data => data.Id);
+        _relicDataDict = LoadRelicData();
         //_equipmentDataDict = LoadData<EquipmentItem>("Equipment", data => data.Id);
         _equipmentDataDict = LoadEquipmentData();
         _monsterDataDict = LoadData<MonsterData>("Monster", data => data.MonsterId);
@@ -153,6 +154,58 @@ public class GameDataManager : MonoBehaviour
         }
 
         return equipmentDataDict;
+    }
+
+#pragma warning disable CS0649
+    [Serializable]
+    private class RelicItemJson
+    {
+        public string Id;
+        public string Name;
+        public string TargetStatType;
+        public float BasePercentBonus;
+        public float PercentBonusPerLevel;
+        public string Grade;
+        public int DropWeight;
+        public string IconId;
+        public string Description;
+    }
+#pragma warning restore CS0649
+
+    private Dictionary<string, RelicItem> LoadRelicData()
+    {
+        Dictionary<string, RelicItemJson> jsonDataDict =
+            LoadData<RelicItemJson>("Relic", data => data.Id);
+
+        var relicDataDict = new Dictionary<string, RelicItem>();
+
+        foreach (RelicItemJson jsonData in jsonDataDict.Values)
+        {
+            if (!Enum.TryParse(jsonData.TargetStatType, true, out StatType targetStatType) ||
+                !Enum.TryParse(jsonData.Grade, true, out EquipmentGrade grade))
+            {
+                Debug.LogError($"[GameDataManager] 유물 enum 파싱 실패: {jsonData.Id}");
+                continue;
+            }
+
+            relicDataDict.Add(
+                jsonData.Id,
+                new RelicItem
+                {
+                    Id = jsonData.Id,
+                    Name = jsonData.Name,
+                    TargetStatType = targetStatType,
+                    BasePercentBonus = jsonData.BasePercentBonus,
+                    PercentBonusPerLevel = jsonData.PercentBonusPerLevel,
+                    Grade = grade,
+                    DropWeight = jsonData.DropWeight,
+                    IconId = jsonData.IconId,
+                    Description = jsonData.Description
+                }
+            );
+        }
+
+        return relicDataDict;
     }
 
     public RelicItem GetRelicData(string id)

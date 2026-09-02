@@ -56,7 +56,7 @@ public class StageManager : MonoBehaviour
     {
         _currentStage = CurrentStage;
         InitStage(_currentStage);
-        GameManager.Instance.UI.OpenMainUI(UIType.StageProgressUI);
+        GameManager.Instance.UI.OpenBackgroundUI(UIType.StageProgressUI);
     }
 
     public void InitStage(int stageIndex)
@@ -80,8 +80,8 @@ public class StageManager : MonoBehaviour
         CurrentMode = StageMode.BossStage;
         OnModeChanged?.Invoke(CurrentMode);
 
-        GameManager.Instance.UI.OpenContentUI(UIType.BossTimerUI);
-        GameManager.Instance.UI.OpenContentUI(UIType.BossHudUI);
+        GameManager.Instance.UI.OpenBackgroundUI(UIType.BossTimerUI);
+        GameManager.Instance.UI.OpenBackgroundUI(UIType.BossHudUI);
 
         if (GameManager.Instance.Combat != null)
         {
@@ -93,8 +93,8 @@ public class StageManager : MonoBehaviour
     {
         if (CurrentMode == StageMode.BossStage)
         {
-            GameManager.Instance.UI.CloseContentUI(UIType.BossTimerUI);
-            GameManager.Instance.UI.CloseContentUI(UIType.BossHudUI);
+            GameManager.Instance.UI.CloseBackgroundUI(UIType.BossTimerUI);
+            GameManager.Instance.UI.CloseBackgroundUI(UIType.BossHudUI);
 
             _currentStage++;
             InitStage(_currentStage);
@@ -126,8 +126,8 @@ public class StageManager : MonoBehaviour
 
     private void HandleBattleFailed()
     {
-        GameManager.Instance.UI.CloseContentUI(UIType.BossTimerUI);
-        GameManager.Instance.UI.CloseContentUI(UIType.BossHudUI);
+        GameManager.Instance.UI.CloseBackgroundUI(UIType.BossTimerUI);
+        GameManager.Instance.UI.CloseBackgroundUI(UIType.BossHudUI);
 
         CurrentMode = StageMode.NormalStage;
         _currentStage = GameUtil.GetThemeFirstStage(_currentStage, _stagesForChange);
