@@ -1,0 +1,323 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: RelicImages
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: RelicImages
+  m_GUID: 1da54e950faf90849aacc47c9a1d2e4a
+  m_SerializeEntries:
+  - m_GUID: 0287dc3fdf458f641bd8e1ae36c3a761
+    m_Address: CriDamage_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0b6c0a7484549c247a1107c0a5f69d43
+    m_Address: MaxHp_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 11964a5b040af4640ada1c370b494411
+    m_Address: CriDamage_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1544658848fcc6143ac053c6a7134da3
+    m_Address: ExpBonus_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1d9bf6eda4714c840bb319f5242fcf75
+    m_Address: CoolDown_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 214ab9ae86a0b154584db65e45ce7e58
+    m_Address: Accuracy_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2b9cac46acb4bd846976891475c19607
+    m_Address: GoldBonus_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 33f4755710f596349a6ccd1e76138eb4
+    m_Address: GoldBonus_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 37a293a1fd19eed4ebd6e5a742757608
+    m_Address: MoveSpeed_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3875a1c0677f34342b5b7a669ab89de1
+    m_Address: Attack_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3c77cdab5e3dbda4ca2f3eb5686e1278
+    m_Address: Attack_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4234f3be8b263974284be899b240599f
+    m_Address: AtkSpeed_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4413e76cb4193e4439f0452c92c2f04e
+    m_Address: DropRate_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4b7604cbdf52c6b40a8bab2c142595dd
+    m_Address: CriChance_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 556d3d8ae98585846befdfab3eecc591
+    m_Address: DropRate_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 558f21069df732d4f86305e72f5fa47d
+    m_Address: Evasion_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 578c9c345a158ce48aa257f324409095
+    m_Address: CoolDown_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5e2c6218d03e15c48b47c6d5d2a169f8
+    m_Address: MaxHp_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 636da3c79c9a8934681ff4211a1e0031
+    m_Address: GoldBonus_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 63a7f10f1deff17499639a95d65e870e
+    m_Address: LifeSteal_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 65c91f05987f1304fbcb80e25bc60c34
+    m_Address: Accuracy_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 660a50879acc4d741a5dbfced1cabb2e
+    m_Address: Attack_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 68ff0666d8dc1214bb9521f3e14ff551
+    m_Address: CriDamage_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6ef73ca25f3cc424db61f129369bc3c5
+    m_Address: Defense_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6f737ae07734d8d4eb9c9cf60c1f0d85
+    m_Address: CoolDown_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6fa5e3ba3f8063043864da420ca486b1
+    m_Address: Attack_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 75f34186999757a45a83a54168334067
+    m_Address: RBPBonus_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7b2cea828198007489a13521ba054ff2
+    m_Address: DropRate_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7d2ed9df467762b42baa9b1b890df436
+    m_Address: Evasion_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7d658e9071bce9c46b035057a721def6
+    m_Address: ExpBonus_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8736cef67d9cecc4eb4e7e4905d28eda
+    m_Address: GoldBonus_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 88165d898e2404147b77e14ffdcefe12
+    m_Address: MaxHp_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8ac1baca3eb3c934b9f553e862c099aa
+    m_Address: Defense_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 95917a1a4b18fba45b54360b6a4bd478
+    m_Address: Accuracy_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9a5436efab06aeb4d81e22967cad7fa3
+    m_Address: CriChance_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9b2dea95b19feb841ad9bd7ce22f39a4
+    m_Address: Defense_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9f4067e1b1dcd734f89513e879c6c5d6
+    m_Address: DropRate_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a3298be9474922d498731ef7fdb0e681
+    m_Address: RBPBonus_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a8983a33bef7c9c41a188fe0cd55a3d8
+    m_Address: RBPBonus_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aa699fb8e0f9b4a47b6666e53c1efe6e
+    m_Address: MaxHp_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae85e8111b9b2f14cb4a5851780b26eb
+    m_Address: AtkSpeed_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ba666e71918d4b543a11ab2bfd9740ec
+    m_Address: MoveSpeed_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bd4d26db8b50e3b4aae3a6883e1efc45
+    m_Address: MoveSpeed_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c13e0c5f02ab96c4eb00cb07d9c98058
+    m_Address: LifeSteal_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c27045470f776e946b2c7510c579c40b
+    m_Address: AtkSpeed_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c3f8ee83db466b04b820355bfb84382a
+    m_Address: CoolDown_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c645f2d659df2ac4aaeb32f4cff19ac1
+    m_Address: AtkSpeed_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ca992bdd11a14af4cb78cda93b1e4a9c
+    m_Address: Accuracy_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cdf5c6626b2f3d74bb985db84963e410
+    m_Address: LifeSteal_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d007eccb3b3ac5147b626a92674299e9
+    m_Address: MoveSpeed_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d168d5194dbf335459ea844b0bd44e40
+    m_Address: ExpBonus_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d21265628f2e6c14b9af45067187d60b
+    m_Address: ExpBonus_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d5759156427aa814791601e5d8fbddb1
+    m_Address: Evasion_3
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e14c15cbced04574187ab0b1f42ae220
+    m_Address: Defense_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ea694bad11815ad43979bc155eac76d6
+    m_Address: CriDamage_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eaba6b5746d0d884390aa4119879a47e
+    m_Address: RBPBonus_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ee5e89f0035735646970dfebdcf3f9e1
+    m_Address: CriChance_1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f3a16c5f683f250408b484587d57b479
+    m_Address: Evasion_4
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f98c66173d1e15f4cb72e62fa5982ba8
+    m_Address: CriChance_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fa5bf06ac1a67754499b73dbe9c55c95
+    m_Address: LifeSteal_2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 3e85b09c119d68948be180652b4d9b96, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 4a82e7494b94c6546aa9e578540b07f4, type: 2}
+    - {fileID: 11400000, guid: 5b0aa2706c384be458113db7bce69ecb, type: 2}
