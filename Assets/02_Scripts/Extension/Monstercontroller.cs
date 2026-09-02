@@ -1,16 +1,26 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 
 public class MonsterController : MonoBehaviour
 {
+    [Header("=== 애니메이션 뷰 참조 ===")]
+    [SerializeField] private CharacterAnimationView _animationView;
+
     public MonsterModel Model { get; private set; }
 
     private const float MoveSpeed = 2f;
 
+    private void Awake()
+    {
+        if (_animationView == null)
+        {
+            _animationView = GetComponent<CharacterAnimationView>();
+        }
+    }
+
     public void Setup(MonsterData data)
     {
         Model = new MonsterModel(data);
-        Model.OnDied += HandleDied;
         MoveToPlayer();
     }
 
@@ -30,23 +40,17 @@ public class MonsterController : MonoBehaviour
 
     private IEnumerator MoveToPosition(Vector3 targetPosition)
     {
+        _animationView?.PlayMove(true);
+
         while (transform.position != targetPosition)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, MoveSpeed * Time.deltaTime);
             yield return null;
         }
+
+        _animationView?.PlayMove(false);
     }
 
-    private void HandleDied()
-    {
-        GameManager.Instance.Combat.OnMonsterKilled(gameObject);
-    }
-
-    private void OnDisable()
-    {
-        if (Model != null)
-        {
-            Model.OnDied -= HandleDied;
-        }
-    }
+    public void PlayAttackAnimation(bool isAttacking) => _animationView?.PlayAttack(isAttacking);
+    public void PlayDieAnimation() => _animationView?.PlayDie();
 }
