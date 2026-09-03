@@ -134,6 +134,8 @@ public class StageManager : MonoBehaviour
         OnModeChanged?.Invoke(CurrentMode);
         OnStageChanged?.Invoke(_currentStage);
 
+        PlayerController.Instance?.ResetHp();
+
         if (GameManager.Instance.Combat != null)
         {
             GameManager.Instance.Combat.StartNormalBattle(_currentStage);

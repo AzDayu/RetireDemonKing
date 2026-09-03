@@ -128,6 +128,11 @@ public class GameManager : MonoBehaviour
             _growthManager.Initialize(playerModel, savedEquipments, savedRelics);
         }
 
+        if (PlayerController.Instance != null)
+        {
+            PlayerController.Instance.Initialize();
+        }
+
         if (_stageManager != null && playerModel != null)
         {
             _stageManager.Initialize(playerModel.CurrentStage);

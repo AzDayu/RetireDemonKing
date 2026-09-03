@@ -230,4 +230,11 @@ public class CombatManager : MonoBehaviour
             DespawnMonster(monster);
         }
     }
+
+    public void TriggerBattleFailed()
+    {
+        _isTimerRunning = false;
+        DespawnAllActiveMonsters();
+        OnBattleFailed?.Invoke();
+    }
 }

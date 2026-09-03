@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterAnimationView : MonoBehaviour
@@ -9,6 +10,8 @@ public class CharacterAnimationView : MonoBehaviour
     private static readonly int HashIsMoving = Animator.StringToHash("IsMoving");
     private static readonly int HashIsAttacking = Animator.StringToHash("IsAttacking");
     private static readonly int HashDie = Animator.StringToHash("Die");
+
+    public event Action OnAttackHit;
 
     protected readonly HashSet<int> _validParameterHashSet = new HashSet<int>();
 
@@ -69,5 +72,10 @@ public class CharacterAnimationView : MonoBehaviour
                 _animator.SetTrigger(HashDie);
             }
         }
+    }
+
+    public void OnAttackHitEvent()
+    {
+        OnAttackHit?.Invoke();
     }
 }
