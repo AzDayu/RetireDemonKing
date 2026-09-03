@@ -125,13 +125,13 @@ MonoBehaviour:
   _weaponSlots:
   - WeaponType: 0
     WeaponObject: {fileID: 4746136925679894696}
-    WeaponHitbox: {fileID: 2742912424993165284}
+    WeaponHitbox: {fileID: 0}
   - WeaponType: 1
     WeaponObject: {fileID: 709468856952761849}
-    WeaponHitbox: {fileID: 8759110994525643481}
+    WeaponHitbox: {fileID: 0}
   - WeaponType: 2
     WeaponObject: {fileID: 6587847639901737654}
-    WeaponHitbox: {fileID: 3572402582554391436}
+    WeaponHitbox: {fileID: 0}
   _currentWeapon: 0
   _attackRange: 5
   _monsterLayer:
@@ -239,17 +239,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2343704259443186213, guid: d4a4be361105ddf4784348adc128da37, type: 3}
   m_PrefabInstance: {fileID: 2980829563416836060}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8759110994525643481 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5823318950453843205, guid: d4a4be361105ddf4784348adc128da37, type: 3}
-  m_PrefabInstance: {fileID: 2980829563416836060}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c650660c19359a34980148dd3d14e3a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponHitbox
 --- !u!1001 &3156108931341781163
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -319,17 +308,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd06beb1c26045c4a8f670befde09c95, type: 3}
---- !u!114 &3572402582554391436 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1900371026412780327, guid: fd06beb1c26045c4a8f670befde09c95, type: 3}
-  m_PrefabInstance: {fileID: 3156108931341781163}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c650660c19359a34980148dd3d14e3a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponHitbox
 --- !u!4 &5775703978260908044 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8929420297138716839, guid: fd06beb1c26045c4a8f670befde09c95, type: 3}
@@ -401,17 +379,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4c9c2455b8fd2a478a5c40b311aa5d5, type: 3}
---- !u!114 &2742912424993165284 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1351860992538074893, guid: f4c9c2455b8fd2a478a5c40b311aa5d5, type: 3}
-  m_PrefabInstance: {fileID: 3806120270377865449}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c650660c19359a34980148dd3d14e3a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponHitbox
 --- !u!1 &4746136925679894696 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8435141338488016961, guid: f4c9c2455b8fd2a478a5c40b311aa5d5, type: 3}

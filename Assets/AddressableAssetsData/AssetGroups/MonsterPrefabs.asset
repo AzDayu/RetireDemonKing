@@ -15,28 +15,28 @@ MonoBehaviour:
   m_GroupName: MonsterPrefabs
   m_GUID: f2d1907d8a327ef4cb6a2c8dcbcc9171
   m_SerializeEntries:
-  - m_GUID: 06329ae3953aeaf4e91c7ceac5ba21a1
-    m_Address: Mob_Ork
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 15eae2732d91e8d44951cff3e774d184
+  - m_GUID: 1b70783655985ea4384ed9dcc0190930
     m_Address: Mob_Knight
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 23bd23f2f71c53045b926d4016f0a390
-    m_Address: Mob_WareWolf
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5ab1ace388870214bb627ebee3331688
+  - m_GUID: 68b1d3a734ee8c9459a5053708157c49
     m_Address: Mob_LittleDevil
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 91e371599e64c7b4c9cd4a2a3e616990
     m_Address: Mob_Pharaoh
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9dc7dcb42c88ebf49ad048c8c564c3a1
+    m_Address: Mob_Ork
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a39f166e5318a6a4d9bd3c77d67f5ca1
+    m_Address: Mob_WareWolf
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

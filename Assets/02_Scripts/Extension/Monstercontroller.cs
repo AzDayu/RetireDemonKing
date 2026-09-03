@@ -1,56 +1,87 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MonsterController : MonoBehaviour
 {
-    [Header("=== 애니메이션 뷰 참조 ===")]
+    [Header("=== 컴포넌트 참조 ===")]
     [SerializeField] private CharacterAnimationView _animationView;
 
-    public MonsterModel Model { get; private set; }
+    [Header("=== 전투 설정 ===")]
+    [SerializeField] private float _attackRange = 1.5f;
+    [SerializeField] private float _moveSpeed = 2f;
 
-    private const float MoveSpeed = 2f;
+    public MonsterModel Model { get; private set; }
+    public bool IsDead => Model == null || Model.CurHp <= 0f;
+
+    private MonsterData _data;
+    private float _attackTimer;
 
     private void Awake()
     {
         if (_animationView == null)
-        {
             _animationView = GetComponent<CharacterAnimationView>();
-        }
     }
 
     public void Setup(MonsterData data)
     {
+        _data = data;
         Model = new MonsterModel(data);
-        MoveToPlayer();
+        _attackTimer = 0f;
     }
 
-    private void MoveToPlayer()
+    private void Update()
     {
-        Transform player = PlayerController.Instance;
-        if (player == null) return;
+        if (IsDead) return;
 
-        Vector3 direction = player.position - transform.position;
-        direction.y = 0f;
-        direction.Normalize();
-        transform.rotation = Quaternion.LookRotation(direction);
-
-        Vector3 targetPosition = transform.position + direction * 2f;
-        StartCoroutine(MoveToPosition(targetPosition));
-    }
-
-    private IEnumerator MoveToPosition(Vector3 targetPosition)
-    {
-        _animationView?.PlayMove(true);
-
-        while (transform.position != targetPosition)
+        PlayerController player = PlayerController.Instance;
+        
+        if (player == null || player.IsDead)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, MoveSpeed * Time.deltaTime);
-            yield return null;
+            _animationView?.PlayAttack(false);
+            _animationView?.PlayMove(false);
+            return;
         }
 
-        _animationView?.PlayMove(false);
+        float distance = Vector3.Distance(transform.position, player.transform.position);
+
+        if (distance > _attackRange)
+        {
+            _animationView?.PlayAttack(false);
+            _animationView?.PlayMove(true);
+
+            Vector3 dir = (player.transform.position - transform.position).normalized;
+            dir.y = 0f;
+            transform.position += dir * (_moveSpeed * Time.deltaTime);
+
+            if (dir.sqrMagnitude > 0.001f)
+                transform.rotation = Quaternion.LookRotation(dir);
+        }
+        else
+        {
+            _animationView?.PlayMove(false);
+            _animationView?.PlayAttack(true);
+
+            float attackSpeed = _data != null && _data.AttackSpeed > 0f ? _data.AttackSpeed : 1f;
+            float attackInterval = 1f / attackSpeed;
+            _attackTimer += Time.deltaTime;
+
+            if (_attackTimer >= attackInterval)
+            {
+                _attackTimer -= attackInterval;
+                float attackPower = _data != null ? _data.AttackPower : 10f;
+                player.TakeDamage(attackPower);
+            }
+        }
     }
 
-    public void PlayAttackAnimation(bool isAttacking) => _animationView?.PlayAttack(isAttacking);
-    public void PlayDieAnimation() => _animationView?.PlayDie();
+    public void TakeDamage(float incomingDamage, float attackerAccuracy = 100f)
+    {
+        if (IsDead) return;
+
+        Model.ChangeCurHp(-incomingDamage);
+
+        if (Model.CurHp <= 0f)
+        {
+            GameManager.Instance.Combat.OnMonsterKilled(gameObject);
+        }
+    }
 }

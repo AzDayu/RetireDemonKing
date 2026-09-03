@@ -84,6 +84,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f2a159f78f60a54fa399b4899d5e32e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterController
+  _animationView: {fileID: 0}
 --- !u!136 &5537277389256677113
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -724,7 +724,7 @@ PrefabInstance:
     - target: {fileID: 9058571513599423876, guid: 9319d943f93f6f249a76aee09e0141aa, type: 3}
       propertyPath: _weaponSlots.Array.data[0].WeaponHitbox
       value: 
-      objectReference: {fileID: 1494053856}
+      objectReference: {fileID: 0}
     - target: {fileID: 9058571513599423876, guid: 9319d943f93f6f249a76aee09e0141aa, type: 3}
       propertyPath: _weaponSlots.Array.data[0].WeaponObject
       value: 
@@ -732,7 +732,7 @@ PrefabInstance:
     - target: {fileID: 9058571513599423876, guid: 9319d943f93f6f249a76aee09e0141aa, type: 3}
       propertyPath: _weaponSlots.Array.data[1].WeaponHitbox
       value: 
-      objectReference: {fileID: 1494053855}
+      objectReference: {fileID: 0}
     - target: {fileID: 9058571513599423876, guid: 9319d943f93f6f249a76aee09e0141aa, type: 3}
       propertyPath: _weaponSlots.Array.data[1].WeaponObject
       value: 
@@ -740,12 +740,13 @@ PrefabInstance:
     - target: {fileID: 9058571513599423876, guid: 9319d943f93f6f249a76aee09e0141aa, type: 3}
       propertyPath: _weaponSlots.Array.data[2].WeaponHitbox
       value: 
-      objectReference: {fileID: 1494053854}
+      objectReference: {fileID: 0}
     - target: {fileID: 9058571513599423876, guid: 9319d943f93f6f249a76aee09e0141aa, type: 3}
       propertyPath: _weaponSlots.Array.data[2].WeaponObject
       value: 
       objectReference: {fileID: 374472851}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3870294900055730612, guid: 9319d943f93f6f249a76aee09e0141aa, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -753,39 +754,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1798606198}
   m_SourcePrefab: {fileID: 100100000, guid: 9319d943f93f6f249a76aee09e0141aa, type: 3}
---- !u!114 &1494053854 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3572402582554391436, guid: 9319d943f93f6f249a76aee09e0141aa, type: 3}
-  m_PrefabInstance: {fileID: 1494053853}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c650660c19359a34980148dd3d14e3a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponHitbox
---- !u!114 &1494053855 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8759110994525643481, guid: 9319d943f93f6f249a76aee09e0141aa, type: 3}
-  m_PrefabInstance: {fileID: 1494053853}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c650660c19359a34980148dd3d14e3a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponHitbox
---- !u!114 &1494053856 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2742912424993165284, guid: 9319d943f93f6f249a76aee09e0141aa, type: 3}
-  m_PrefabInstance: {fileID: 1494053853}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c650660c19359a34980148dd3d14e3a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponHitbox
 --- !u!1 &1798606194 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1476733051683785865, guid: 9319d943f93f6f249a76aee09e0141aa, type: 3}

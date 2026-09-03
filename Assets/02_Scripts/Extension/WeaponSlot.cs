@@ -13,5 +13,4 @@ public struct WeaponSlot
 {
     public WeaponType WeaponType;
     public GameObject WeaponObject;
-    public WeaponHitbox WeaponHitbox;
 }
