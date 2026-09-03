@@ -43,8 +43,9 @@ public class RelicScrollUI : UIBase
         foreach (RelicItem relic in allRelics)
         {
             Debug.Log($"[RelicScrollUI] Id: {relic.Id}, Grade: {relic.Grade}, Stat: {relic.TargetStatType}");
+
             if (!groupedByStat.ContainsKey(relic.TargetStatType))
-        {
+            {
                 groupedByStat[relic.TargetStatType] = new List<RelicItem>();
             }
             groupedByStat[relic.TargetStatType].Add(relic);

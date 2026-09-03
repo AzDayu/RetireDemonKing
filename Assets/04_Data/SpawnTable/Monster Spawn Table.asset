@@ -15,86 +15,86 @@ MonoBehaviour:
   entries:
   - theme: 0
     monsters:
-    - monsterId: Monster_BlueSlime
-      count: 1
-    bossMonsterId: Monster_Knight
+    - monsterId: Monster_Hyena
+      count: 3
+    bossMonsterId: Monster_WareWolf
   - theme: 1
     monsters:
-    - monsterId: Monster_BlueSlime
-      count: 1
-    bossMonsterId: Monster_BlueSlime
+    - monsterId: Monster_Hyena
+      count: 3
+    bossMonsterId: Monster_WareWolf
   - theme: 2
     monsters:
     - monsterId: Monster_Hyena
-      count: 1
-    bossMonsterId: Monster_Hyena
+      count: 3
+    bossMonsterId: Monster_Ork
   - theme: 3
     monsters:
     - monsterId: Monster_Hyena
-      count: 1
-    bossMonsterId: Monster_Hyena
+      count: 3
+    bossMonsterId: Monster_Ork
   - theme: 4
     monsters:
-    - monsterId: Monster_Pharaoh
-      count: 1
-    bossMonsterId: Monster_Pharaoh
+    - monsterId: Monster_Ork
+      count: 3
+    bossMonsterId: Monster_LittleDevil
   - theme: 5
     monsters:
-    - monsterId: Monster_Pharaoh
-      count: 1
-    bossMonsterId: Monster_Pharaoh
+    - monsterId: Monster_Ork
+      count: 3
+    bossMonsterId: Monster_LittleDevil
   - theme: 6
     monsters:
-    - monsterId: Monster_Hyena
-      count: 1
-    bossMonsterId: Monster_Hyena
+    - monsterId: Monster_LittleDevil
+      count: 3
+    bossMonsterId: Monster_Knight
   - theme: 7
     monsters:
-    - monsterId: Monster_Ork
-      count: 1
-    bossMonsterId: Monster_Ork
+    - monsterId: Monster_LittleDevil
+      count: 3
+    bossMonsterId: Monster_Knight
   - theme: 8
     monsters:
-    - monsterId: Monster_Ork
-      count: 1
-    bossMonsterId: Monster_Ork
+    - monsterId: Monster_LittleDevil
+      count: 3
+    bossMonsterId: Monster_Knight
   - theme: 9
     monsters:
     - monsterId: Monster_LittleDevil
-      count: 1
+      count: 3
     bossMonsterId: Monster_LittleDevil
   - theme: 10
     monsters:
     - monsterId: Monster_LittleDevil
-      count: 1
+      count: 3
     bossMonsterId: Monster_LittleDevil
   - theme: 11
     monsters:
     - monsterId: Monster_LittleDevil
-      count: 1
+      count: 3
     bossMonsterId: Monster_LittleDevil
   - theme: 12
     monsters:
     - monsterId: Monster_WareWolf
-      count: 1
+      count: 3
     bossMonsterId: Monster_WareWolf
   - theme: 13
     monsters:
     - monsterId: Monster_WareWolf
-      count: 1
+      count: 3
     bossMonsterId: Monster_WareWolf
   - theme: 14
     monsters:
     - monsterId: Monster_WareWolf
-      count: 1
+      count: 3
     bossMonsterId: Monster_WareWolf
   - theme: 15
     monsters:
     - monsterId: Monster_WareWolf
-      count: 1
+      count: 3
     bossMonsterId: Monster_WareWolf
   - theme: 16
     monsters:
     - monsterId: Monster_Knight
-      count: 1
+      count: 3
     bossMonsterId: Monster_Knight
