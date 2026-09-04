@@ -1626,6 +1626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BottomBarUI
   Button_Growth: {fileID: 2171365480752265093}
   Button_Skill: {fileID: 6757189514015205394}
+  Button_Shop: {fileID: 8625482583906199081}
 --- !u!1 &1237880066946311975
 GameObject:
   m_ObjectHideFlags: 0
