@@ -7,6 +7,8 @@ public class ShopPopupUI : UIBase
 {
     private const long EquipmentLowChestPrice = 0;
     private const long EquipmentHighChestPrice = 0;
+    private const int RelicLowChestPrice = 0;
+    private const int RelicHighChestPrice = 0;
     private const int UniqueIdRetryCount = 8;
 
     private enum ChestTier
@@ -23,6 +25,7 @@ public class ShopPopupUI : UIBase
     [SerializeField] private UIButton Button_RelicHighChest;
 
     private EquipmentChestResultPanelUI _equipmentResultPanel;
+    private RelicChestResultPanelUI _relicResultPanel;
     private EquipmentModel _pendingCurrentEquipment;
     private EquipmentModel _pendingNewEquipment;
     private bool _isResolvingEquipment;
@@ -59,6 +62,7 @@ public class ShopPopupUI : UIBase
 
         ResolvePendingEquipmentOnDisable();
         _equipmentResultPanel?.Hide();
+        _relicResultPanel?.Hide();
     }
 
     private void OnDestroy()
@@ -120,8 +124,10 @@ public class ShopPopupUI : UIBase
 
     private void OnClickClose()
     {
-        if (_equipmentResultPanel != null &&
-            _equipmentResultPanel.IsVisible)
+        if ((_equipmentResultPanel != null &&
+             _equipmentResultPanel.IsVisible) ||
+            (_relicResultPanel != null &&
+             _relicResultPanel.IsVisible))
         {
             return;
         }
@@ -363,25 +369,73 @@ public class ShopPopupUI : UIBase
 
     private void EnsureEquipmentResultPanel()
     {
-        if (_equipmentResultPanel == null)
+        if (_equipmentResultPanel != null)
         {
-            _equipmentResultPanel =
-                GetComponent<EquipmentChestResultPanelUI>();
+            return;
         }
 
-        if (_equipmentResultPanel == null)
+        GameObject resultPanelPrefab = Resources.Load<GameObject>(
+            "PopupUI/EquipmentChestResultPanelUI"
+        );
+
+        if (resultPanelPrefab == null)
         {
-            _equipmentResultPanel =
-                gameObject.AddComponent<
-                    EquipmentChestResultPanelUI
-                >();
+            Debug.LogError(
+                "[ShopPopupUI] 결과창 프리팹을 찾지 못했습니다."
+            );
+            return;
         }
+
+        GameObject resultPanelObject = Instantiate(
+            resultPanelPrefab,
+            transform,
+            false
+        );
+        _equipmentResultPanel =
+            resultPanelObject.GetComponent<EquipmentChestResultPanelUI>();
+    }
+
+    private void EnsureRelicResultPanel()
+    {
+        if (_relicResultPanel != null)
+        {
+            return;
+        }
+
+        GameObject resultPanelPrefab = Resources.Load<GameObject>(
+            "PopupUI/RelicChestResultPanelUI"
+        );
+
+        if (resultPanelPrefab == null)
+        {
+            Debug.LogError(
+                "[ShopPopupUI] 유물 결과창 프리팹을 찾지 못했습니다."
+            );
+            return;
+        }
+
+        GameObject resultPanelObject = Instantiate(
+            resultPanelPrefab,
+            transform,
+            false
+        );
+        _relicResultPanel =
+            resultPanelObject.GetComponent<RelicChestResultPanelUI>();
     }
 
     private void ShowPurchaseFailure(string message)
     {
+        ShowNotice("구매 실패", message);
+    }
+
+    private void ShowNotice(string title, string message)
+    {
         EnsureEquipmentResultPanel();
-        _equipmentResultPanel.ShowNotice("구매 실패", message);
+
+        if (_equipmentResultPanel != null)
+        {
+            _equipmentResultPanel.ShowNotice(title, message);
+        }
     }
 
     private List<EquipmentItem> GetAllEquipmentItems()
@@ -508,141 +562,68 @@ public class ShopPopupUI : UIBase
 
     private void OnClickRelicChest(ChestTier tier)
     {
-        List<RelicItem> relicList = GetAllRelicItems();
+        EnsureRelicResultPanel();
 
-        List<RelicItem> candidates =
-            GetRelicItemsByTier(relicList, tier);
+        if (_relicResultPanel == null)
+        {
+            ShowPurchaseFailure("유물 결과창 프리팹을 찾지 못했습니다.");
+            return;
+        }
 
-        RelicItem selectedRelic =
-            GetRandomRelic(candidates);
-
-        if (selectedRelic == null)
+        if (_relicResultPanel.IsVisible)
         {
             return;
         }
 
-        Debug.Log(
-            $"[ShopPopupUI] 렐릭 추첨 결과: " +
-            $"상자 등급: {tier} / " +
-            $"{selectedRelic.Name} / " +
-            $"ID: {selectedRelic.Id}"
-        );
-    }
-
-    private List<RelicItem> GetAllRelicItems()
-    {
-        if (GameManager.Instance == null)
+        if (GameManager.Instance == null ||
+            GameManager.Instance.Growth == null ||
+            GameManager.Instance.Growth.PlayerModel == null)
         {
-            Debug.LogWarning("GameManager가 없습니다.");
-
-            return new List<RelicItem>();
+            ShowPurchaseFailure("유물 데이터를 불러오지 못했습니다.");
+            return;
         }
 
-        if (GameManager.Instance.Data == null)
-        {
-            Debug.LogWarning("GameDataManager가 없습니다.");
+        RelicManager relicManager =
+            FindFirstObjectByType<RelicManager>();
 
-            return new List<RelicItem>();
+        if (relicManager == null)
+        {
+            ShowPurchaseFailure("유물 관리자를 찾지 못했습니다.");
+            return;
         }
 
-        List<RelicItem> relicList = GameManager.Instance.Data.GetAllRelicDataList();
+        int chestPrice = tier == ChestTier.Low
+            ? RelicLowChestPrice
+            : RelicHighChestPrice;
+        PlayerModel playerModel = GameManager.Instance.Growth.PlayerModel;
 
-        if (relicList == null)
+        if (playerModel.RebirthPoints < chestPrice)
         {
-            Debug.LogWarning("렐릭 목록을 가져오지 못했습니다.");
-
-            return new List<RelicItem>();
-        }
-
-        return relicList;
-    }
-
-    private List<RelicItem> GetRelicItemsByTier(List<RelicItem> relicList, ChestTier tier)
-    {
-        List<RelicItem> result = new List<RelicItem>();
-
-        if (relicList == null)
-        {
-            return result;
-        }
-
-        foreach (RelicItem relic in relicList)
-        {
-            if (relic == null)
-            {
-                continue;
-            }
-
-            bool isTargetGrade;
-            if (tier == ChestTier.Low)
-            {
-                isTargetGrade = relic.Id.EndsWith("_01") || relic.Id.EndsWith("_02");
-            }
-
-            else
-            {
-                isTargetGrade = relic.Id.EndsWith("_03") || relic.Id.EndsWith("_04");
-            }
-
-            if (isTargetGrade)
-            {
-                result.Add(relic);
-            }
-        }
-
-        return result;
-    }
-
-    private RelicItem GetRandomRelic(List<RelicItem> candidates)
-    {
-        if (candidates == null || candidates.Count == 0)
-        {
-            Debug.LogWarning("추첨 가능한 렐릭이 없습니다.");
-
-            return null;
-        }
-
-        int totalWeight = 0;
-
-        foreach (RelicItem relic in candidates)
-        {
-            if (relic == null)
-            {
-                continue;
-            }
-
-            totalWeight += Mathf.Max(0, relic.DropWeight);
-        }
-
-        if (totalWeight <= 0)
-        {
-            int randomIndex = UnityEngine.Random.Range(
-                0,
-                candidates.Count
+            ShowPurchaseFailure(
+                $"환생 포인트가 부족합니다.\n" +
+                $"필요 포인트: {chestPrice:N0}\n" +
+                $"보유 포인트: {playerModel.RebirthPoints:N0}"
             );
-
-            return candidates[randomIndex];
+            return;
         }
 
-        int randomValue = UnityEngine.Random.Range(0, totalWeight);
-        int accumulatedWeight = 0;
+        EquipmentGrade[] availableGrades = tier == ChestTier.Low
+            ? new[] { EquipmentGrade.Common, EquipmentGrade.Rare }
+            : new[] { EquipmentGrade.Epic, EquipmentGrade.Legendary };
 
-        foreach (RelicItem relic in candidates)
+        if (!relicManager.TryDrawRelic(
+                playerModel,
+                chestPrice,
+                availableGrades,
+                out RelicDrawResult result))
         {
-            if (relic == null)
-            {
-                continue;
-            }
-
-            accumulatedWeight += Mathf.Max(0, relic.DropWeight);
-
-            if (randomValue < accumulatedWeight)
-            {
-                return relic;
-            }
+            ShowPurchaseFailure("추첨 가능한 유물이 없습니다.");
+            return;
         }
 
-        return candidates[candidates.Count - 1];
+        GameManager.Instance.SaveServer?.SaveGameData();
+
+        _relicResultPanel.Show(result);
     }
 
 
