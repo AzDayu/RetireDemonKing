@@ -11,24 +11,23 @@ public class CombatManager : MonoBehaviour
     private bool _isTimerRunning;
 
     [Header("Monster Spawn Settings")]
-    [SerializeField] private Transform _monsterSpawnPoint;
+    [SerializeField] private Transform[] _monsterSpawnPoints;
     [SerializeField] private MonsterSpawnTable _monsterSpawnTable;
-
-    [Header("Wave & Target Settings")]
-    private int _currentKillCount = 0;
-    private int _currentWaveTotal = 0;
     private bool _isBossBattle = false;
-    public const int WaveMaxCount = 10;
-
-    private Queue<string> _waveQueue = new Queue<string>();
-    private Dictionary<string, Queue<GameObject>> _monsterPool = new Dictionary<string, Queue<GameObject>>();
-    private Dictionary<GameObject, string> _activeMonsters = new Dictionary<GameObject, string>();
 
     // StageManager 및 UI에서 구독할 이벤트들
     public event Action OnBattleCleared;
     public event Action OnBattleFailed;
     public event Action<int, int> OnWaveUpdated;
     public event Action<float, float> OnBossTimerUpdated;
+    public event Action<MonsterController> OnBossSpawned;
+
+    private Queue<string> _waveQueue = new Queue<string>();
+    private Dictionary<string, Queue<GameObject>> _monsterPool = new Dictionary<string, Queue<GameObject>>();
+    private Dictionary<GameObject, string> _activeMonsters = new Dictionary<GameObject, string>();
+
+    private int _currentKillCount = 0;
+    private int _currentWaveTotal = 0;
 
     private void Update()
     {
@@ -126,7 +125,6 @@ public class CombatManager : MonoBehaviour
         if (expanded.Count == 0)
         {
             Debug.LogWarning($"[CombatManager] 테마 {theme}에 등록된 몬스터가 없습니다. MonsterSpawnTable 설정을 확인하세요.");
-            _currentWaveTotal = WaveMaxCount;
             return;
         }
 
@@ -188,7 +186,8 @@ public class CombatManager : MonoBehaviour
             monster = Instantiate(prefab, transform);
         }
 
-        monster.transform.position = _monsterSpawnPoint != null ? _monsterSpawnPoint.position : Vector3.zero;
+        Transform spawnPoint = GameUtil.GetRandomElement(_monsterSpawnPoints);
+        monster.transform.position = spawnPoint != null ? spawnPoint.position : Vector3.zero;
         monster.transform.rotation = Quaternion.identity;
         monster.SetActive(true);
 
@@ -196,6 +195,11 @@ public class CombatManager : MonoBehaviour
 
         MonsterController controller = monster.GetComponent<MonsterController>();
         controller?.Setup(data);
+
+        if (_isBossBattle)
+        {
+            OnBossSpawned?.Invoke(controller);
+        }
     }
 
     public bool DespawnMonster(GameObject monsterObj)
@@ -225,5 +229,12 @@ public class CombatManager : MonoBehaviour
         {
             DespawnMonster(monster);
         }
+    }
+
+    public void TriggerBattleFailed()
+    {
+        _isTimerRunning = false;
+        DespawnAllActiveMonsters();
+        OnBattleFailed?.Invoke();
     }
 }

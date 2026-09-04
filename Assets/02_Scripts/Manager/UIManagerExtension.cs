@@ -18,9 +18,13 @@ public enum UIType
     LoginPopupUI,
     MainHUDUI,
     PopupRootUI,
+    RandomEventPopupUI,
     ShopPopupUI,
     StageProgressUI,
-    RandomEventPopupUI
+    BossTimerUI,
+    BossHudUI,
+    RelicUI,
+
 }
 
 public static class UIManagerExtension
@@ -35,7 +39,7 @@ public static class UIManagerExtension
 
     public static void ShowStartupUIOnGameStart(this UIManager uiManager)
     {
-        //uiManager.OpenUI(UIRootType.MainUI, UIType.StartTitleUI);
+        
     }
 
 
