@@ -5,6 +5,7 @@ public class PopupRootUI : UIBase
     [SerializeField] private UIButton Button_Close;
     [SerializeField] private GameObject Popup_Equipment;
     [SerializeField] private GameObject Popup_Skill;
+    [SerializeField] private GameObject Popup_Shop;
 
     private void OnEnable()
     {
@@ -32,6 +33,11 @@ public class PopupRootUI : UIBase
         ShowPopup(Popup_Skill);
     }
 
+    public void ShowShop()
+    {
+        ShowPopup(Popup_Shop);
+    }
+
     private void ShowPopup(GameObject target)
     {
         if (Popup_Equipment != null)
@@ -42,6 +48,11 @@ public class PopupRootUI : UIBase
         if (Popup_Skill != null)
         {
             Popup_Skill.SetActive(target == Popup_Skill);
+        }
+
+        if (Popup_Shop != null)
+        {
+            Popup_Shop.SetActive(target == Popup_Shop);
         }
     }
 
