@@ -19,8 +19,6 @@ public class RelicSlotUI : UIBase
     {
         if (Button_Base != null)
         {
-            Debug.Log($"[RelicSlotUI] {gameObject.name} Bind 시도, Button_Base null? {Button_Base == null}");
-
             Button_Base.BindOnClickButtonEvent(OnClickButton);
         }
     }
