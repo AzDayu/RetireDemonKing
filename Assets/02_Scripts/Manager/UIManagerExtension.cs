@@ -23,6 +23,7 @@ public enum UIType
     BossTimerUI,
     BossHudUI,
     RelicUI,
+    RelicInfoPopupUI,
 
 }
 
