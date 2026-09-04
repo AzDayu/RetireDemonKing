@@ -344,6 +344,7 @@ GameObject:
   - component: {fileID: 6999146499562799701}
   - component: {fileID: 5254326622407429636}
   - component: {fileID: 3598782736468550537}
+  - component: {fileID: 7812345678901234567}
   m_Layer: 5
   m_Name: ShopPopupUI
   m_TagString: Untagged
@@ -430,6 +431,18 @@ MonoBehaviour:
   Button_EquipmentHighChest: {fileID: 6407905425296701476}
   Button_RelicLowChest: {fileID: 1226901472389128844}
   Button_RelicHighChest: {fileID: 170828113613698393}
+--- !u!114 &7812345678901234567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224463284321153306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72e2bc0d1e7b4b84a13b33ab0fbb2de9, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::EquipmentChestResultPanelUI
 --- !u!1 &299291501057844985
 GameObject:
   m_ObjectHideFlags: 0
@@ -707,7 +720,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 300
+  m_text: 10000
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3fbeea142f65343a780c643690bd2255, type: 2}
   m_sharedMaterial: {fileID: 7834994180810731740, guid: 3fbeea142f65343a780c643690bd2255, type: 2}
