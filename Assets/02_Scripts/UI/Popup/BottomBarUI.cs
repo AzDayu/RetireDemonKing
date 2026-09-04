@@ -42,12 +42,14 @@ public class BottomBarUI : UIBase
 
     private void OnClick_Shop()
     {
-       PopupRootUI popup = OpenPopupRoot();
-
-        if (popup != null)
+        if (GameManager.Instance == null || GameManager.Instance.UI == null)
         {
-            popup.ShowShop();
+            Debug.LogWarning("[BottomBarUI] UIManager를 찾을 수 없습니다.");
+
+            return;
         }
+
+        GameManager.Instance.UI.OpenPopupUI(UIType.ShopPopupUI);
     }
 
     private PopupRootUI OpenPopupRoot()

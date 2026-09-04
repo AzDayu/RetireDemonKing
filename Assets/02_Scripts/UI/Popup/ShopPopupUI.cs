@@ -3,19 +3,13 @@ using System.Collections.Generic;
 
 
 
-public class ShopPopupUI : MonoBehaviour
+public class ShopPopupUI : UIBase
 {
     private enum ChestTier
     {
         Low,
         High,
     }
-
-
-    [SerializeField] private GameObject slotPrefab;
-    [SerializeField] private Transform contentRoot;
-
-
 
     [Header("Buttons")]
     [SerializeField] private UIButton Button_Close;
@@ -49,10 +43,7 @@ public class ShopPopupUI : MonoBehaviour
 
     private void OnClickClose()
     {
-        if (GameManager.Instance != null && GameManager.Instance.UI != null)
-        {
-            GameManager.Instance.UI.ClosePopupUI(UIType.PopupRootUI);
-        }
+        GameManager.Instance.UI.ClosePopupUI(UIType.ShopPopupUI);
     }
 
     private void OnClickEquipmentChest(ChestTier tier)
