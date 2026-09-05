@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class SkillEnhancePanelUI : MonoBehaviour
+public class SkillEnhancePanelUI : UIBase
 {
     private const long BasePromotionCost = 200;
 

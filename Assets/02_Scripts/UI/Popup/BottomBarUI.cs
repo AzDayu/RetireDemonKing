@@ -25,22 +25,12 @@ public class BottomBarUI : UIBase
 
     private void OnClick_Growth()
     {
-        PopupRootUI popup = OpenPopupRoot();
-
-        if (popup != null)
-        {
-            popup.ShowEquipment();
-        }
+        GameManager.Instance.UI.OpenPopupUI(UIType.GrowthPopupUI);
     }
 
     private void OnClick_Skill()
     {
-        PopupRootUI popup = OpenPopupRoot();
-
-        if (popup != null)
-        {
-            popup.ShowSkill();
-        }
+        GameManager.Instance.UI.OpenPopupUI(UIType.SkillPopupUI);
     }
     private void OnClick_Relic()
     {
@@ -49,34 +39,7 @@ public class BottomBarUI : UIBase
 
     private void OnClick_Shop()
     {
-        if (GameManager.Instance == null || GameManager.Instance.UI == null)
-        {
-            Debug.LogWarning("[BottomBarUI] UIManager를 찾을 수 없습니다.");
-
-            return;
-        }
-
         GameManager.Instance.UI.OpenPopupUI(UIType.ShopPopupUI);
     }
 
-    private PopupRootUI OpenPopupRoot()
-    {
-        if (GameManager.Instance == null || GameManager.Instance.UI == null)
-        {
-            Debug.LogWarning("[BottomBarUI] UIManager를 찾을 수 없습니다.");
-
-            return null;
-        }
-
-        UIBase popup = GameManager.Instance.UI.OpenPopupUI(UIType.PopupRootUI);
-
-        if (popup is PopupRootUI popupRoot)
-        {
-            return popupRoot;
-        }
-
-        Debug.LogWarning("[BottomBarUI] PopupRootUI를 생성하지 못했습니다.");
-
-        return null;
-    }
 }

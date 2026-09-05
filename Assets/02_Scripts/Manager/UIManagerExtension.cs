@@ -26,7 +26,8 @@ public enum UIType
     RelicInfoPopupUI,
     ShopPopupUI,
     MenuPopupUI,
-
+    GrowthPopupUI,
+    SkillPopupUI,
 }
 
 public static class UIManagerExtension
