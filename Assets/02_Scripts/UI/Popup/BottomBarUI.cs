@@ -41,7 +41,7 @@ public class BottomBarUI : UIBase
     }
     private void OnClick_Relic()
     {
-        GameManager.Instance.UI.OpenPopupUI(UIType.RelicUI);
+        GameManager.Instance.UI.OpenRelicUI();
     }
 
     private PopupRootUI OpenPopupRoot()

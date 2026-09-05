@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 
@@ -43,7 +43,7 @@ public class ShopPopupUI : UIBase
 
     private void OnClickClose()
     {
-        GameManager.Instance.UI.ClosePopupUI(UIType.ShopPopupUI);
+        GameManager.Instance.UI.CloseShopPopupUI();
     }
 
     private void OnClickEquipmentChest(ChestTier tier)
