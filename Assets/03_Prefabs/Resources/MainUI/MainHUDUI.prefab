@@ -13250,6 +13250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UserInformationUI
   Text_Gold: {fileID: 7559677024567799798}
+  Text_RebirthGold: {fileID: 6871599664838172168}
 --- !u!1 &9075453726583944089
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,34 +4,34 @@ using UnityEngine;
 public class UserInformationUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text Text_Gold;
+    [SerializeField] private TMP_Text Text_RebirthGold;
 
-    private long _lastDisplayedEnhanceCurrency =
-        long.MinValue;
+    private long _lastDisplayedEnhanceCurrency = long.MinValue;
+    private int _lastDisplayedRebirthPoints = int.MinValue;
 
     private void Update()
     {
-        if (Text_Gold == null ||
-            GameManager.Instance == null ||
+        if (GameManager.Instance == null ||
             GameManager.Instance.Growth == null ||
             GameManager.Instance.Growth.PlayerModel == null)
         {
             return;
         }
 
-        long enhanceCurrency =
-            GameManager.Instance.Growth
-                .PlayerModel.EnhanceCurrency;
+        PlayerModel playerModel = GameManager.Instance.Growth.PlayerModel;
+        long enhanceCurrency = playerModel.EnhanceCurrency;
+        int rebirthPoints = playerModel.RebirthPoints;
 
-        if (_lastDisplayedEnhanceCurrency ==
-            enhanceCurrency)
+        if (Text_Gold != null && _lastDisplayedEnhanceCurrency != enhanceCurrency)
         {
-            return;
+            _lastDisplayedEnhanceCurrency = enhanceCurrency;
+            Text_Gold.text = enhanceCurrency.ToString("N0");
         }
 
-        _lastDisplayedEnhanceCurrency =
-            enhanceCurrency;
-
-        Text_Gold.text =
-            enhanceCurrency.ToString("N0");
+        if (Text_RebirthGold != null && _lastDisplayedRebirthPoints != rebirthPoints)
+        {
+            _lastDisplayedRebirthPoints = rebirthPoints;
+            Text_RebirthGold.text = rebirthPoints.ToString("N0");
+        }
     }
 }
