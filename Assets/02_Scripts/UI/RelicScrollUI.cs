@@ -16,10 +16,7 @@ public class RelicScrollUI : UIBase
 
     private void OnEnable()
     {
-        if (Button_Close != null)
-        {
-            Button_Close.BindOnClickButtonEvent(OnClickClose);
-        }
+        Button_Close.BindOnClickButtonEvent(OnClickClose);
         BuildRelicList().Forget();
     }
 
@@ -36,8 +33,6 @@ public class RelicScrollUI : UIBase
         }
 
         List<RelicItem> allRelics = GameManager.Instance.Data.GetAllRelicDataList();
-        Debug.Log($"[RelicScrollUI] 유물 개수: {allRelics.Count}");
-
         Dictionary<StatType, List<RelicItem>> groupedByStat = new Dictionary<StatType, List<RelicItem>>();
 
         foreach (RelicItem relic in allRelics)
@@ -60,6 +55,7 @@ public class RelicScrollUI : UIBase
             await CreateSlot(group, EquipmentGrade.Legendary, _legendarySlotPrefab);
         }
     }
+
     private async UniTask CreateSlot(IEnumerable<RelicItem> group, EquipmentGrade grade, RelicSlotUI slotPrefab)
     {
         RelicItem relic = null;
@@ -86,5 +82,14 @@ public class RelicScrollUI : UIBase
         bool isOwned = relicManager != null &&
             relicManager.IsRelicOwned(relic.Id);
         slotInstance.SetIcon(sprite, isOwned);
+        slotInstance.SetClickData(relic, slotPrefab, OnClickSlot);
+    }
+    private void OnClickSlot(RelicItem relic, RelicSlotUI slotPrefab, bool isOwned)
+    {
+        var popup = GameManager.Instance.UI.OpenPopupUI(UIType.RelicInfoPopupUI) as RelicInfoPopupUI;
+        if (popup != null)
+        {
+            popup.Open(relic, slotPrefab, isOwned).Forget();
+        }
     }
 }

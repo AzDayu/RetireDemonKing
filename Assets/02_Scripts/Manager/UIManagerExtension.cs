@@ -23,7 +23,7 @@ public enum UIType
     BossTimerUI,
     BossHudUI,
     RelicUI,
-    ShopPopupUI,
+    RelicInfoPopupUI,
 
 }
 
@@ -105,25 +105,5 @@ public static class UIManagerExtension
     public static void ClosePopupRootUI(this UIManager uiManager)
     {
         uiManager.CloseUI(UIRootType.PopupUI, UIType.PopupRootUI);
-    }
-
-    public static void OpenShopPopupUI(this UIManager uiManager)
-    {
-        uiManager.OpenUI(UIRootType.PopupUI, UIType.ShopPopupUI);
-
-    }
-    public static void CloseShopPopupUI(this UIManager uiManager)
-    {
-        uiManager.CloseUI(UIRootType.PopupUI, UIType.ShopPopupUI);
-    }
-
-    public static void OpenRelicUI(this UIManager uiManager)
-    {
-        uiManager.OpenUI(UIRootType.PopupUI, UIType.RelicUI);
-
-    }
-    public static void CloseRelicUI(this UIManager uiManager)
-    {
-        uiManager.CloseUI(UIRootType.PopupUI, UIType.RelicUI);
     }
 }
