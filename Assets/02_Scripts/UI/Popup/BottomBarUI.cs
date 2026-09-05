@@ -4,6 +4,7 @@ public class BottomBarUI : UIBase
 {
     [SerializeField] private UIButton Button_Growth;
     [SerializeField] private UIButton Button_Skill;
+    [SerializeField] private UIButton Button_Shop;
     [SerializeField] private UIButton Button_Relic;
 
     private void OnEnable()
@@ -11,12 +12,14 @@ public class BottomBarUI : UIBase
         Button_Growth?.BindOnClickButtonEvent(OnClick_Growth);
         Button_Skill?.BindOnClickButtonEvent(OnClick_Skill);
         Button_Relic?.BindOnClickButtonEvent(OnClick_Relic);
+        Button_Shop?.BindOnClickButtonEvent(OnClick_Shop);
     }
 
     private void OnDisable()
     {
         Button_Growth?.UnBindAllOnClickButtonEvent();
         Button_Skill?.UnBindAllOnClickButtonEvent();
+        Button_Shop?.UnBindAllOnClickButtonEvent();
         Button_Relic?.UnBindAllOnClickButtonEvent();
     }
 
@@ -41,7 +44,19 @@ public class BottomBarUI : UIBase
     }
     private void OnClick_Relic()
     {
-        GameManager.Instance.UI.OpenRelicUI();
+        GameManager.Instance.UI.OpenPopupUI(UIType.RelicUI);
+    }
+
+    private void OnClick_Shop()
+    {
+        if (GameManager.Instance == null || GameManager.Instance.UI == null)
+        {
+            Debug.LogWarning("[BottomBarUI] UIManager를 찾을 수 없습니다.");
+
+            return;
+        }
+
+        GameManager.Instance.UI.OpenPopupUI(UIType.ShopPopupUI);
     }
 
     private PopupRootUI OpenPopupRoot()

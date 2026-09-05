@@ -81,8 +81,10 @@ public class RelicScrollUI : UIBase
         RelicSlotUI slotInstance = Instantiate(slotPrefab, _content);
         Sprite sprite = await GameManager.Instance.Resource.LoadSprite(relic.IconId);
 
-        // RelicManager에 공개 획득 여부 조회 메서드(IsRelicOwned) 추가 후 교체
-        bool isOwned = false;
+        RelicManager relicManager =
+            FindFirstObjectByType<RelicManager>();
+        bool isOwned = relicManager != null &&
+            relicManager.IsRelicOwned(relic.Id);
         slotInstance.SetIcon(sprite, isOwned);
     }
 }
