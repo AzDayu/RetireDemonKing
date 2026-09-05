@@ -25,6 +25,7 @@ public enum UIType
     RelicUI,
     RelicInfoPopupUI,
     ShopPopupUI,
+    MenuPopupUI,
 
 }
 
@@ -106,5 +107,15 @@ public static class UIManagerExtension
     public static void ClosePopupRootUI(this UIManager uiManager)
     {
         uiManager.CloseUI(UIRootType.PopupUI, UIType.PopupRootUI);
+    }
+
+    public static void OpenMenuPopupUI(this UIManager uiManager)
+    {
+        uiManager.OpenUI(UIRootType.PopupUI, UIType.MenuPopupUI);
+
+    }
+    public static void CloseMenuPopupUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIRootType.PopupUI, UIType.MenuPopupUI);
     }
 }

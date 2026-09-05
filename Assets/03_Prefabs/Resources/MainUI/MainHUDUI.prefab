@@ -1764,6 +1764,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BottomBarUI
   Button_Growth: {fileID: 2171365480752265093}
   Button_Skill: {fileID: 6757189514015205394}
+  Button_Shop: {fileID: 0}
   Button_Relic: {fileID: 3234715734979092351}
 --- !u!1 &1237880066946311975
 GameObject:
@@ -7780,6 +7781,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45809877876f9124f8683da9ca00dfff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainUIHUD
+  _buttonMenu: {fileID: 8318406021069331649}
 --- !u!1 &5433873483775206411
 GameObject:
   m_ObjectHideFlags: 0
