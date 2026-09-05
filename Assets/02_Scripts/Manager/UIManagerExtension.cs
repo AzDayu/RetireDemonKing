@@ -24,6 +24,7 @@ public enum UIType
     BossHudUI,
     RelicUI,
     RelicInfoPopupUI,
+    ShopPopupUI,
 
 }
 
