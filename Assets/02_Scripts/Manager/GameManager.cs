@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UIManager _uiManager;
     [SerializeField] private GameDataManager _gameDataManager;
     [SerializeField] private ResourceManager _resourceManager;
+    [SerializeField] private RebirthManager _rebirthManager;
 
     public StageManager Stage => _stageManager;
     public CombatManager Combat => _combatManager;
@@ -37,6 +38,7 @@ public class GameManager : MonoBehaviour
     public GameDataManager Data => _gameDataManager;
     public ResourceManager Resource => _resourceManager;
     public EventManager Event => _eventManager;
+    public RebirthManager Rebirth => _rebirthManager;
 
     private void Awake()
     {
@@ -100,14 +102,15 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Rebirth:
-                ChangeState(GameState.IdleStage);
+                ChangeState(GameState.Rebirth);
+
                 break;
         }
     }
 
     public async void OnLoginSuccessAndStartGame()
     {
-        Debug.Log("[GameManager] 로그인 성공 -> 서버/로컬 세이브 데이터 로드 시작");
+        Debug.Log("[GameManager] 로그인 성공 -> 세이브 데이터 로드 시작");
 
         if (SaveServer != null)
         {
@@ -119,9 +122,22 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        PlayerModel playerModel = SaveServer != null ? SaveServer.GetPlayerModel() : null;
-        var savedEquipments = SaveServer != null ? SaveServer.GetEquipments() : null;
-        var savedRelics = SaveServer != null ? SaveServer.GetRelics() : null;
+        PlayerModel playerModel = SaveServer?.GetPlayerModel();
+
+        if (_offlineManager != null && playerModel != null && SaveServer != null)
+        {
+            long lastSaveTicks = SaveServer.GetLastSaveUnixMinutes();
+            _offlineManager.ProcessOfflineReward(lastSaveTicks, playerModel.CurrentStage);
+        }
+
+        RestartInGameLoop();
+    }
+
+    public void RestartInGameLoop()
+    {
+        PlayerModel playerModel = SaveServer?.GetPlayerModel();
+        var savedEquipments = SaveServer?.GetEquipments();
+        var savedRelics = SaveServer?.GetRelics();
 
         if (_growthManager != null)
         {
@@ -138,13 +154,7 @@ public class GameManager : MonoBehaviour
             _stageManager.Initialize(playerModel.CurrentStage);
         }
 
-        if (_offlineManager != null && playerModel != null && SaveServer != null)
-        {
-            long lastSaveTicks = SaveServer.GetLastSaveUnixMinutes();
-            _offlineManager.ProcessOfflineReward(lastSaveTicks, playerModel.CurrentStage);
-        }
-
-        Debug.Log("[GameManager] 모든 초기화 완료 -> 방치 전투(IdleStage) 진입");
+        Debug.Log("[GameManager] 인게임 루프 재시작 완료 -> IdleStage 진입");
         ChangeState(GameState.IdleStage);
     }
 
