@@ -423,8 +423,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d797492858ed6ef4abb64d2f0d5443d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopPopupUI
-  slotPrefab: {fileID: 3921152974767557245, guid: b0408f2c6d9c251429574f558739a0c4, type: 3}
-  contentRoot: {fileID: 0}
   Button_Close: {fileID: 6796705625338283679}
   Button_EquipmentLowChest: {fileID: 7324500512289692960}
   Button_EquipmentHighChest: {fileID: 6407905425296701476}
@@ -1493,7 +1491,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 300
+  m_text: 50
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3fbeea142f65343a780c643690bd2255, type: 2}
   m_sharedMaterial: {fileID: 7834994180810731740, guid: 3fbeea142f65343a780c643690bd2255, type: 2}
@@ -3189,7 +3187,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 300
+  m_text: 100
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3fbeea142f65343a780c643690bd2255, type: 2}
   m_sharedMaterial: {fileID: 7834994180810731740, guid: 3fbeea142f65343a780c643690bd2255, type: 2}
