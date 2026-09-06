@@ -27,6 +27,8 @@ public enum UIType
     ShopPopupUI,
     MenuPopupUI,
     RebirthPopupUI,
+    GrowthPopupUI,
+    SkillPopupUI,
 
 }
 
