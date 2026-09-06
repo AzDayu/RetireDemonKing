@@ -26,8 +26,8 @@ public enum UIType
     RelicInfoPopupUI,
     ShopPopupUI,
     MenuPopupUI,
-    GrowthPopupUI,
-    SkillPopupUI,
+    RebirthPopupUI,
+
 }
 
 public static class UIManagerExtension
@@ -118,5 +118,15 @@ public static class UIManagerExtension
     public static void CloseMenuPopupUI(this UIManager uiManager)
     {
         uiManager.CloseUI(UIRootType.PopupUI, UIType.MenuPopupUI);
+    }
+
+    public static void OpenRebirthPopupUI(this UIManager uiManager)
+    {
+        uiManager.OpenUI(UIRootType.PopupUI, UIType.RebirthPopupUI);
+
+    }
+    public static void CloseRebirthPopupUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIRootType.PopupUI, UIType.RebirthPopupUI);
     }
 }

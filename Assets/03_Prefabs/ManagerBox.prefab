@@ -517,6 +517,51 @@ MonoBehaviour:
   Canvas_ContentRoot: {fileID: 7097156763878943852}
   Canvas_PopupRoot: {fileID: 6449842952898664283}
   Canvas_VeryFrontRoot: {fileID: 6232492795514640739}
+--- !u!1 &5379683314195523480
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1241174521067341384}
+  - component: {fileID: 2960774286532673179}
+  m_Layer: 0
+  m_Name: RebirthManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1241174521067341384
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5379683314195523480}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -960.4079, y: -535.4389, z: -6.75403}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4634041316688594820}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2960774286532673179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5379683314195523480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23372cad3aa634c48b364ca7cde82593, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RebirthManager
+  _minRebirthStage: 10
 --- !u!1 &5519038143232959087
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,6 +741,7 @@ Transform:
   - {fileID: 5824174623848320874}
   - {fileID: 463535729420877321}
   - {fileID: 7383866752432712589}
+  - {fileID: 1241174521067341384}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6918734984185987777
@@ -1169,3 +1215,4 @@ MonoBehaviour:
   _uiManager: {fileID: 6164618168047710873}
   _gameDataManager: {fileID: 1858486214482068649}
   _resourceManager: {fileID: 4112609992852620555}
+  _rebirthManager: {fileID: 2960774286532673179}
