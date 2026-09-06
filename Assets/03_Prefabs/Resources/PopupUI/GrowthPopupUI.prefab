@@ -1486,6 +1486,7 @@ MonoBehaviour:
   Text_Currency: {fileID: 8453423109487277124}
   Text_EnhanceCost: {fileID: 6793871163671435109}
   Button_Enhance: {fileID: 3380141484415060645}
+  Button_Close: {fileID: 81945855829482577}
   Text_NextLevel: {fileID: 7635489245291523320}
   Text_NextStat: {fileID: 8098272763936913767}
   Button_Weapon: {fileID: 6897126786987663367}

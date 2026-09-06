@@ -3725,47 +3725,7 @@ MonoBehaviour:
   NextSkillText: {fileID: 7591771430987264645}
   Button_Close: {fileID: 6338326021706837905}
   Button_Enhance: {fileID: 8897488172000602975}
-  tempSkillDataList:
-  - Name: "\uAE30\uBCF8\uC2A4\uD0AC1"
-    CurrentDescription: "10\uC758 \uB370\uBBF8\uC9C0\uB97C \uC90D\uB2C8\uB2E4."
-    NextName: "\uAE30\uBCF8\uC2A4\uD0AC1"
-    NextDescription: "10(+2)\uC758 \uB370\uBBF8\uC9C0\uB97C \uC90D\uB2C8\uB2E4."
-  - Name: "\uAE30\uBCF8\uC2A4\uD0AC2"
-    CurrentDescription: "20\uC758 \uB370\uBBF8\uC9C0\uB97C \uC90D\uB2C8\uB2E4."
-    NextName: "\uAE30\uBCF8\uC2A4\uD0AC2"
-    NextDescription: "20(+2)\uC758 \uB370\uBBF8\uC9C0\uB97C \uC90D\uB2C8\uB2E4."
-  - Name: 
-    CurrentDescription: 
-    NextName: 
-    NextDescription: 
-  - Name: 
-    CurrentDescription: 
-    NextName: 
-    NextDescription: 
-  - Name: 
-    CurrentDescription: 
-    NextName: 
-    NextDescription: 
-  - Name: 
-    CurrentDescription: 
-    NextName: 
-    NextDescription: 
-  - Name: 
-    CurrentDescription: 
-    NextName: 
-    NextDescription: 
-  - Name: 
-    CurrentDescription: 
-    NextName: 
-    NextDescription: 
-  - Name: 
-    CurrentDescription: 
-    NextName: 
-    NextDescription: 
-  - Name: 
-    CurrentDescription: 
-    NextName: 
-    NextDescription: 
+  EnhanceCostText: {fileID: 0}
 --- !u!1 &6105014369936176879
 GameObject:
   m_ObjectHideFlags: 0

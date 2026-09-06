@@ -2,6 +2,7 @@
 using System.Linq;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using UnityEngine.UI;
 
 public class RelicScrollUI : UIBase
 {
@@ -14,10 +15,81 @@ public class RelicScrollUI : UIBase
     [SerializeField] private Transform _content;
     [SerializeField] private UIButton Button_Close;
 
+    private GameObject _backgroundOverlay;
+
+    private void Awake()
+    {
+        CreateBackgroundOverlay();
+    }
+
     private void OnEnable()
     {
-        Button_Close.BindOnClickButtonEvent(OnClickClose);
+        SetBackgroundOverlayActive(true);
+        Button_Close?.BindOnClickButtonEvent(OnClickClose);
         BuildRelicList().Forget();
+    }
+
+    private void OnDisable()
+    {
+        SetBackgroundOverlayActive(false);
+        Button_Close?.UnBindAllOnClickButtonEvent();
+    }
+
+    private void OnDestroy()
+    {
+        if (_backgroundOverlay != null)
+        {
+            Destroy(_backgroundOverlay);
+        }
+    }
+
+    private void CreateBackgroundOverlay()
+    {
+        if (_backgroundOverlay != null || transform.parent == null)
+        {
+            return;
+        }
+
+        GameObject overlay = new GameObject(
+            "RelicPopupBackdrop",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Image),
+            typeof(Button)
+        );
+        overlay.layer = gameObject.layer;
+
+        RectTransform rectTransform = overlay.GetComponent<RectTransform>();
+        rectTransform.SetParent(transform.parent, false);
+        rectTransform.anchorMin = Vector2.zero;
+        rectTransform.anchorMax = Vector2.one;
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
+
+        Image image = overlay.GetComponent<Image>();
+        image.color = new Color(0f, 0f, 0f, 0.4f);
+
+        Button button = overlay.GetComponent<Button>();
+        button.transition = Selectable.Transition.None;
+        button.targetGraphic = image;
+        button.onClick.AddListener(OnClickClose);
+
+        overlay.transform.SetSiblingIndex(transform.GetSiblingIndex());
+        overlay.SetActive(false);
+        _backgroundOverlay = overlay;
+    }
+
+    private void SetBackgroundOverlayActive(bool isActive)
+    {
+        if (_backgroundOverlay == null)
+        {
+            CreateBackgroundOverlay();
+        }
+
+        if (_backgroundOverlay != null)
+        {
+            _backgroundOverlay.SetActive(isActive);
+        }
     }
 
     private void OnClickClose()

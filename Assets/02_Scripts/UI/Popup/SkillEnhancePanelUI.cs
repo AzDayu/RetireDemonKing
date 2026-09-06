@@ -1,17 +1,12 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SkillEnhancePanelUI : UIBase
 {
-    private const long BasePromotionCost = 200;
-
     [Header("스킬")]
     [SerializeField] private UIButton[] skillButtons;
-
-    private int _selectedSkillIndex;
 
     [Header("현재 레벨 스킬 정보")]
     [SerializeField] private TMP_Text CurrentSkillName;
@@ -25,53 +20,21 @@ public class SkillEnhancePanelUI : UIBase
     [Header("버튼")]
     [SerializeField] private UIButton Button_Close;
     [SerializeField] private UIButton Button_Enhance;
+    [SerializeField] private TMP_Text EnhanceCostText;
 
+    private readonly List<string> _skillIds = new List<string>();
+    private SkillEnhanceService _skillEnhanceService;
+    private int _selectedSkillIndex = -1;
+    private GameObject _backgroundOverlay;
 
-    [Serializable]
-    private class TempSkillData
+    private void Awake()
     {
-        public string Name;
-
-        [TextArea]
-        public string CurrentDescription;
-
-        public string NextName;
-
-        [TextArea]
-        public string NextDescription;
+        CreateBackgroundOverlay();
     }
-
-    PlayerModel playerModel = GameManager.Instance?.Growth?.PlayerModel;
-
-    [Header("임시 스킬 데이터")]
-    [SerializeField] private TempSkillData[] tempSkillDataList;
 
     private void OnEnable()
     {
-        if (skillButtons.Length != tempSkillDataList.Length)
-        {
-            Debug.LogWarning(
-                $"스킬 버튼 {skillButtons.Length}개, " +
-                $"임시 데이터 {tempSkillDataList.Length}개. " +
-                $"개수 맞춰야 함."
-            );
-        }
-
-        for (int i = 0; i < skillButtons.Length; i++)
-        {
-            int index = i;
-
-            skillButtons[i]?.BindOnClickButtonEvent(
-                () => SelectSkill(index),
-                true
-            );
-        }
-
-        if (tempSkillDataList.Length > 0)
-        {
-            SelectSkill(0);
-        }
-
+        SetBackgroundOverlayActive(true);
 
         Button_Enhance?.BindOnClickButtonEvent(
             OnClickEnhance,
@@ -82,26 +45,169 @@ public class SkillEnhancePanelUI : UIBase
             OnClickClose,
             true
         );
+
+        InitializeSkillData();
     }
 
     private void OnDisable()
     {
-        foreach (UIButton button in skillButtons)
+        SetBackgroundOverlayActive(false);
+
+        if (skillButtons != null)
         {
-            button?.UnBindAllOnClickButtonEvent();
+            foreach (UIButton button in skillButtons)
+            {
+                button?.UnBindAllOnClickButtonEvent();
+            }
         }
 
         Button_Enhance?.UnBindAllOnClickButtonEvent();
         Button_Close?.UnBindAllOnClickButtonEvent();
+
+        _skillEnhanceService = null;
+        _selectedSkillIndex = -1;
+    }
+
+    private void OnDestroy()
+    {
+        if (_backgroundOverlay != null)
+        {
+            Destroy(_backgroundOverlay);
+        }
+    }
+
+    private void CreateBackgroundOverlay()
+    {
+        if (_backgroundOverlay != null || transform.parent == null)
+        {
+            return;
+        }
+
+        GameObject overlay = new GameObject(
+            "SkillPopupBackdrop",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Image),
+            typeof(Button)
+        );
+        overlay.layer = gameObject.layer;
+
+        RectTransform rectTransform = overlay.GetComponent<RectTransform>();
+        rectTransform.SetParent(transform.parent, false);
+        rectTransform.anchorMin = Vector2.zero;
+        rectTransform.anchorMax = Vector2.one;
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
+
+        Image image = overlay.GetComponent<Image>();
+        image.color = new Color(0f, 0f, 0f, 0.4f);
+
+        Button button = overlay.GetComponent<Button>();
+        button.transition = Selectable.Transition.None;
+        button.targetGraphic = image;
+        button.onClick.AddListener(OnClickClose);
+
+        overlay.transform.SetSiblingIndex(transform.GetSiblingIndex());
+        overlay.SetActive(false);
+        _backgroundOverlay = overlay;
+    }
+
+    private void SetBackgroundOverlayActive(bool isActive)
+    {
+        if (_backgroundOverlay == null)
+        {
+            CreateBackgroundOverlay();
+        }
+
+        if (_backgroundOverlay != null)
+        {
+            _backgroundOverlay.SetActive(isActive);
+        }
+    }
+
+    private void InitializeSkillData()
+    {
+        _skillIds.Clear();
+
+        if (!SkillDataLoader.Load())
+        {
+            Debug.LogError("[스킬 강화] Skill.json을 불러오지 못했습니다.");
+            ConfigureSkillButtons(0);
+            SetEmptyState();
+            return;
+        }
+
+        PlayerSaveData saveData =
+            GameManager.Instance?.SaveServer?.GetSaveData();
+
+        if (saveData == null)
+        {
+            Debug.LogWarning("[스킬 강화] 세이브 데이터가 없습니다.");
+            ConfigureSkillButtons(0);
+            SetEmptyState();
+            return;
+        }
+
+        _skillEnhanceService = new SkillEnhanceService(saveData);
+        _skillIds.AddRange(
+            SkillDataLoader.GetSkillIdsInDisplayOrder()
+        );
+
+        ConfigureSkillButtons(_skillIds.Count);
+
+        if (_skillIds.Count > 0)
+        {
+            SelectSkill(0);
+        }
+        else
+        {
+            SetEmptyState();
+        }
+    }
+
+    private void ConfigureSkillButtons(int skillCount)
+    {
+        if (skillButtons == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < skillButtons.Length; i++)
+        {
+            UIButton button = skillButtons[i];
+            if (button == null)
+            {
+                continue;
+            }
+
+            button.UnBindAllOnClickButtonEvent();
+
+            bool hasSkill = i < skillCount;
+            button.gameObject.SetActive(hasSkill);
+
+            if (!hasSkill)
+            {
+                continue;
+            }
+
+            int index = i;
+            button.BindOnClickButtonEvent(
+                () => SelectSkill(index),
+                true
+            );
+        }
     }
 
     private void SelectSkill(int index)
     {
-        if (tempSkillDataList == null ||
+        if (_skillEnhanceService == null ||
             index < 0 ||
-            index >= tempSkillDataList.Length)
+            index >= _skillIds.Count)
         {
-            Debug.LogWarning($"[스킬 강화] {index}번 스킬 데이터 없음.");
+            Debug.LogWarning(
+                "[스킬 강화] 선택할 스킬 데이터가 없습니다: " +
+                index
+            );
             return;
         }
 
@@ -111,23 +217,50 @@ public class SkillEnhancePanelUI : UIBase
 
     private void RefreshSelectedSkillUI()
     {
-        TempSkillData skill = tempSkillDataList[_selectedSkillIndex];
-
-        CurrentSkillName.text = skill.Name;
-        CurrentSkillText.text = skill.CurrentDescription;
-
-        bool hasNextLevel = string.IsNullOrWhiteSpace(skill.NextName) == false;
-
-        if (hasNextLevel)
+        if (_skillEnhanceService == null ||
+            _selectedSkillIndex < 0 ||
+            _selectedSkillIndex >= _skillIds.Count)
         {
-            NextSkillName.text = skill.NextName;
-            NextSkillText.text = skill.NextDescription;
+            SetEmptyState();
+            return;
         }
-        else
+
+        string skillId = _skillIds[_selectedSkillIndex];
+        SkillItem currentData =
+            _skillEnhanceService.GetCurrentData(skillId);
+
+        if (currentData == null)
         {
-            NextSkillName.text = "MAX";
-            NextSkillText.text = "최고 레벨입니다.";
+            Debug.LogWarning(
+                "[스킬 강화] 현재 레벨 데이터를 찾지 못했습니다: " +
+                skillId
+            );
+            SetEmptyState();
+            return;
         }
+
+        SetText(CurrentSkillName, currentData.Name);
+        SetText(CurrentSkillText, currentData.Description);
+        SetText(EnhanceCostText, currentData.EnhanceCost.ToString("N0"));
+
+        SkillItem nextData =
+            _skillEnhanceService.GetNextData(skillId);
+
+        if (nextData == null)
+        {
+            SetText(NextSkillName, "MAX");
+            SetText(NextSkillText, "최고 레벨입니다.");
+
+            if (Button_Enhance != null)
+            {
+                Button_Enhance.gameObject.SetActive(false);
+            }
+
+            return;
+        }
+
+        SetText(NextSkillName, nextData.Name);
+        SetText(NextSkillText, nextData.Description);
 
         if (Button_Enhance != null)
         {
@@ -137,57 +270,69 @@ public class SkillEnhancePanelUI : UIBase
 
     private void OnClickEnhance()
     {
-        if (tempSkillDataList == null ||
+        if (_skillEnhanceService == null ||
             _selectedSkillIndex < 0 ||
-            _selectedSkillIndex >= tempSkillDataList.Length)
+            _selectedSkillIndex >= _skillIds.Count)
         {
             return;
         }
 
-        PlayerModel playerModel =
-            GameManager.Instance?.Growth?.PlayerModel;
+        string skillId = _skillIds[_selectedSkillIndex];
+        SkillEnhanceResult result =
+            _skillEnhanceService.TryEnhance(skillId);
 
-        if (playerModel == null)
+        switch (result)
         {
-            Debug.LogWarning("[스킬 강화] 플레이어 데이터가 없습니다.");
-            return;
+            case SkillEnhanceResult.Success:
+                GameManager.Instance?.SaveServer?.SaveGameData();
+                RefreshSelectedSkillUI();
+                break;
+
+            case SkillEnhanceResult.MaxLevel:
+                Debug.Log("[스킬 강화] 이미 최고 레벨입니다.");
+                break;
+
+            case SkillEnhanceResult.InsufficientCurrency:
+                Debug.Log("[스킬 강화] 강화 재화가 부족합니다.");
+                break;
+
+            case SkillEnhanceResult.MissingData:
+                Debug.LogWarning("[스킬 강화] 레벨 데이터를 찾지 못했습니다.");
+                break;
+
+            default:
+                Debug.LogWarning("[스킬 강화] 플레이어 데이터가 없습니다.");
+                break;
         }
-
-        TempSkillData skill =
-            tempSkillDataList[_selectedSkillIndex];
-
-        if (string.IsNullOrWhiteSpace(skill.NextName))
-        {
-            Debug.Log("[스킬 강화] 이미 최고 레벨입니다.");
-            return;
-        }
-
-        if (playerModel.EnhanceCurrency < BasePromotionCost)
-        {
-            Debug.Log("[스킬 강화] 강화 재화가 부족합니다.");
-            return;
-        }
-
-        playerModel.EnhanceCurrency -= BasePromotionCost;
-
-        skill.Name = skill.NextName;
-        skill.CurrentDescription = skill.NextDescription;
-
-        skill.NextName = string.Empty;
-        skill.NextDescription = string.Empty;
-
-        RefreshSelectedSkillUI();
     }
 
     private void OnClickClose()
     {
         if (GameManager.Instance != null && GameManager.Instance.UI != null)
         {
-            GameManager.Instance.UI.ClosePopupUI(UIType.PopupRootUI);
+            GameManager.Instance.UI.ClosePopupUI(UIType.SkillPopupUI);
         }
     }
 
+    private void SetEmptyState()
+    {
+        SetText(CurrentSkillName, string.Empty);
+        SetText(CurrentSkillText, string.Empty);
+        SetText(NextSkillName, "MAX");
+        SetText(NextSkillText, "스킬 데이터가 없습니다.");
+        SetText(EnhanceCostText, "-");
+
+        if (Button_Enhance != null)
+        {
+            Button_Enhance.gameObject.SetActive(false);
+        }
+    }
+
+    private static void SetText(TMP_Text target, string value)
+    {
+        if (target != null)
+        {
+            target.text = value;
+        }
+    }
 }
-
-
-

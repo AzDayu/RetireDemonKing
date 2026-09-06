@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 현재 장착 중인 장비를 슬롯별로 보여주고, 선택한 장비의 등급 승급을 처리한다.
@@ -19,6 +20,7 @@ public class EquipmentEnhancePanelUI : UIBase
     [SerializeField] private TMP_Text Text_Currency;
     [SerializeField] private TMP_Text Text_EnhanceCost;
     [SerializeField] private UIButton Button_Enhance;
+    [SerializeField] private UIButton Button_Close;
 
     [Header("장비 다음 등급 정보")]
     [SerializeField] private TMP_Text Text_NextLevel;
@@ -44,9 +46,16 @@ public class EquipmentEnhancePanelUI : UIBase
     private EquipmentModel _selectedEquipmentModel;
     private PlayerModel _playerModel;
     private Coroutine _initializeCoroutine;
+    private GameObject _backgroundOverlay;
+
+    private void Awake()
+    {
+        CreateBackgroundOverlay();
+    }
 
     private void OnEnable()
     {
+        SetBackgroundOverlayActive(true);
         _initializeCoroutine = StartCoroutine(InitializeWhenDataReady());
     }
 
@@ -76,6 +85,8 @@ public class EquipmentEnhancePanelUI : UIBase
 
     private void OnDisable()
     {
+        SetBackgroundOverlayActive(false);
+
         if (_initializeCoroutine != null)
         {
             StopCoroutine(_initializeCoroutine);
@@ -83,6 +94,68 @@ public class EquipmentEnhancePanelUI : UIBase
         }
 
         UnbindButtons();
+    }
+
+    private void OnDestroy()
+    {
+        if (_backgroundOverlay != null)
+        {
+            Destroy(_backgroundOverlay);
+        }
+    }
+
+    private void CreateBackgroundOverlay()
+    {
+        if (_backgroundOverlay != null || transform.parent == null)
+        {
+            return;
+        }
+
+        GameObject overlay = new GameObject(
+            "GrowthPopupBackdrop",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Image),
+            typeof(Button)
+        );
+        overlay.layer = gameObject.layer;
+
+        RectTransform rectTransform = overlay.GetComponent<RectTransform>();
+        rectTransform.SetParent(transform.parent, false);
+        rectTransform.anchorMin = Vector2.zero;
+        rectTransform.anchorMax = Vector2.one;
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
+
+        Image image = overlay.GetComponent<Image>();
+        image.color = new Color(0f, 0f, 0f, 0.4f);
+
+        Button button = overlay.GetComponent<Button>();
+        button.transition = Selectable.Transition.None;
+        button.targetGraphic = image;
+        button.onClick.AddListener(OnClickClose);
+
+        overlay.transform.SetSiblingIndex(transform.GetSiblingIndex());
+        overlay.SetActive(false);
+        _backgroundOverlay = overlay;
+    }
+
+    private void SetBackgroundOverlayActive(bool isActive)
+    {
+        if (_backgroundOverlay == null)
+        {
+            CreateBackgroundOverlay();
+        }
+
+        if (_backgroundOverlay != null)
+        {
+            _backgroundOverlay.SetActive(isActive);
+        }
+    }
+
+    private void OnClickClose()
+    {
+        GameManager.Instance?.UI?.ClosePopupUI(UIType.GrowthPopupUI);
     }
 
     private void InitializeEquipmentData()
@@ -167,11 +240,13 @@ public class EquipmentEnhancePanelUI : UIBase
         }
 
         Button_Enhance?.BindOnClickButtonEvent(OnClick_Promote, true);
+        Button_Close?.BindOnClickButtonEvent(OnClickClose, true);
     }
 
     private void UnbindButtons()
     {
         Button_Enhance?.UnBindAllOnClickButtonEvent();
+        Button_Close?.UnBindAllOnClickButtonEvent();
         foreach (var entry in GetSlotButtons())
             entry.Button?.UnBindAllOnClickButtonEvent();
     }

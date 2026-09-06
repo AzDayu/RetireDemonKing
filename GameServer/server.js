@@ -65,12 +65,13 @@ app.post('/api/auth/register', async (req, res) => {
                 Player: { Level: 1, CurrentExp: 0, Gold: 0, EnhanceCurrency: 0, RebirthPoints: 0, CurrentStage: 1, MaxStage: 1 },
                 Equipments: [],
                 Relics: [],
+                Skills: [],
                 LastSaveUnixMinutes: Math.floor(Date.now() / 60000), // Unix Time (분 단위)
                 UserAccountId: accountId
             };
 
             const insertSaveQuery = `INSERT INTO PlayerSaves (user_id, save_json, last_save_ticks) VALUES (?, ?, ?)`;
-            db.run(insertSaveQuery, [newUserId, JSON.stringify(defaultSaveData), defaultSaveData.LastSaveTimestamp], (saveErr) => {
+            db.run(insertSaveQuery, [newUserId, JSON.stringify(defaultSaveData), defaultSaveData.LastSaveUnixMinutes], (saveErr) => {
                 if (saveErr) {
                     console.error('[DB] 기본 세이브 생성 에러:', saveErr);
                 }

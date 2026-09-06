@@ -1,0 +1,302 @@
+[
+  {
+    "Id": "SKILL_BASIC_01_LV_1",
+    "SkillId": "SKILL_BASIC_01",
+    "Level": 1,
+    "DisplayOrder": 1,
+    "Name": "기본공격 - 마력탄",
+    "Description": "적에게 10의 마법 데미지를 줍니다.",
+    "EnhanceCost": 5000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_BASIC_01_LV_2",
+    "SkillId": "SKILL_BASIC_01",
+    "Level": 2,
+    "DisplayOrder": 1,
+    "Name": "기본공격 - 마력탄",
+    "Description": "적에게 12의 마법 데미지를 줍니다.",
+    "EnhanceCost": 50000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_BASIC_01_LV_3",
+    "SkillId": "SKILL_BASIC_01",
+    "Level": 3,
+    "DisplayOrder": 1,
+    "Name": "기본공격 - 마력탄",
+    "Description": "적에게 15의 마법 데미지를 줍니다.",
+    "EnhanceCost": 0,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_BASIC_02_LV_1",
+    "SkillId": "SKILL_BASIC_02",
+    "Level": 1,
+    "DisplayOrder": 2,
+    "Name": "스킬 - 강타",
+    "Description": "20의 데미지를 줍니다.",
+    "EnhanceCost": 5000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_BASIC_02_LV_2",
+    "SkillId": "SKILL_BASIC_02",
+    "Level": 2,
+    "DisplayOrder": 2,
+    "Name": "스킬 - 강타",
+    "Description": "22의 데미지를 줍니다.",
+    "EnhanceCost": 50000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_BASIC_02_LV_3",
+    "SkillId": "SKILL_BASIC_02",
+    "Level": 3,
+    "DisplayOrder": 2,
+    "Name": "스킬 - 강타",
+    "Description": "27의 데미지를 줍니다.",
+    "EnhanceCost": 0,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_FIREBALL_LV_1",
+    "SkillId": "SKILL_FIREBALL",
+    "Level": 1,
+    "DisplayOrder": 3,
+    "Name": "기본공격 - 화염구",
+    "Description": "적에게 30의 화염 데미지를 줍니다.",
+    "EnhanceCost": 5000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_FIREBALL_LV_2",
+    "SkillId": "SKILL_FIREBALL",
+    "Level": 2,
+    "DisplayOrder": 3,
+    "Name": "기본공격 - 화염구",
+    "Description": "적에게 36의 화염 데미지를 줍니다.",
+    "EnhanceCost": 50000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_FIREBALL_LV_3",
+    "SkillId": "SKILL_FIREBALL",
+    "Level": 3,
+    "DisplayOrder": 3,
+    "Name": "기본공격 - 화염구",
+    "Description": "적에게 44의 화염 데미지를 줍니다.",
+    "EnhanceCost": 0,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_ICE_SPEAR_LV_1",
+    "SkillId": "SKILL_ICE_SPEAR",
+    "Level": 1,
+    "DisplayOrder": 4,
+    "Name": "궁극기 - 얼음 창",
+    "Description": "적에게 28의 냉기 데미지를 줍니다.",
+    "EnhanceCost": 5000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_ICE_SPEAR_LV_2",
+    "SkillId": "SKILL_ICE_SPEAR",
+    "Level": 2,
+    "DisplayOrder": 4,
+    "Name": "궁극기 - 얼음 창",
+    "Description": "적에게 34의 냉기 데미지를 줍니다.",
+    "EnhanceCost": 50000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_ICE_SPEAR_LV_3",
+    "SkillId": "SKILL_ICE_SPEAR",
+    "Level": 3,
+    "DisplayOrder": 4,
+    "Name": "궁극기 - 얼음 창",
+    "Description": "적에게 42의 냉기 데미지를 줍니다.",
+    "EnhanceCost": 0,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_CHAIN_LIGHTNING_LV_1",
+    "SkillId": "SKILL_CHAIN_LIGHTNING",
+    "Level": 1,
+    "DisplayOrder": 5,
+    "Name": "기본공격 - 번개 사슬",
+    "Description": "적과 주변 대상에게 각각 24, 12의 번개 데미지를 줍니다.",
+    "EnhanceCost": 5000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_CHAIN_LIGHTNING_LV_2",
+    "SkillId": "SKILL_CHAIN_LIGHTNING",
+    "Level": 2,
+    "DisplayOrder": 5,
+    "Name": "기본공격 - 번개 사슬",
+    "Description": "적과 주변 대상에게 각각 30, 15의 번개 데미지를 줍니다.",
+    "EnhanceCost": 50000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_CHAIN_LIGHTNING_LV_3",
+    "SkillId": "SKILL_CHAIN_LIGHTNING",
+    "Level": 3,
+    "DisplayOrder": 5,
+    "Name": "기본공격 - 번개 사슬",
+    "Description": "적과 주변 대상에게 각각 38, 19의 번개 데미지를 줍니다.",
+    "EnhanceCost": 0,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_DARK_WAVE_LV_1",
+    "SkillId": "SKILL_DARK_WAVE",
+    "Level": 1,
+    "DisplayOrder": 6,
+    "Name": "스킬 - 암흑 파동",
+    "Description": "모든 적에게 18의 암흑 데미지를 줍니다.",
+    "EnhanceCost": 5000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_DARK_WAVE_LV_2",
+    "SkillId": "SKILL_DARK_WAVE",
+    "Level": 2,
+    "DisplayOrder": 6,
+    "Name": "스킬 - 암흑 파동",
+    "Description": "모든 적에게 23의 암흑 데미지를 줍니다.",
+    "EnhanceCost": 50000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_DARK_WAVE_LV_3",
+    "SkillId": "SKILL_DARK_WAVE",
+    "Level": 3,
+    "DisplayOrder": 6,
+    "Name": "스킬 - 암흑 파동",
+    "Description": "모든 적에게 29의 암흑 데미지를 줍니다.",
+    "EnhanceCost": 0,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_LIFE_DRAIN_LV_1",
+    "SkillId": "SKILL_LIFE_DRAIN",
+    "Level": 1,
+    "DisplayOrder": 7,
+    "Name": "궁극기 - 생명력 흡수",
+    "Description": "적에게 20의 데미지를 주고 체력을 5 회복합니다.",
+    "EnhanceCost": 5000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_LIFE_DRAIN_LV_2",
+    "SkillId": "SKILL_LIFE_DRAIN",
+    "Level": 2,
+    "DisplayOrder": 7,
+    "Name": "궁극기 - 생명력 흡수",
+    "Description": "적에게 26의 데미지를 주고 체력을 8 회복합니다.",
+    "EnhanceCost": 50000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_LIFE_DRAIN_LV_3",
+    "SkillId": "SKILL_LIFE_DRAIN",
+    "Level": 3,
+    "DisplayOrder": 7,
+    "Name": "궁극기 - 생명력 흡수",
+    "Description": "적에게 34의 데미지를 주고 체력을 12 회복합니다.",
+    "EnhanceCost": 0,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_MAGIC_BARRIER_LV_1",
+    "SkillId": "SKILL_MAGIC_BARRIER",
+    "Level": 1,
+    "DisplayOrder": 8,
+    "Name": "기본공격 - 방벽 충격",
+    "Description": "적에게 16의 마법 데미지를 주고 2초 동안 받는 데미지가 3% 감소합니다.",
+    "EnhanceCost": 5000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_MAGIC_BARRIER_LV_2",
+    "SkillId": "SKILL_MAGIC_BARRIER",
+    "Level": 2,
+    "DisplayOrder": 8,
+    "Name": "기본공격 - 방벽 충격",
+    "Description": "적에게 21의 마법 데미지를 주고 2초 동안 받는 데미지가 4% 감소합니다.",
+    "EnhanceCost": 50000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_MAGIC_BARRIER_LV_3",
+    "SkillId": "SKILL_MAGIC_BARRIER",
+    "Level": 3,
+    "DisplayOrder": 8,
+    "Name": "기본공격 - 방벽 충격",
+    "Description": "적에게 27의 마법 데미지를 주고 2초 동안 받는 데미지가 5% 감소합니다.",
+    "EnhanceCost": 0,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_WEAKENING_CURSE_LV_1",
+    "SkillId": "SKILL_WEAKENING_CURSE",
+    "Level": 1,
+    "DisplayOrder": 9,
+    "Name": "스킬 - 약화의 공격",
+    "Description": "6초 동안 적의 방어력을 8% 감소시킵니다.",
+    "EnhanceCost": 5000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_WEAKENING_CURSE_LV_2",
+    "SkillId": "SKILL_WEAKENING_CURSE",
+    "Level": 2,
+    "DisplayOrder": 9,
+    "Name": "스킬 - 약화의 공격",
+    "Description": "8초 동안 적의 방어력을 12% 감소시킵니다.",
+    "EnhanceCost": 50000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_WEAKENING_CURSE_LV_3",
+    "SkillId": "SKILL_WEAKENING_CURSE",
+    "Level": 3,
+    "DisplayOrder": 9,
+    "Name": "스킬 - 약화의 공격",
+    "Description": "10초 동안 적의 방어력을 16% 감소시킵니다.",
+    "EnhanceCost": 0,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_METEOR_LV_1",
+    "SkillId": "SKILL_METEOR",
+    "Level": 1,
+    "DisplayOrder": 10,
+    "Name": "궁극기 - 유성 낙하",
+    "Description": "모든 적에게 45의 화염 데미지를 줍니다.",
+    "EnhanceCost": 5000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_METEOR_LV_2",
+    "SkillId": "SKILL_METEOR",
+    "Level": 2,
+    "DisplayOrder": 10,
+    "Name": "궁극기 - 유성 낙하",
+    "Description": "모든 적에게 58의 화염 데미지를 줍니다.",
+    "EnhanceCost": 50000,
+    "IconId": ""
+  },
+  {
+    "Id": "SKILL_METEOR_LV_3",
+    "SkillId": "SKILL_METEOR",
+    "Level": 3,
+    "DisplayOrder": 10,
+    "Name": "궁극기 - 유성 낙하",
+    "Description": "모든 적에게 72의 화염 데미지를 줍니다.",
+    "EnhanceCost": 0,
+    "IconId": ""
+  }
+]
