@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Rebirth:
-                ChangeState(GameState.Rebirth);
+                ChangeState(GameState.Init);
 
                 break;
         }
@@ -152,6 +152,11 @@ public class GameManager : MonoBehaviour
         if (_stageManager != null && playerModel != null)
         {
             _stageManager.Initialize(playerModel.CurrentStage);
+        }
+
+        if (_eventManager != null)
+        {
+            _eventManager.Initialize();
         }
 
         Debug.Log("[GameManager] 인게임 루프 재시작 완료 -> IdleStage 진입");

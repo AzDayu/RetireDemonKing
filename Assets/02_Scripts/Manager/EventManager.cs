@@ -19,6 +19,7 @@ public class EventManager : MonoBehaviour
 
     public void Initialize()
     {
+        _currentTimer = 0f;
         ResetNextTimer();
         _isTimerRunning = true;
     }
@@ -68,19 +69,21 @@ public class EventManager : MonoBehaviour
             }
         }
 
-        if (selectedEvent != null)
+        if (selectedEvent == null)
         {
-            Debug.Log($"[EventManager] 돌발 이벤트 발생: {selectedEvent.Title}");
-
-            if (GameManager.Instance != null && GameManager.Instance.UI != null)
-            {
-                GameManager.Instance.UI.OpenRandomEventPopupUI(selectedEvent);
-            }
-
-            OnEventTriggered?.Invoke(selectedEvent);
+            Debug.LogWarning(
+                "[EventManager] 선택된 랜덤 이벤트가 없습니다."
+            );
+            return;
         }
 
-        Debug.Log($"[EventManager] 돌발 이벤트 발생: {selectedEvent.Title}");
+        Debug.Log(
+            $"[EventManager] 돌발 이벤트 발생: {selectedEvent.Title}"
+        );
+
+        GameManager.Instance?.UI?
+            .OpenRandomEventPopupUI(selectedEvent);
+
         OnEventTriggered?.Invoke(selectedEvent);
     }
 

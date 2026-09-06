@@ -69,7 +69,7 @@ public class OfflineManager : MonoBehaviour
 
         var snapshot = new OfflineRewardSnapshot
         {
-            LastActiveUnixTime = lastSaveUnixMinutes,
+            LastActiveUnixMinutes = lastSaveUnixMinutes,
             GoldPerMinute = goldPerMin,
             ExperiencePerMinute = expPerMin
         };
@@ -113,10 +113,10 @@ public class OfflineManager : MonoBehaviour
 public static class OfflineRewardCalculator
 {
     public static OfflineRewardResult Calculate(
-        OfflineRewardSnapshot snapshot,
-        long currentUnixTime,
-        long minimumOfflineMinutes,
-        long maximumOfflineMinutes)
+    OfflineRewardSnapshot snapshot,
+    long currentUnixMinutes,
+    long minimumOfflineMinutes,
+    long maximumOfflineMinutes)
     {
         if (snapshot == null)
         {
@@ -125,14 +125,19 @@ public static class OfflineRewardCalculator
 
 
         // 게임 첫 실행(이전 종료 기록 없음) & 현재 시각이 마지막 활동 시각보다 과거임
-        if (snapshot.LastActiveUnixTime <= 0 || currentUnixTime <= snapshot.LastActiveUnixTime)
+        if (snapshot.LastActiveUnixMinutes <= 0 || currentUnixMinutes <= snapshot.LastActiveUnixMinutes)
         {
             return new OfflineRewardResult();
         }
 
-        long rawElapsedSeconds = currentUnixTime - snapshot.LastActiveUnixTime;
+        if (snapshot.LastActiveUnixMinutes <= 0 ||
+            currentUnixMinutes <= snapshot.LastActiveUnixMinutes)
+        {
+            return new OfflineRewardResult();
+        }
 
-        long rawElapsedMinutes = rawElapsedSeconds / 60;
+        long rawElapsedMinutes =
+            currentUnixMinutes - snapshot.LastActiveUnixMinutes;
 
 
         // minimumOfflineMinutes가 음수인 경우 방지
@@ -179,7 +184,7 @@ public static class OfflineRewardCalculator
 [Serializable]
 public class OfflineRewardSnapshot
 {
-    public long LastActiveUnixTime;
+    public long LastActiveUnixMinutes;
     public double GoldPerMinute;
     public double ExperiencePerMinute;
 }

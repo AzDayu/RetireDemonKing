@@ -13,7 +13,6 @@ public class MonsterController : MonoBehaviour
     public bool IsDead => Model == null || Model.CurHp <= 0f;
 
     private MonsterData _data;
-    private float _attackTimer;
 
     private void Awake()
     {
@@ -21,11 +20,26 @@ public class MonsterController : MonoBehaviour
             _animationView = GetComponent<CharacterAnimationView>();
     }
 
+    private void OnEnable()
+    {
+        if (_animationView != null)
+        {
+            _animationView.OnAttackHit += HandleAttackHit;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (_animationView != null)
+        {
+            _animationView.OnAttackHit -= HandleAttackHit;
+        }
+    }
+
     public void Setup(MonsterData data)
     {
         _data = data;
         Model = new MonsterModel(data);
-        _attackTimer = 0f;
     }
 
     private void Update()
@@ -60,16 +74,9 @@ public class MonsterController : MonoBehaviour
             _animationView?.PlayMove(false);
             _animationView?.PlayAttack(true);
 
-            float attackSpeed = _data != null && _data.AttackSpeed > 0f ? _data.AttackSpeed : 1f;
-            float attackInterval = 1f / attackSpeed;
-            _attackTimer += Time.deltaTime;
+            float attackSpeed =_data != null && _data.AttackSpeed > 0f? _data.AttackSpeed: 1f;
 
-            if (_attackTimer >= attackInterval)
-            {
-                _attackTimer -= attackInterval;
-                float attackPower = _data != null ? _data.AttackPower : 10f;
-                player.TakeDamage(attackPower);
-            }
+            _animationView?.SetAnimationSpeed(attackSpeed);
         }
     }
 
@@ -83,5 +90,36 @@ public class MonsterController : MonoBehaviour
         {
             GameManager.Instance.Combat.OnMonsterKilled(gameObject);
         }
+    }
+
+    private void HandleAttackHit()
+    {
+        if (IsDead)
+        {
+            return;
+        }
+
+        PlayerController player = PlayerController.Instance;
+
+        if (player == null || player.IsDead)
+        {
+            return;
+        }
+
+        float distance = Vector3.Distance(
+            transform.position,
+            player.transform.position
+        );
+
+        // 공격 애니메이션 도중 플레이어가 멀어진 경우 피해 방지
+        if (distance > _attackRange)
+        {
+            return;
+        }
+
+        float attackPower =
+            _data != null ? _data.AttackPower : 10f;
+
+        player.TakeDamage(attackPower);
     }
 }
