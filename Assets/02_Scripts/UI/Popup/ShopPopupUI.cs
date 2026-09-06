@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class ShopPopupUI : UIBase
 {
-    private const long EquipmentLowChestPrice = 0;
-    private const long EquipmentHighChestPrice = 0;
-    private const int RelicLowChestPrice = 0;
-    private const int RelicHighChestPrice = 0;
+    private const long EquipmentLowChestPrice = 100;
+    private const long EquipmentHighChestPrice = 10000;
+    private const int RelicLowChestPrice = 50;
+    private const int RelicHighChestPrice = 300;
     private const int UniqueIdRetryCount = 8;
 
     private enum ChestTier

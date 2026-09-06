@@ -3,8 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class EquipmentEnhancePanelUI : MonoBehaviour
+/// <summary>
+/// 현재 장착 중인 장비를 슬롯별로 보여주고, 선택한 장비의 등급 승급을 처리한다.
+/// EquipmentItem은 정적 데이터, EquipmentModel은 플레이어가 보유한 장비 상태를 의미한다.
+/// </summary>
+public class EquipmentEnhancePanelUI : UIBase
 {
     private const long BasePromotionCost = 50;
 
@@ -15,6 +20,7 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
     [SerializeField] private TMP_Text Text_Currency;
     [SerializeField] private TMP_Text Text_EnhanceCost;
     [SerializeField] private UIButton Button_Enhance;
+    [SerializeField] private UIButton Button_Close;
 
     [Header("장비 다음 등급 정보")]
     [SerializeField] private TMP_Text Text_NextLevel;
@@ -31,30 +37,31 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
     [SerializeField] private UIButton Button_Ring1;
     [SerializeField] private UIButton Button_Ring2;
 
-    // 장비 원본 데이터 연결
-    private readonly Dictionary<EquipmentSlotType, EquipmentItem>
-        _equipmentDataMap = new Dictionary<EquipmentSlotType, EquipmentItem>();
-
-
-    // 장비 상태 연결
-    private readonly Dictionary<EquipmentSlotType, EquipmentModel>
-        _equipmentModelMap = new Dictionary<EquipmentSlotType, EquipmentModel>();
+    // 동일한 슬롯을 기준으로 표시용 정적 데이터와 실제 보유 장비 상태를 각각 보관한다.
+    private readonly Dictionary<EquipmentSlotType, EquipmentItem> _equipmentDataMap = new();
+    private readonly Dictionary<EquipmentSlotType, EquipmentModel> _equipmentModelMap = new();
 
     private EquipmentSlotType _selectedSlotType;
     private EquipmentItem _selectedEquipmentData;
     private EquipmentModel _selectedEquipmentModel;
     private PlayerModel _playerModel;
-
     private Coroutine _initializeCoroutine;
+    private GameObject _backgroundOverlay;
+
+    private void Awake()
+    {
+        CreateBackgroundOverlay();
+    }
 
     private void OnEnable()
     {
-        _initializeCoroutine =
-            StartCoroutine(InitializeWhenDataReady());
+        SetBackgroundOverlayActive(true);
+        _initializeCoroutine = StartCoroutine(InitializeWhenDataReady());
     }
 
     private IEnumerator InitializeWhenDataReady()
     {
+        // 세이브 데이터와 장비 원본 데이터가 모두 준비된 뒤 UI를 구성한다.
         yield return new WaitUntil(() =>
             GameManager.Instance != null &&
             GameManager.Instance.Growth != null &&
@@ -62,271 +69,209 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
             GameManager.Instance.Growth.PlayerModel != null &&
             GameManager.Instance.Growth.Equipment != null &&
             GameManager.Instance.Data != null &&
-            GameManager.Instance.Data
-                .GetAllEquipmentDataList().Count > 0
-        );
+            GameManager.Instance.Data.GetAllEquipmentDataList().Count > 0);
 
         InitializeEquipmentData();
+        UnbindButtons();
+        BindButtons();
 
-        Button_Enhance?.UnBindAllOnClickButtonEvent();
-        UnbindEquipmentSlotButtons();
-
-        BindEquipmentSlotButtons();
-
-        if (Button_Enhance != null)
-        {
-            Button_Enhance.BindOnClickButtonEvent(
-                OnClick_Promote,
-                true
-            );
-        }
-
-        if (_selectedEquipmentData == null ||
-            !_equipmentDataMap.ContainsKey(_selectedSlotType))
-        {
+        if (_selectedEquipmentData == null || !_equipmentDataMap.ContainsKey(_selectedSlotType))
             SelectDefaultEquipment();
-        }
         else
-        {
             SelectEquipment(_selectedSlotType);
-        }
 
         _initializeCoroutine = null;
     }
 
     private void OnDisable()
     {
+        SetBackgroundOverlayActive(false);
+
         if (_initializeCoroutine != null)
         {
             StopCoroutine(_initializeCoroutine);
             _initializeCoroutine = null;
         }
 
-        Button_Enhance?.UnBindAllOnClickButtonEvent();
-        UnbindEquipmentSlotButtons();
+        UnbindButtons();
+    }
+
+    private void OnDestroy()
+    {
+        if (_backgroundOverlay != null)
+        {
+            Destroy(_backgroundOverlay);
+        }
+    }
+
+    private void CreateBackgroundOverlay()
+    {
+        if (_backgroundOverlay != null || transform.parent == null)
+        {
+            return;
+        }
+
+        GameObject overlay = new GameObject(
+            "GrowthPopupBackdrop",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Image),
+            typeof(Button)
+        );
+        overlay.layer = gameObject.layer;
+
+        RectTransform rectTransform = overlay.GetComponent<RectTransform>();
+        rectTransform.SetParent(transform.parent, false);
+        rectTransform.anchorMin = Vector2.zero;
+        rectTransform.anchorMax = Vector2.one;
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
+
+        Image image = overlay.GetComponent<Image>();
+        image.color = new Color(0f, 0f, 0f, 0.4f);
+
+        Button button = overlay.GetComponent<Button>();
+        button.transition = Selectable.Transition.None;
+        button.targetGraphic = image;
+        button.onClick.AddListener(OnClickClose);
+
+        overlay.transform.SetSiblingIndex(transform.GetSiblingIndex());
+        overlay.SetActive(false);
+        _backgroundOverlay = overlay;
+    }
+
+    private void SetBackgroundOverlayActive(bool isActive)
+    {
+        if (_backgroundOverlay == null)
+        {
+            CreateBackgroundOverlay();
+        }
+
+        if (_backgroundOverlay != null)
+        {
+            _backgroundOverlay.SetActive(isActive);
+        }
+    }
+
+    private void OnClickClose()
+    {
+        GameManager.Instance?.UI?.ClosePopupUI(UIType.GrowthPopupUI);
     }
 
     private void InitializeEquipmentData()
     {
         _playerModel = GameManager.Instance.Growth.PlayerModel;
-
         _equipmentDataMap.Clear();
         _equipmentModelMap.Clear();
 
-        RegisterEquipment(
-            EquipmentSlotType.Weapon,
-            EquipmentType.Weapon
-        );
-        RegisterEquipment(
-            EquipmentSlotType.Chest,
-            EquipmentType.Chest
-        );
-        RegisterEquipment(
-            EquipmentSlotType.Pants,
-            EquipmentType.Pants
-        );
-        RegisterEquipment(
-            EquipmentSlotType.Gloves,
-            EquipmentType.Gloves
-        );
-        RegisterEquipment(
-            EquipmentSlotType.Boots,
-            EquipmentType.Boots
-        );
-        RegisterEquipment(
-            EquipmentSlotType.Belt,
-            EquipmentType.Belt
-        );
-        RegisterEquipment(
-            EquipmentSlotType.Necklace,
-            EquipmentType.Necklace
-        );
-        RegisterEquipment(
-            EquipmentSlotType.Ring1,
-            EquipmentType.Ring,
-            0
-        );
-        RegisterEquipment(
-            EquipmentSlotType.Ring2,
-            EquipmentType.Ring,
-            1
-        );
+        // 반지는 같은 EquipmentType을 사용하므로 조회 순서(0, 1)로 두 슬롯을 구분한다.
+        RegisterEquipment(EquipmentSlotType.Weapon, EquipmentType.Weapon);
+        RegisterEquipment(EquipmentSlotType.Chest, EquipmentType.Chest);
+        RegisterEquipment(EquipmentSlotType.Pants, EquipmentType.Pants);
+        RegisterEquipment(EquipmentSlotType.Gloves, EquipmentType.Gloves);
+        RegisterEquipment(EquipmentSlotType.Boots, EquipmentType.Boots);
+        RegisterEquipment(EquipmentSlotType.Belt, EquipmentType.Belt);
+        RegisterEquipment(EquipmentSlotType.Necklace, EquipmentType.Necklace);
+        RegisterEquipment(EquipmentSlotType.Ring1, EquipmentType.Ring, 0);
+        RegisterEquipment(EquipmentSlotType.Ring2, EquipmentType.Ring, 1);
     }
 
-    private void RegisterEquipment(
-        EquipmentSlotType slotType,
-        EquipmentType equipmentType,
-        int typeIndex = 0)
+    private void RegisterEquipment(EquipmentSlotType slotType, EquipmentType equipmentType, int typeIndex = 0)
     {
-        EquipmentModel equipmentModel =
-            GameManager.Instance.Growth.Equipment
-                .GetEquippedEquipment(
-                    equipmentType,
-                    typeIndex
-                );
+        EquipmentModel model = GameManager.Instance.Growth.Equipment
+            .GetEquippedEquipment(equipmentType, typeIndex);
+        if (model == null) return;
 
-        if (equipmentModel == null)
+        EquipmentItem data = GameManager.Instance.Data.GetEquipmentData(model.ItemDataId);
+        if (data == null)
         {
+            Debug.LogWarning($"[장비 승급] 장비 데이터를 찾지 못했습니다: {model.ItemDataId}");
             return;
         }
 
-        EquipmentItem equipmentData =
-            GameManager.Instance.Data.GetEquipmentData(
-                equipmentModel.ItemDataId
-            );
-
-        if (equipmentData == null)
-        {
-            Debug.LogWarning(
-                $"[장비 승급] 장비 데이터를 찾지 못했습니다: " +
-                $"{equipmentModel.ItemDataId}"
-            );
-
-            return;
-        }
-
-        _equipmentDataMap[slotType] = equipmentData;
-        _equipmentModelMap[slotType] = equipmentModel;
+        _equipmentDataMap[slotType] = data;
+        _equipmentModelMap[slotType] = model;
     }
 
     private void SelectDefaultEquipment()
     {
-        if (_equipmentDataMap.ContainsKey(
-                EquipmentSlotType.Chest))
+        // 상의를 우선 선택하고, 없다면 enum 순서상 첫 번째 장착 장비를 선택한다.
+        if (_equipmentDataMap.ContainsKey(EquipmentSlotType.Chest))
         {
             SelectEquipment(EquipmentSlotType.Chest);
             return;
         }
 
-        foreach (EquipmentSlotType slotType in
-                 Enum.GetValues(typeof(EquipmentSlotType)))
+        foreach (EquipmentSlotType slotType in Enum.GetValues(typeof(EquipmentSlotType)))
         {
-            if (_equipmentDataMap.ContainsKey(slotType))
-            {
-                SelectEquipment(slotType);
-                return;
-            }
-        }
-    }
-
-    private void BindEquipmentSlotButtons()
-    {
-        BindEquipmentSlotButton(
-            Button_Weapon,
-            EquipmentSlotType.Weapon
-        );
-
-        BindEquipmentSlotButton(
-            Button_Chest,
-            EquipmentSlotType.Chest
-        );
-
-        BindEquipmentSlotButton(
-            Button_Pants,
-            EquipmentSlotType.Pants
-        );
-
-        BindEquipmentSlotButton(
-            Button_Gloves,
-            EquipmentSlotType.Gloves
-        );
-
-        BindEquipmentSlotButton(
-            Button_Boots,
-            EquipmentSlotType.Boots
-        );
-
-        BindEquipmentSlotButton(
-            Button_Belt,
-            EquipmentSlotType.Belt
-        );
-
-        BindEquipmentSlotButton(
-            Button_Necklace,
-            EquipmentSlotType.Necklace
-        );
-
-        BindEquipmentSlotButton(
-            Button_Ring1,
-            EquipmentSlotType.Ring1
-        );
-
-        BindEquipmentSlotButton(
-            Button_Ring2,
-            EquipmentSlotType.Ring2
-        );
-    }
-
-    private void BindEquipmentSlotButton(
-        UIButton button,
-        EquipmentSlotType slotType)
-    {
-        if (button == null)
-        {
-            Debug.LogWarning(
-                $"[장비 승급] 슬롯 버튼이 연결되지 않았습니다: " +
-                $"{slotType}"
-            );
-
+            if (!_equipmentDataMap.ContainsKey(slotType)) continue;
+            SelectEquipment(slotType);
             return;
         }
-
-        button.BindOnClickButtonEvent(
-            () => SelectEquipment(slotType),
-            true
-        );
     }
 
-    private void UnbindEquipmentSlotButtons()
+    private IEnumerable<(UIButton Button, EquipmentSlotType Slot)> GetSlotButtons()
     {
-        Button_Weapon?.UnBindAllOnClickButtonEvent();
-        Button_Chest?.UnBindAllOnClickButtonEvent();
-        Button_Pants?.UnBindAllOnClickButtonEvent();
-        Button_Gloves?.UnBindAllOnClickButtonEvent();
-        Button_Boots?.UnBindAllOnClickButtonEvent();
-        Button_Belt?.UnBindAllOnClickButtonEvent();
-        Button_Necklace?.UnBindAllOnClickButtonEvent();
-        Button_Ring1?.UnBindAllOnClickButtonEvent();
-        Button_Ring2?.UnBindAllOnClickButtonEvent();
+        // 버튼 바인딩과 해제에서 동일한 슬롯 목록을 사용하기 위한 단일 매핑이다.
+        yield return (Button_Weapon, EquipmentSlotType.Weapon);
+        yield return (Button_Chest, EquipmentSlotType.Chest);
+        yield return (Button_Pants, EquipmentSlotType.Pants);
+        yield return (Button_Gloves, EquipmentSlotType.Gloves);
+        yield return (Button_Boots, EquipmentSlotType.Boots);
+        yield return (Button_Belt, EquipmentSlotType.Belt);
+        yield return (Button_Necklace, EquipmentSlotType.Necklace);
+        yield return (Button_Ring1, EquipmentSlotType.Ring1);
+        yield return (Button_Ring2, EquipmentSlotType.Ring2);
     }
 
-    private void SelectEquipment(
-        EquipmentSlotType slotType)
+    private void BindButtons()
     {
-        if (!_equipmentDataMap.TryGetValue(
-                slotType,
-                out EquipmentItem equipmentData) ||
-            !_equipmentModelMap.TryGetValue(
-                slotType,
-                out EquipmentModel equipmentModel))
+        foreach (var entry in GetSlotButtons())
         {
-            Debug.LogWarning(
-                $"[장비 승급] 등록되지 않은 장비 슬롯입니다: " +
-                $"{slotType}"
-            );
+            if (entry.Button == null)
+            {
+                Debug.LogWarning($"[장비 승급] 슬롯 버튼이 연결되지 않았습니다: {entry.Slot}");
+                continue;
+            }
 
+            // 각 콜백이 반복문의 현재 슬롯 값을 확실히 기억하도록 복사한다.
+            EquipmentSlotType capturedSlot = entry.Slot;
+            entry.Button.BindOnClickButtonEvent(() => SelectEquipment(capturedSlot), true);
+        }
+
+        Button_Enhance?.BindOnClickButtonEvent(OnClick_Promote, true);
+        Button_Close?.BindOnClickButtonEvent(OnClickClose, true);
+    }
+
+    private void UnbindButtons()
+    {
+        Button_Enhance?.UnBindAllOnClickButtonEvent();
+        Button_Close?.UnBindAllOnClickButtonEvent();
+        foreach (var entry in GetSlotButtons())
+            entry.Button?.UnBindAllOnClickButtonEvent();
+    }
+
+    private void SelectEquipment(EquipmentSlotType slotType)
+    {
+        if (!_equipmentDataMap.TryGetValue(slotType, out EquipmentItem data) ||
+            !_equipmentModelMap.TryGetValue(slotType, out EquipmentModel model))
+        {
+            Debug.LogWarning($"[장비 승급] 등록되지 않은 장비 슬롯입니다: {slotType}");
             return;
         }
 
         _selectedSlotType = slotType;
-        _selectedEquipmentData = equipmentData;
-        _selectedEquipmentModel = equipmentModel;
-
+        _selectedEquipmentData = data;
+        _selectedEquipmentModel = model;
         RefreshUI();
     }
 
     private void OnClick_Promote()
     {
-        if (_selectedEquipmentData == null ||
-            _selectedEquipmentModel == null ||
-            _playerModel == null)
-        {
+        if (_selectedEquipmentData == null || _selectedEquipmentModel == null || _playerModel == null)
             return;
-        }
 
-        EquipmentItem nextGradeData =
-            FindNextGradeEquipment(_selectedEquipmentData);
-
+        EquipmentItem nextGradeData = FindNextGradeEquipment(_selectedEquipmentData);
         if (nextGradeData == null)
         {
             Debug.Log("[장비 승급] 이미 최고 등급입니다.");
@@ -334,153 +279,73 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
         }
 
         long promotionCost = CalculatePromotionCost();
-
         if (_playerModel.EnhanceCurrency < promotionCost)
         {
             Debug.Log("[장비 승급] 승급 재화가 부족합니다.");
             return;
         }
 
+        // 승급 성공 여부와 관계없이 도전 비용은 먼저 차감한다.
         _playerModel.EnhanceCurrency -= promotionCost;
 
-        int successRatePercent =
-            GetPromotionSuccessRatePercent();
-
-        int randomValue =
-            UnityEngine.Random.Range(0, 100);
-
+        int successRatePercent = GetPromotionSuccessRatePercent();
+        int randomValue = UnityEngine.Random.Range(0, 100);
         if (randomValue >= successRatePercent)
         {
-            Debug.Log(
-                $"[장비 승급] 실패! " +
-                $"성공 확률: {successRatePercent}%, " +
-                $"판정값: {randomValue}"
-            );
-
+            Debug.Log($"[장비 승급] 실패! 성공 확률: {successRatePercent}%, 판정값: {randomValue}");
             RefreshUI();
             return;
         }
 
-        Debug.Log(
-            $"[장비 승급] 성공! " +
-            $"성공 확률: {successRatePercent}%, " +
-            $"판정값: {randomValue}"
-        );
+        Debug.Log($"[장비 승급] 성공! 성공 확률: {successRatePercent}%, 판정값: {randomValue}");
 
-
-        // 같은 장비 모델의 데이터 ID만 다음 등급으로 교체
+        // 보유 장비 객체는 유지하고 참조하는 정적 데이터 ID만 다음 등급으로 교체한다.
         _selectedEquipmentModel.ItemDataId = nextGradeData.Id;
-
         _selectedEquipmentData = nextGradeData;
-
         _equipmentDataMap[_selectedSlotType] = nextGradeData;
 
         GameManager.Instance.Growth.RecalculateTotalStats();
-
         RefreshUI();
     }
 
-    private EquipmentItem FindNextGradeEquipment(
-     EquipmentItem currentData)
+    private EquipmentItem FindNextGradeEquipment(EquipmentItem currentData)
     {
-        if (currentData == null ||
-            string.IsNullOrEmpty(currentData.Id))
-        {
-            return null;
-        }
+        if (currentData == null || string.IsNullOrEmpty(currentData.Id)) return null;
 
-        string currentId = currentData.Id;
-        string nextGradeSuffix;
+        string nextGradeSuffix = GetNextGradeSuffix(currentData.Id);
+        if (nextGradeSuffix == null) return null;
 
-        if (currentId.EndsWith(
-                "_Common",
-                StringComparison.OrdinalIgnoreCase))
-        {
-            nextGradeSuffix = "RARE";
-        }
-        else if (currentId.EndsWith(
-                     "_RARE",
-                     StringComparison.OrdinalIgnoreCase))
-        {
-            nextGradeSuffix = "EPIC";
-        }
-        else if (currentId.EndsWith(
-                     "_EPIC",
-                     StringComparison.OrdinalIgnoreCase))
-        {
-            nextGradeSuffix = "LEGENDARY";
-        }
-        else if (currentId.EndsWith(
-                     "_LEGENDARY",
-                     StringComparison.OrdinalIgnoreCase))
-        {
-            nextGradeSuffix = "MYTHIC";
-        }
-        else if (currentId.EndsWith(
-                     "_MYTHIC",
-                     StringComparison.OrdinalIgnoreCase))
-        {
-            // 신화 등급은 다음 등급이 없음
-            return null;
-        }
-        else
-        {
-            Debug.LogError(
-                $"[장비 승급] 장비 ID에서 등급을 확인할 수 없습니다: " +
-                $"{currentId}"
-            );
-
-            return null;
-        }
-
-        string equipmentFamilyId =
-            GetEquipmentFamilyId(currentId);
-
-        string nextEquipmentId =
-            $"{equipmentFamilyId}_{nextGradeSuffix}";
-
-        EquipmentItem nextGradeData =
-            GameManager.Instance.Data.GetEquipmentData(
-                nextEquipmentId
-            );
+        // 예: EQ_WEAPON_SWORD_Common -> EQ_WEAPON_SWORD_RARE
+        string nextEquipmentId = $"{GetEquipmentFamilyId(currentData.Id)}_{nextGradeSuffix}";
+        EquipmentItem nextGradeData = GameManager.Instance.Data.GetEquipmentData(nextEquipmentId);
 
         if (nextGradeData == null)
-        {
-            Debug.LogError(
-                $"[장비 승급] 다음 등급 데이터를 찾지 못했습니다: " +
-                $"{nextEquipmentId}"
-            );
-
-            return null;
-        }
+            Debug.LogError($"[장비 승급] 다음 등급 데이터를 찾지 못했습니다: {nextEquipmentId}");
 
         return nextGradeData;
     }
 
-    private string GetEquipmentFamilyId(
-        string equipmentId)
+    private string GetNextGradeSuffix(string equipmentId)
     {
-        if (string.IsNullOrEmpty(equipmentId))
-        {
-            return string.Empty;
-        }
+        // 현재 장비 데이터는 ID 마지막 접미사로 등급 계열을 구분한다.
+        if (equipmentId.EndsWith("_Common", StringComparison.OrdinalIgnoreCase)) return "RARE";
+        if (equipmentId.EndsWith("_RARE", StringComparison.OrdinalIgnoreCase)) return "EPIC";
+        if (equipmentId.EndsWith("_EPIC", StringComparison.OrdinalIgnoreCase)) return "LEGENDARY";
+        if (equipmentId.EndsWith("_LEGENDARY", StringComparison.OrdinalIgnoreCase)) return "MYTHIC";
+        if (equipmentId.EndsWith("_MYTHIC", StringComparison.OrdinalIgnoreCase)) return null;
 
-        int lastSeparatorIndex =
-            equipmentId.LastIndexOf('_');
-
-        if (lastSeparatorIndex <= 0)
-        {
-            return equipmentId;
-        }
-
-        return equipmentId.Substring(
-            0,
-            lastSeparatorIndex
-        );
+        Debug.LogError($"[장비 승급] 장비 ID에서 등급을 확인할 수 없습니다: {equipmentId}");
+        return null;
     }
 
-    private EquipmentGrade GetGradeFromId(
-        string equipmentId)
+    private string GetEquipmentFamilyId(string equipmentId)
+    {
+        if (string.IsNullOrEmpty(equipmentId)) return string.Empty;
+        int separatorIndex = equipmentId.LastIndexOf('_');
+        return separatorIndex > 0 ? equipmentId.Substring(0, separatorIndex) : equipmentId;
+    }
+
+    private EquipmentGrade GetGradeFromId(string equipmentId)
     {
         if (string.IsNullOrEmpty(equipmentId))
         {
@@ -488,270 +353,114 @@ public class EquipmentEnhancePanelUI : MonoBehaviour
             return EquipmentGrade.Common;
         }
 
-        if (equipmentId.EndsWith(
-                "_Common",
-                StringComparison.OrdinalIgnoreCase))
-        {
-            return EquipmentGrade.Common;
-        }
+        if (equipmentId.EndsWith("_Common", StringComparison.OrdinalIgnoreCase)) return EquipmentGrade.Common;
+        if (equipmentId.EndsWith("_RARE", StringComparison.OrdinalIgnoreCase)) return EquipmentGrade.Rare;
+        if (equipmentId.EndsWith("_EPIC", StringComparison.OrdinalIgnoreCase)) return EquipmentGrade.Epic;
+        if (equipmentId.EndsWith("_LEGENDARY", StringComparison.OrdinalIgnoreCase)) return EquipmentGrade.Legendary;
+        if (equipmentId.EndsWith("_MYTHIC", StringComparison.OrdinalIgnoreCase)) return EquipmentGrade.Mythic;
 
-        if (equipmentId.EndsWith(
-                "_RARE",
-                StringComparison.OrdinalIgnoreCase))
-        {
-            return EquipmentGrade.Rare;
-        }
-
-        if (equipmentId.EndsWith(
-                "_EPIC",
-                StringComparison.OrdinalIgnoreCase))
-        {
-            return EquipmentGrade.Epic;
-        }
-
-        if (equipmentId.EndsWith(
-                "_LEGENDARY",
-                StringComparison.OrdinalIgnoreCase))
-        {
-            return EquipmentGrade.Legendary;
-        }
-
-        if (equipmentId.EndsWith(
-                "_MYTHIC",
-                StringComparison.OrdinalIgnoreCase))
-        {
-            return EquipmentGrade.Mythic;
-        }
-
-        Debug.LogError(
-            $"[장비 승급] 장비 ID에서 등급을 확인할 수 없습니다: " +
-            $"{equipmentId}"
-        );
-
+        Debug.LogError($"[장비 승급] 장비 ID에서 등급을 확인할 수 없습니다: {equipmentId}");
         return EquipmentGrade.Common;
     }
 
     private long CalculatePromotionCost()
     {
-        if (_selectedEquipmentData == null)
-        {
-            return 0;
-        }
+        if (_selectedEquipmentData == null) return 0;
 
-        EquipmentGrade currentGrade =
-            GetGradeFromId(_selectedEquipmentData.Id);
-
-        int gradeWeight =
-            (int)currentGrade + 1;
-
-        return BasePromotionCost * gradeWeight;
+        // 일반부터 등급 순서대로 기본 비용의 1~5배를 적용한다.
+        return BasePromotionCost * ((int)GetGradeFromId(_selectedEquipmentData.Id) + 1);
     }
 
     private int GetPromotionSuccessRatePercent()
     {
-        if (_selectedEquipmentData == null)
+        if (_selectedEquipmentData == null) return 0;
+
+        // 다음 등급으로 갈수록 성공 확률이 낮아지며, 최고 등급은 승급할 수 없다.
+        return GetGradeFromId(_selectedEquipmentData.Id) switch
         {
-            return 0;
-        }
-
-        switch (GetGradeFromId(_selectedEquipmentData.Id))
-        {
-            case EquipmentGrade.Common:
-                return 20;
-
-            case EquipmentGrade.Rare:
-                return 10;
-
-            case EquipmentGrade.Epic:
-                return 5;
-
-            case EquipmentGrade.Legendary:
-                return 3;
-
-            case EquipmentGrade.Mythic:
-            default:
-                return 0;
-        }
+            EquipmentGrade.Common => 20,
+            EquipmentGrade.Rare => 10,
+            EquipmentGrade.Epic => 5,
+            EquipmentGrade.Legendary => 3,
+            _ => 0
+        };
     }
 
     private void RefreshUI()
     {
-        if (_selectedEquipmentData == null ||
-            _selectedEquipmentModel == null ||
-            _playerModel == null)
-        {
+        if (_selectedEquipmentData == null || _selectedEquipmentModel == null || _playerModel == null)
             return;
-        }
 
-        EquipmentItem nextGradeData =
-            FindNextGradeEquipment(
-                _selectedEquipmentData
-            );
+        // 현재 등급과 다음 등급을 함께 계산해 비교 영역을 한 번에 갱신한다.
+        EquipmentItem nextGradeData = FindNextGradeEquipment(_selectedEquipmentData);
+        float currentStat = CalculateStat(_selectedEquipmentData);
+        string statName = GetStatDisplayName(_selectedEquipmentData.MainStatType);
 
-        float currentStat =
-            CalculateStat(_selectedEquipmentData);
-
-        string statName =
-            GetStatDisplayName(
-                _selectedEquipmentData.MainStatType
-            );
-
-        if (Text_EquipmentName != null)
-        {
-            Text_EquipmentName.text =
-                _selectedEquipmentData.Name;
-        }
-
-        if (Text_Level != null)
-        {
-            Text_Level.text =
-                GetGradeDisplayName(
-                    GetGradeFromId(
-                        _selectedEquipmentData.Id
-                    )
-                );
-        }
-
-        if (Text_Stat != null)
-        {
-            Text_Stat.text =
-                $"{statName}: {currentStat:0.##}";
-        }
-
-        if (Text_Currency != null)
-        {
-            Text_Currency.text =
-                $"승급 재화: " +
-                $"{_playerModel.EnhanceCurrency:N0}";
-        }
+        SetText(Text_EquipmentName, _selectedEquipmentData.Name);
+        SetText(Text_Level, GetGradeDisplayName(GetGradeFromId(_selectedEquipmentData.Id)));
+        SetText(Text_Stat, $"{statName}: {currentStat:0.##}");
+        SetText(Text_Currency, $"승급 재화: {_playerModel.EnhanceCurrency:N0}");
 
         if (nextGradeData == null)
         {
-            if (Text_NextLevel != null)
-            {
-                Text_NextLevel.text = "MAX";
-            }
-
-            if (Text_NextStat != null)
-            {
-                Text_NextStat.text = "최고 등급";
-            }
-
-            if (Text_EnhanceCost != null)
-            {
-                Text_EnhanceCost.text = "승급 비용: -";
-            }
-
-            if (Button_Enhance != null)
-            {
-                Button_Enhance.gameObject.SetActive(false);
-            }
-
+            // 다음 데이터가 없는 신화 등급에서는 승급 버튼을 숨긴다.
+            SetText(Text_NextLevel, "MAX");
+            SetText(Text_NextStat, "최고 등급");
+            SetText(Text_EnhanceCost, "승급 비용: -");
+            if (Button_Enhance != null) Button_Enhance.gameObject.SetActive(false);
             return;
         }
 
-        float nextStat =
-            CalculateStat(nextGradeData);
+        float nextStat = CalculateStat(nextGradeData);
+        float increaseStat = nextStat - currentStat;
 
-        float increaseStat =
-            nextStat - currentStat;
-
-        if (Text_NextLevel != null)
-        {
-            Text_NextLevel.text =
-                GetGradeDisplayName(
-                    GetGradeFromId(nextGradeData.Id)
-                );
-        }
-
-        if (Text_NextStat != null)
-        {
-            Text_NextStat.text =
-                $"{statName}: {nextStat:0.##} " +
-                $"<color=#67E480>" +
-                $"(+{increaseStat:0.##})" +
-                $"</color>";
-        }
-
-        if (Text_EnhanceCost != null)
-        {
-            Text_EnhanceCost.text =
-                $"승급 비용: " +
-                $"{CalculatePromotionCost():N0}";
-        }
-
-        if (Button_Enhance != null)
-        {
-            Button_Enhance.gameObject.SetActive(true);
-        }
+        SetText(Text_NextLevel, GetGradeDisplayName(GetGradeFromId(nextGradeData.Id)));
+        SetText(Text_NextStat,
+            $"{statName}: {nextStat:0.##} <color=#67E480>(+{increaseStat:0.##})</color>");
+        SetText(Text_EnhanceCost, $"승급 비용: {CalculatePromotionCost():N0}");
+        if (Button_Enhance != null) Button_Enhance.gameObject.SetActive(true);
     }
 
-    private float CalculateStat(
-        EquipmentItem equipmentData)
+    private static void SetText(TMP_Text text, string value)
     {
-        if (equipmentData == null)
-        {
-            return 0f;
-        }
-
-        return equipmentData.BaseStatValue *
-               equipmentData.GradeMultiplier;
+        if (text != null) text.text = value;
     }
 
-    private string GetGradeDisplayName(
-        EquipmentGrade grade)
+    private static float CalculateStat(EquipmentItem data)
     {
-        switch (grade)
-        {
-            case EquipmentGrade.Common:
-                return "일반";
-
-            case EquipmentGrade.Rare:
-                return "고급";
-
-            case EquipmentGrade.Epic:
-                return "희귀";
-
-            case EquipmentGrade.Legendary:
-                return "전설";
-
-            case EquipmentGrade.Mythic:
-                return "신화";
-
-            default:
-                return grade.ToString();
-        }
+        // 이 화면의 승급 비교값은 현재 기획대로 기본 능력치와 등급 배율만 반영한다.
+        return data == null ? 0f : data.BaseStatValue * data.GradeMultiplier;
     }
 
-    private string GetStatDisplayName(
-        StatType statType)
+    private static string GetGradeDisplayName(EquipmentGrade grade)
     {
-        switch (statType)
+        return grade switch
         {
-            case StatType.Attack:
-                return "공격력";
-            case StatType.MaxHp:
-                return "체력";
-            case StatType.Defense:
-                return "방어력";
-            case StatType.CriticalChance:
-                return "치명타 확률";
-            case StatType.CriticalDamage:
-                return "치명타 피해";
-            case StatType.AttackSpeed:
-                return "공격 속도";
-            case StatType.CooldownReduction:
-                return "재사용 대기시간 감소";
-            case StatType.Accuracy:
-                return "명중률";
-            case StatType.Evasion:
-                return "회피율";
-            case StatType.LifeSteal:
-                return "생명력 흡수";
-            case StatType.MoveSpeed:
-                return "이동 속도";
-            default:
-                return statType.ToString();
-        }
+            EquipmentGrade.Common => "일반",
+            EquipmentGrade.Rare => "고급",
+            EquipmentGrade.Epic => "희귀",
+            EquipmentGrade.Legendary => "전설",
+            EquipmentGrade.Mythic => "신화",
+            _ => grade.ToString()
+        };
+    }
+
+    private static string GetStatDisplayName(StatType statType)
+    {
+        return statType switch
+        {
+            StatType.Attack => "공격력",
+            StatType.MaxHp => "체력",
+            StatType.Defense => "방어력",
+            StatType.CriticalChance => "치명타 확률",
+            StatType.CriticalDamage => "치명타 피해",
+            StatType.AttackSpeed => "공격 속도",
+            StatType.CooldownReduction => "재사용 대기시간 감소",
+            StatType.Accuracy => "명중률",
+            StatType.Evasion => "회피율",
+            StatType.LifeSteal => "생명력 흡수",
+            StatType.MoveSpeed => "이동 속도",
+            _ => statType.ToString()
+        };
     }
 }
