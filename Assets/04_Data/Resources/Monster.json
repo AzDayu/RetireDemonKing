@@ -6,8 +6,8 @@
     "MaxHp": 200,
     "DropCoins": 100,
     "DropExp": 100,
-    "AttackPower": 0,
-    "AttackSpeed": 0
+    "AttackPower": 10,
+    "AttackSpeed": 0.5
   },
   {
     "MonsterId": "Monster_BlueSlime",
@@ -16,8 +16,8 @@
     "MaxHp": 100,
     "DropCoins": 50,
     "DropExp": 50,
-    "AttackPower": 0,
-    "AttackSpeed": 0
+    "AttackPower": 5,
+    "AttackSpeed": 0.5
   },
   {
     "MonsterId": "Monster_WareWolf",
@@ -26,8 +26,8 @@
     "MaxHp": 300,
     "DropCoins": 150,
     "DropExp": 150,
-    "AttackPower": 0,
-    "AttackSpeed": 0
+    "AttackPower": 20,
+    "AttackSpeed": 0.5
   },
   {
     "MonsterId": "Monster_Ork",
@@ -36,8 +36,8 @@
     "MaxHp": 400,
     "DropCoins": 200,
     "DropExp": 200,
-    "AttackPower": 0,
-    "AttackSpeed": 0
+    "AttackPower": 30,
+    "AttackSpeed": 0.5
   },
   {
     "MonsterId": "Monster_Pharaoh",
@@ -46,8 +46,8 @@
     "MaxHp": 500,
     "DropCoins": 250,
     "DropExp": 250,
-    "AttackPower": 0,
-    "AttackSpeed": 0
+    "AttackPower": 25,
+    "AttackSpeed": 0.5
   },
   {
     "MonsterId": "Monster_LittleDevil",
@@ -56,8 +56,8 @@
     "MaxHp": 600,
     "DropCoins": 300,
     "DropExp": 300,
-    "AttackPower": 0,
-    "AttackSpeed": 0
+    "AttackPower": 45,
+    "AttackSpeed": 0.5
   },
   {
     "MonsterId": "Monster_Knight",
@@ -66,7 +66,7 @@
     "MaxHp": 700,
     "DropCoins": 350,
     "DropExp": 350,
-    "AttackPower": 0,
-    "AttackSpeed": 0
+    "AttackPower": 60,
+    "AttackSpeed": 0.5
   }
 ]

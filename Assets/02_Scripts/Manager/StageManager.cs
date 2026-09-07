@@ -57,6 +57,7 @@ public class StageManager : MonoBehaviour
         _currentStage = CurrentStage;
         InitStage(_currentStage);
         GameManager.Instance.UI.OpenBackgroundUI(UIType.StageProgressUI);
+        GameManager.Instance.UI.OpenBackgroundUI(UIType.StageInfoUI);
     }
 
     public void InitStage(int stageIndex)

@@ -20,6 +20,7 @@ public enum UIType
     PopupRootUI,
     RandomEventPopupUI,
     StageProgressUI,
+    StageInfoUI,
     BossTimerUI,
     BossHudUI,
     RelicUI,
