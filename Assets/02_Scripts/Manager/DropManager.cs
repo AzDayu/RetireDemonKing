@@ -1,89 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DropManager : MonoBehaviour
 {
-    [Header("Base Settings")]
+    [Header("=== 드랍 확률 설정 ===")]
     [SerializeField] private float _baseMonsterItemDropRate = 0.05f;
 
-    private static long _idCounter = 0;
-
-    public void ProcessMonsterReward(MonsterData monsterData)
+    private readonly Dictionary<EquipmentGrade, float> _gradeWeights = new Dictionary<EquipmentGrade, float>
     {
-        if (monsterData == null) return;
+        { EquipmentGrade.Common, 70f },
+        { EquipmentGrade.Rare, 20f },
+        { EquipmentGrade.Epic, 7.5f },
+        { EquipmentGrade.Legendary, 2f },
+        { EquipmentGrade.Mythic, 0.5f }
+    };
 
-        var saveServer = GameManager.Instance.SaveServer;
-        var player = saveServer?.GetPlayerModel();
-        if (player == null) return;
+    public void ProcessMonsterReward(int playerLevel)
+    {
+        float dropBonusPercent = GameManager.Instance.Growth != null
+            ? GameManager.Instance.Growth.GetStatValue(StatType.EquipmentDropRate)
+            : 0f;
 
-        if (monsterData.DropExp > 0 && GameManager.Instance.Growth != null)
+        float finalDropRate = _baseMonsterItemDropRate * (1f + (dropBonusPercent / 100f));
+
+        if (UnityEngine.Random.value > finalDropRate) return;
+
+        EquipmentModel droppedEquipment = GenerateEquipmentWithPlayerLevel(playerLevel);
+
+        if (droppedEquipment != null)
         {
-            GameManager.Instance.Growth.AddExp((long)monsterData.DropExp);
-        }
-
-        float goldBonusPercent = GameManager.Instance.Growth.GetStatValue(StatType.GoldGainBonus);
-        long finalGold = Mathf.RoundToInt(monsterData.DropCoins * (1f + (goldBonusPercent / 100f)));
-        player.Gold += finalGold;
-
-        float dropBonusPercent = GameManager.Instance.Growth.GetStatValue(StatType.EquipmentDropRate);
-        float finalDropRate = _baseMonsterItemDropRate + (dropBonusPercent / 100f);
-
-        if (UnityEngine.Random.value <= finalDropRate)
-        {
-            GenerateAndRewardEquipment(player, monsterData);
+            GameManager.Instance.Growth.Equipment.TryAddEquipment(droppedEquipment);
+            Debug.Log($"[DropManager] 장비 드랍 성공! ID: {droppedEquipment.ItemDataId} | Lv.{droppedEquipment.Level}");
         }
     }
 
-    private void GenerateAndRewardEquipment(PlayerModel player, MonsterData monsterData)
+    public EquipmentModel GenerateEquipmentWithPlayerLevel(int playerLevel)
     {
-        string targetItemDataId = GetRandomItemIdFromDropTable(monsterData.DropTable);
+        List<EquipmentItem> allEquipment = GameManager.Instance.Data.GetAllEquipmentDataList();
+        if (allEquipment == null || allEquipment.Count == 0) return null;
 
-        if (string.IsNullOrEmpty(targetItemDataId))
+        EquipmentGrade targetGrade = RollGrade();
+
+        List<EquipmentItem> matchingItems = allEquipment
+            .Where(item => item.Grade == targetGrade)
+            .ToList();
+
+        if (matchingItems.Count == 0)
         {
-            targetItemDataId = "eq_weapon_Common";
+            matchingItems = allEquipment;
         }
 
-        int minLevel = Mathf.Max(1, player.Level - 2);
-        int maxLevel = player.Level + 1;
-        int droppedEquipLevel = UnityEngine.Random.Range(minLevel, maxLevel + 1);
+        int randomIndex = UnityEngine.Random.Range(0, matchingItems.Count);
+        EquipmentItem selectedStaticData = matchingItems[randomIndex];
 
-        long uniqueId = DateTime.UtcNow.Ticks + (_idCounter++);
+        int minLevel = Mathf.Max(1, playerLevel - 2);
+        int maxLevel = playerLevel + 1;
+        int calculatedLevel = UnityEngine.Random.Range(minLevel, maxLevel + 1);
 
-        EquipmentModel newEquipment = new EquipmentModel()
+        return new EquipmentModel
         {
-            ItemUniqueId = uniqueId,
-            ItemDataId = targetItemDataId,
-            Level = droppedEquipLevel,
+            ItemUniqueId = DateTime.UtcNow.Ticks,
+            ItemDataId = selectedStaticData.Id,
+            Level = calculatedLevel,
             IsEquipped = false
         };
-
-        if (GameManager.Instance.Growth?.Equipment != null)
-        {
-            bool isSuccess = GameManager.Instance.Growth.Equipment.TryAddEquipment(newEquipment);
-            if (isSuccess)
-            {
-                Debug.Log($"[DropManager]  장비 드랍 성공! ID: {targetItemDataId} (Lv.{droppedEquipLevel})");
-            }
-        }
     }
 
-    private string GetRandomItemIdFromDropTable(List<DropItemData> dropTable)
+    private EquipmentGrade RollGrade()
     {
-        if (dropTable == null || dropTable.Count == 0) return null;
+        float totalWeight = _gradeWeights.Values.Sum();
+        float randomVal = UnityEngine.Random.Range(0f, totalWeight);
+        float cumulative = 0f;
 
-        float randomVal = UnityEngine.Random.value;
-        float cumulativeRate = 0f;
-
-        foreach (var dropItem in dropTable)
+        foreach (var pair in _gradeWeights)
         {
-            cumulativeRate += dropItem.DropRate;
-            if (randomVal <= cumulativeRate)
+            cumulative += pair.Value;
+            if (randomVal <= cumulative)
             {
-                return dropItem.ItemId;
+                return pair.Key;
             }
         }
 
-        return dropTable[0].ItemId;
+        return EquipmentGrade.Common;
     }
 }

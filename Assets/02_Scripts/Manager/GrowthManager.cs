@@ -11,8 +11,9 @@ public class GrowthManager : MonoBehaviour
     public EquipmentManager Equipment => _equipmentManager;
     public RelicManager Relic => _relicManager;
 
-    private PlayerModel _playerModel;
+    public bool IsInitialized { get; private set; } = false;
 
+    private PlayerModel _playerModel;
     private StatCalculator _calculator = new StatCalculator();
     private Dictionary<StatType, float> _cachedFinalStats = new Dictionary<StatType, float>();
 
@@ -21,6 +22,8 @@ public class GrowthManager : MonoBehaviour
 
     public void Initialize(PlayerModel playerModel, List<EquipmentModel> savedEquipment = null, List<RelicModel> savedRelics = null)
     {
+        IsInitialized = false;
+
         _playerModel = playerModel ?? new PlayerModel();
 
         ApplyLevelBaseStats();
@@ -29,6 +32,8 @@ public class GrowthManager : MonoBehaviour
         _relicManager?.Initialize(savedRelics);
 
         RecalculateTotalStats();
+
+        IsInitialized = true;
     }
 
     private void ApplyLevelBaseStats()
@@ -62,6 +67,8 @@ public class GrowthManager : MonoBehaviour
 
     public float GetStatValue(StatType statType)
     {
+        if (!IsInitialized) return 0f;
+
         return _cachedFinalStats.TryGetValue(statType, out float value) ? value : 0f;
     }
 

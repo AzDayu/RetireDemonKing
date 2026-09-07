@@ -86,9 +86,10 @@ public class CombatManager : MonoBehaviour
         if (_activeMonsters.TryGetValue(monsterObj, out string monsterId))
         {
             MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
+            int playerLevel = GameManager.Instance.SaveServer?.GetPlayerModel()?.Level ?? 1;
             if (data != null)
             {
-                GameManager.Instance.Drop?.ProcessMonsterReward(data);
+                GameManager.Instance.Drop?.ProcessMonsterReward(playerLevel);
             }
         }
 
