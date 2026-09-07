@@ -788,6 +788,7 @@ Transform:
   - {fileID: 7383866752432712589}
   - {fileID: 1241174521067341384}
   - {fileID: 5327485520324151660}
+  - {fileID: 1722500769918985083}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6918734984185987777
@@ -834,7 +835,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ae1dea16da957f4eb4b39eea7efbb66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageManager
-  _currentStage: 1
   _autoBossChallenge: 1
   _stagesForChange: 10
   _bgScroller: {fileID: 0}
@@ -1040,6 +1040,51 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
+--- !u!1 &7798137147205323336
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1722500769918985083}
+  - component: {fileID: 6676641764756771416}
+  m_Layer: 0
+  m_Name: DropManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1722500769918985083
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7798137147205323336}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -960.36005, y: -540, z: 4.90367}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4634041316688594820}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6676641764756771416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7798137147205323336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e4db059610ac8a4ea8261d415d59447, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DropManager
+  _baseMonsterItemDropRate: 0.05
 --- !u!1 &7827833135584944126
 GameObject:
   m_ObjectHideFlags: 0
@@ -1086,17 +1131,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GrowthManager
   _equipmentManager: {fileID: 8747260285965394081}
   _relicManager: {fileID: 5552028106715496433}
-  _useTestEquipmentLoadout: 1
-  _testEquipmentDataIds:
-  - EQ_WEAPON_SWORD_Common
-  - EQ_CHEST_ICE_Common
-  - EQ_PANTS_GREEN_Common
-  - EQ_GLOVE_LEATHER_Common
-  - EQ_BOOTS_BLACK_Common
-  - EQ_BELT_TOOL_Common
-  - EQ_NECK_GREEN_Common
-  - EQ_RING_ICE_Common
-  - EQ_RING_FIRE_Common
 --- !u!1 &8369523466375852335
 GameObject:
   m_ObjectHideFlags: 0
@@ -1262,3 +1296,4 @@ MonoBehaviour:
   _gameDataManager: {fileID: 1858486214482068649}
   _resourceManager: {fileID: 4112609992852620555}
   _rebirthManager: {fileID: 2960774286532673179}
+  _dropManager: {fileID: 6676641764756771416}
