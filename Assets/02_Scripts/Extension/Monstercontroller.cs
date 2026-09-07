@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using UnityEngine;
 
 public class MonsterController : MonoBehaviour
 {
@@ -106,20 +107,19 @@ public class MonsterController : MonoBehaviour
             return;
         }
 
-        float distance = Vector3.Distance(
-            transform.position,
-            player.transform.position
-        );
+       //float distance = Vector3.Distance(transform.position,player.transform.position);
+       //
+       //// 공격 애니메이션 도중 플레이어가 멀어진 경우 피해 방지
+       //if (distance > _attackRange)
+       //{
+       //    return;
+       //}
 
-        // 공격 애니메이션 도중 플레이어가 멀어진 경우 피해 방지
-        if (distance > _attackRange)
-        {
-            return;
-        }
-
-        float attackPower =
-            _data != null ? _data.AttackPower : 10f;
+        float attackPower = 10f;
+        //float attackPower =_data != null ? _data.AttackPower : 10f;
 
         player.TakeDamage(attackPower);
+
+        Debug.Log($"[Monster 공격 성공] 대상: {player.name} | 피해량: {attackPower} | {player.CurHp}");
     }
 }
