@@ -141,6 +141,8 @@ public class GameManager : MonoBehaviour
         var savedEquipments = SaveServer?.GetEquipments();
         var savedRelics = SaveServer?.GetRelics();
 
+        PlayerNetworkService.Initialize(playerModel);
+
         if (_growthManager != null)
         {
             _growthManager.Initialize(playerModel, savedEquipments, savedRelics);

@@ -16,25 +16,19 @@ public class MonsterData
     public float MaxHp;
     public int DropCoins;
     public float DropExp;
-    public List<DropItemData> DropTable;
     public float AttackPower;
     public float AttackSpeed;
+    public List<DropTableData> DropTable;
 }
 
 [Serializable]
-public class DropItemData
+public class DropTableData
 {
-    public string ItemId;
-    public float DropRate;
-    public int MinCount;
-    public int MaxCount;
-
-    public DropItemData(string itemId, float dropRate, int minCount = 1, int maxCount = 1)
-    {
-        ItemId = itemId;
-        DropRate = dropRate;
-        MinCount = minCount;
-        MaxCount = maxCount;
-    }
+    public string MonsterId;
+    public float CommonDropRate;
+    public float RareDropRate;
+    public float EpicDropRate;
+    public float LegendaryDropRate;
+    public float MythDropRate;
 }
 

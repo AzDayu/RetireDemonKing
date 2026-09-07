@@ -9,6 +9,7 @@ public class GameDataManager : MonoBehaviour
     private Dictionary<string, EquipmentItem> _equipmentDataDict = new Dictionary<string, EquipmentItem>();
     private Dictionary<string, MonsterData> _monsterDataDict = new Dictionary<string, MonsterData>();
     private Dictionary<string, RandomEventStaticData> _randomEventDataDict = new Dictionary<string, RandomEventStaticData>();
+    private Dictionary<string, DropTableData> _monsterDropTableDict = new Dictionary<string, DropTableData>();
 
 
     [Serializable]
@@ -24,6 +25,7 @@ public class GameDataManager : MonoBehaviour
         //_equipmentDataDict = LoadData<EquipmentItem>("Equipment", data => data.Id);
         _equipmentDataDict = LoadEquipmentData();
         _monsterDataDict = LoadData<MonsterData>("Monster", data => data.MonsterId);
+        _monsterDropTableDict = LoadData<DropTableData>("DropItemTable", data => data.MonsterId);
         _randomEventDataDict = LoadData<RandomEventStaticData>("RandomEvent", data => data.Id);
 
         Debug.Log($"[GameDataManager] 데이터 로드 완료 - 유물: {_relicDataDict.Count}개, 장비: {_equipmentDataDict.Count}개. 몬스터: {_monsterDataDict.Count}개,이벤트:{_randomEventDataDict.Count}개");
@@ -231,6 +233,11 @@ public class GameDataManager : MonoBehaviour
     public MonsterData GetMonsterData(string monsterId)
     {
         return _monsterDataDict.TryGetValue(monsterId, out var data) ? data : null;
+    }
+
+    public DropTableData GetMonsterDropTable(string monsterId)
+    {
+        return _monsterDropTableDict.TryGetValue(monsterId, out var data) ? data : null;
     }
 
     // 테스트용 임시 데이터

@@ -11,6 +11,7 @@ public class MonsterController : MonoBehaviour
     [SerializeField] private float _moveSpeed = 2f;
 
     public MonsterModel Model { get; private set; }
+    public MonsterData Data => _data;
     public bool IsDead => Model == null || Model.CurHp <= 0f;
 
     private MonsterData _data;

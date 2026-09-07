@@ -3,11 +3,25 @@ using UnityEngine;
 
 public class EquipmentManager : MonoBehaviour
 {
-   private List<EquipmentModel> _ownedEquipmentList = new List<EquipmentModel>();
+    private List<EquipmentModel> _ownedEquipmentList = new List<EquipmentModel>();
+    private long _nextUniqueId = 1;
 
     public void Initialize(List<EquipmentModel> savedEquipmentList)
     {
         _ownedEquipmentList = savedEquipmentList ?? new List<EquipmentModel>();
+
+        foreach (EquipmentModel equipment in _ownedEquipmentList)
+        {
+            if (equipment.ItemUniqueId >= _nextUniqueId)
+            {
+                _nextUniqueId = equipment.ItemUniqueId + 1;
+            }
+        }
+    }
+
+    public long GetNextUniqueId()
+    {
+        return _nextUniqueId++;
     }
 
     public bool HasEquippedEquipment()
@@ -109,6 +123,31 @@ public class EquipmentManager : MonoBehaviour
 
         _ownedEquipmentList.Add(equipmentModel);
         return true;
+    }
+
+    public bool TryDropEquipmentForMonster(string monsterId)
+    {
+        if (GameManager.Instance == null || GameManager.Instance.Data == null)
+        {
+            return false;
+        }
+
+        DropTableData dropTable = GameManager.Instance.Data.GetMonsterDropTable(monsterId);
+        if (dropTable == null) return false;
+
+        EquipmentGrade grade = GameUtil.RollGrade(dropTable);
+        EquipmentItem droppedItem = GameUtil.GetRandomEquipmentByGrade(grade, GameManager.Instance.Data.GetAllEquipmentDataList());
+        if (droppedItem == null) return false;
+
+        EquipmentModel newEquipment = new EquipmentModel
+        {
+            ItemUniqueId = GetNextUniqueId(),
+            ItemDataId = droppedItem.Id,
+            Level = 1,
+            IsEquipped = false
+        };
+
+        return TryAddEquipment(newEquipment);
     }
 
     public Dictionary<StatType, float> GetTotalFlatStats()

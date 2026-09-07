@@ -1,0 +1,58 @@
+[
+  {
+    "MonsterId": "Monster_Hyena",
+    "CommonDropRate": 70,
+    "RareDropRate": 30,
+    "EpicDropRate": 0,
+    "LegendaryDropRate": 0,
+    "MythDropRate": 0
+  },
+  {
+    "MonsterId": "Monster_BlueSlime",
+    "CommonDropRate": null,
+    "RareDropRate": null,
+    "EpicDropRate": null,
+    "LegendaryDropRate": null,
+    "MythDropRate": null
+  },
+  {
+    "MonsterId": "Monster_WareWolf",
+    "CommonDropRate": 50,
+    "RareDropRate": 40,
+    "EpicDropRate": 10,
+    "LegendaryDropRate": 0,
+    "MythDropRate": 0
+  },
+  {
+    "MonsterId": "Monster_Ork",
+    "CommonDropRate": 50,
+    "RareDropRate": 30,
+    "EpicDropRate": 20,
+    "LegendaryDropRate": 0,
+    "MythDropRate": 0
+  },
+  {
+    "MonsterId": "Monster_Pharaoh",
+    "CommonDropRate": null,
+    "RareDropRate": null,
+    "EpicDropRate": null,
+    "LegendaryDropRate": null,
+    "MythDropRate": null
+  },
+  {
+    "MonsterId": "Monster_LittleDevil",
+    "CommonDropRate": 40,
+    "RareDropRate": 40,
+    "EpicDropRate": 20,
+    "LegendaryDropRate": 0,
+    "MythDropRate": 0
+  },
+  {
+    "MonsterId": "Monster_Knight",
+    "CommonDropRate": 30,
+    "RareDropRate": 40,
+    "EpicDropRate": 20,
+    "LegendaryDropRate": 10,
+    "MythDropRate": 0
+  }
+]

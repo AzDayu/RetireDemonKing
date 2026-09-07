@@ -15,7 +15,7 @@ public class MonsterModel
     private float _attackSpeed;
     private int _dropCoins;
     private float _dropExp;
-    private List<DropItemData> _dropTable;
+    private List<DropTableData> _dropTable;
 
     public string MonsterId
     {
@@ -41,14 +41,14 @@ public class MonsterModel
         get { return _dropExp; }
         set { _dropExp = value; OnInfoChanged?.Invoke(nameof(DropExp)); }
     }
-    public List<DropItemData> DropTable
+    public List<DropTableData> DropTable
     {
         get { return _dropTable; }
         set 
         {
             _dropTable = value != null
-            ? new List<DropItemData>(value)
-            : new List<DropItemData>();
+            ? new List<DropTableData>(value)
+            : new List<DropTableData>();
             OnInfoChanged?.Invoke(nameof(DropTable)); 
         }
     }
@@ -90,7 +90,7 @@ public class MonsterModel
     {
         if (data == null)
         {
-            _dropTable = new List<DropItemData>();
+            _dropTable = new List<DropTableData>();
             return;
         }
 
@@ -103,8 +103,8 @@ public class MonsterModel
         _dropCoins = data.DropCoins;
         _dropExp = data.DropExp;
         _dropTable = data.DropTable != null
-            ? new List<DropItemData>(data.DropTable) 
-            : new List<DropItemData>();
+            ? new List<DropTableData>(data.DropTable) 
+            : new List<DropTableData>();
     }
 
     public void ChangeCurHp(float amount)
