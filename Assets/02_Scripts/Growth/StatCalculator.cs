@@ -20,7 +20,18 @@ public class StatCalculator
     {
         float baseVal = GetBaseStat(statType);
 
-        float totalFlat = baseVal + flatBonus;
+        float totalFlat;
+
+        if (statType == StatType.AttackSpeed)
+        {
+            totalFlat = baseVal + (flatBonus / 100f);
+        }
+        else
+        {
+            totalFlat = baseVal + flatBonus;
+        }
+
+
         float multiplier = 1f + (percentBonus / 100f);
 
         float finalStat = totalFlat * multiplier;
