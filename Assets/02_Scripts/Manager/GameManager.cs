@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameDataManager _gameDataManager;
     [SerializeField] private ResourceManager _resourceManager;
     [SerializeField] private RebirthManager _rebirthManager;
+    [SerializeField] private DropManager _dropManager;
 
     public StageManager Stage => _stageManager;
     public CombatManager Combat => _combatManager;
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
     public ResourceManager Resource => _resourceManager;
     public EventManager Event => _eventManager;
     public RebirthManager Rebirth => _rebirthManager;
+    public DropManager Drop => _dropManager;
 
     private void Awake()
     {

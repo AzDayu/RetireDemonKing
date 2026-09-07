@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
     public void ResetHp()
     {
         MaxHp = GameManager.Instance != null && GameManager.Instance.Growth != null
-            ? GameManager.Instance.Growth.GetStat(StatType.MaxHp)
+            ? GameManager.Instance.Growth.GetStatValue(StatType.MaxHp)
             : 100f;
 
         CurHp = MaxHp;
@@ -149,8 +149,13 @@ public class PlayerController : MonoBehaviour
 
         if (hasTarget)
         {
-            float attackSpeed = GameManager.Instance.Growth.GetStat(StatType.AttackSpeed);
+            float attackSpeed = GameManager.Instance.Growth.GetStatValue(StatType.AttackSpeed);
+            attackSpeed = attackSpeed > 0f ? attackSpeed : 1f;
             _animationView?.SetAnimationSpeed(attackSpeed);
+        }
+        else
+        {
+            _animationView?.SetAnimationSpeed(1f);
         }
     }
 
@@ -174,8 +179,8 @@ public class PlayerController : MonoBehaviour
 
         if (monster == null || monster.IsDead) return;
 
-        float damage = GameManager.Instance.Growth.GetStat(StatType.Attack);
-        float accuracy = GameManager.Instance.Growth.GetStat(StatType.Accuracy);
+        float damage = GameManager.Instance.Growth.GetStatValue(StatType.Attack);
+        float accuracy = GameManager.Instance.Growth.GetStatValue(StatType.Accuracy);
 
         Debug.Log($"[Player 공격 성공] 대상: {monster.name} | 피해량: {damage} | 명중률: {accuracy}");
 
@@ -186,11 +191,11 @@ public class PlayerController : MonoBehaviour
     {
         if (IsDead) return;
 
-        float evasion = GameManager.Instance.Growth.GetStat(StatType.Evasion);
+        float evasion = GameManager.Instance.Growth.GetStatValue(StatType.Evasion);
         float hitChance = Mathf.Clamp(monsterAccuracy - evasion, 10f, 100f);
         if (UnityEngine.Random.Range(0f, 100f) > hitChance) return;
 
-        float defense = GameManager.Instance.Growth.GetStat(StatType.Defense);
+        float defense = GameManager.Instance.Growth.GetStatValue(StatType.Defense);
         float finalDamage = Mathf.Max(1f, monsterAttackPower - defense);
 
         CurHp = Mathf.Max(0f, CurHp - finalDamage);

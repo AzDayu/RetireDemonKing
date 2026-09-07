@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -66,7 +66,7 @@ public class EquipmentEnhancePanelUI : UIBase
             GameManager.Instance != null &&
             GameManager.Instance.Growth != null &&
             GameManager.Instance.Growth.IsInitialized &&
-            GameManager.Instance.Growth.PlayerModel != null &&
+            GameManager.Instance.SaveServer?.GetPlayerModel() != null &&
             GameManager.Instance.Growth.Equipment != null &&
             GameManager.Instance.Data != null &&
             GameManager.Instance.Data.GetAllEquipmentDataList().Count > 0);
@@ -160,7 +160,7 @@ public class EquipmentEnhancePanelUI : UIBase
 
     private void InitializeEquipmentData()
     {
-        _playerModel = GameManager.Instance.Growth.PlayerModel;
+        _playerModel = GameManager.Instance.SaveServer.GetPlayerModel();
         _equipmentDataMap.Clear();
         _equipmentModelMap.Clear();
 

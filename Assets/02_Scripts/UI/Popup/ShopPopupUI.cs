@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -149,7 +149,7 @@ public class ShopPopupUI : UIBase
             GameManager.Instance.Growth == null ||
             GameManager.Instance.Data == null ||
             GameManager.Instance.Growth.Equipment == null ||
-            GameManager.Instance.Growth.PlayerModel == null)
+            GameManager.Instance.SaveServer.GetPlayerModel() == null)
         {
             ShowPurchaseFailure(
                 "상점 데이터를 불러오지 못했습니다."
@@ -161,7 +161,7 @@ public class ShopPopupUI : UIBase
             ? EquipmentLowChestPrice
             : EquipmentHighChestPrice;
         PlayerModel playerModel =
-            GameManager.Instance.Growth.PlayerModel;
+            GameManager.Instance.SaveServer.GetPlayerModel();
 
         if (playerModel.EnhanceCurrency < chestPrice)
         {
@@ -273,7 +273,7 @@ public class ShopPopupUI : UIBase
             GameManager.Instance == null ||
             GameManager.Instance.Growth == null ||
             GameManager.Instance.Growth.Equipment == null ||
-            GameManager.Instance.Growth.PlayerModel == null)
+            GameManager.Instance.SaveServer.GetPlayerModel() == null)
         {
             ClearPendingEquipment();
             return;
@@ -301,7 +301,7 @@ public class ShopPopupUI : UIBase
         EquipmentManager equipmentManager =
             GameManager.Instance.Growth.Equipment;
         PlayerModel playerModel =
-            GameManager.Instance.Growth.PlayerModel;
+            GameManager.Instance.SaveServer.GetPlayerModel();
 
         if (selectedNewEquipment)
         {
@@ -335,7 +335,7 @@ public class ShopPopupUI : UIBase
             GameManager.Instance == null ||
             GameManager.Instance.Growth == null ||
             GameManager.Instance.Growth.Equipment == null ||
-            GameManager.Instance.Growth.PlayerModel == null)
+            GameManager.Instance.SaveServer.GetPlayerModel() == null)
         {
             return;
         }
@@ -343,7 +343,7 @@ public class ShopPopupUI : UIBase
         EquipmentManager equipmentManager =
             GameManager.Instance.Growth.Equipment;
         PlayerModel playerModel =
-            GameManager.Instance.Growth.PlayerModel;
+            GameManager.Instance.SaveServer.GetPlayerModel();
 
         if (_pendingCurrentEquipment != null)
         {
@@ -577,7 +577,7 @@ public class ShopPopupUI : UIBase
 
         if (GameManager.Instance == null ||
             GameManager.Instance.Growth == null ||
-            GameManager.Instance.Growth.PlayerModel == null)
+            GameManager.Instance.SaveServer.GetPlayerModel() == null)
         {
             ShowPurchaseFailure("유물 데이터를 불러오지 못했습니다.");
             return;
@@ -595,7 +595,7 @@ public class ShopPopupUI : UIBase
         int chestPrice = tier == ChestTier.Low
             ? RelicLowChestPrice
             : RelicHighChestPrice;
-        PlayerModel playerModel = GameManager.Instance.Growth.PlayerModel;
+        PlayerModel playerModel = GameManager.Instance.SaveServer.GetPlayerModel();
 
         if (playerModel.RebirthPoints < chestPrice)
         {

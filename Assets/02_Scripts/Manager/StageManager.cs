@@ -11,14 +11,33 @@ public enum StageMode
 public class StageManager : MonoBehaviour
 {
     [Header("Stage Progress Settings")]
-    [SerializeField] private int _currentStage = 1;
     [SerializeField] private bool _autoBossChallenge = true;
 
     [Header("Map Environment Settings")]
     [SerializeField] private int _stagesForChange = 10;
     [SerializeField] private BGIScroller _bgScroller;
 
-    public int CurrentStage => _currentStage;
+    public int CurrentStage
+    {
+        get
+        {
+            var player = GameManager.Instance.SaveServer?.GetPlayerModel();
+            return player != null ? player.CurrentStage : 1;
+        }
+        set
+        {
+            var player = GameManager.Instance.SaveServer?.GetPlayerModel();
+            if (player != null)
+            {
+                player.CurrentStage = value;
+                if (value > player.MaxStage)
+                {
+                    player.MaxStage = value;
+                }
+            }
+        }
+    }
+
     public int StagesForChange => _stagesForChange;
 
     public bool AutoBossChallenge
@@ -36,7 +55,7 @@ public class StageManager : MonoBehaviour
 
     private void Start()
     {
-        if (GameManager.Instance != null)
+        if (GameManager.Instance != null && GameManager.Instance.Combat != null)
         {
             GameManager.Instance.Combat.OnBattleCleared += HandleBattleCleared;
             GameManager.Instance.Combat.OnBattleFailed += HandleBattleFailed;
@@ -52,27 +71,27 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    public void Initialize(int CurrentStage)
+    public void Initialize(int stage)
     {
-        _currentStage = CurrentStage;
-        InitStage(_currentStage);
+        CurrentStage = stage;
+        InitStage(CurrentStage);
         GameManager.Instance.UI.OpenBackgroundUI(UIType.StageProgressUI);
         GameManager.Instance.UI.OpenBackgroundUI(UIType.StageInfoUI);
     }
 
     public void InitStage(int stageIndex)
     {
-        _currentStage = stageIndex;
+        CurrentStage = stageIndex;
         CurrentMode = StageMode.NormalStage;
 
-        OnStageChanged?.Invoke(_currentStage);
+        OnStageChanged?.Invoke(CurrentStage);
         OnModeChanged?.Invoke(CurrentMode);
 
-        UpdateMainStageBGI(_currentStage);
+        UpdateMainStageBGI(CurrentStage);
 
         if (GameManager.Instance.Combat != null)
         {
-            GameManager.Instance.Combat.StartNormalBattle(_currentStage);
+            GameManager.Instance.Combat.StartNormalBattle(CurrentStage);
         }
     }
 
@@ -86,7 +105,7 @@ public class StageManager : MonoBehaviour
 
         if (GameManager.Instance.Combat != null)
         {
-            GameManager.Instance.Combat.StartBossBattle(_currentStage);
+            GameManager.Instance.Combat.StartBossBattle(CurrentStage);
         }
     }
 
@@ -97,14 +116,14 @@ public class StageManager : MonoBehaviour
             GameManager.Instance.UI.CloseBackgroundUI(UIType.BossTimerUI);
             GameManager.Instance.UI.CloseBackgroundUI(UIType.BossHudUI);
 
-            _currentStage++;
-            InitStage(_currentStage);
+            CurrentStage++;
+            InitStage(CurrentStage);
         }
         else if (CurrentMode == StageMode.NormalStage)
         {
-            _currentStage++;
+            CurrentStage++;
 
-            if (_currentStage % _stagesForChange == 0)
+            if (CurrentStage % _stagesForChange == 0)
             {
                 if (_autoBossChallenge)
                 {
@@ -112,15 +131,14 @@ public class StageManager : MonoBehaviour
                 }
                 else
                 {
-                    // 자동 도전 off. 주제 첫 스테이지로 복귀
-                    _currentStage = GameUtil.GetThemeFirstStage(_currentStage, _stagesForChange);
-                    InitStage(_currentStage);
+                    CurrentStage = GameUtil.GetThemeFirstStage(CurrentStage, _stagesForChange);
+                    InitStage(CurrentStage);
                 }
             }
             else
             {
-                OnStageChanged?.Invoke(_currentStage);
-                GameManager.Instance.Combat.StartNormalBattle(_currentStage);
+                OnStageChanged?.Invoke(CurrentStage);
+                GameManager.Instance.Combat.StartNormalBattle(CurrentStage);
             }
         }
     }
@@ -131,15 +149,16 @@ public class StageManager : MonoBehaviour
         GameManager.Instance.UI.CloseBackgroundUI(UIType.BossHudUI);
 
         CurrentMode = StageMode.NormalStage;
-        _currentStage = GameUtil.GetThemeFirstStage(_currentStage, _stagesForChange);
+        CurrentStage = GameUtil.GetThemeFirstStage(CurrentStage, _stagesForChange); // 프로퍼티 set 호출
+
         OnModeChanged?.Invoke(CurrentMode);
-        OnStageChanged?.Invoke(_currentStage);
+        OnStageChanged?.Invoke(CurrentStage);
 
         PlayerController.Instance?.ResetHp();
 
         if (GameManager.Instance.Combat != null)
         {
-            GameManager.Instance.Combat.StartNormalBattle(_currentStage);
+            GameManager.Instance.Combat.StartNormalBattle(CurrentStage);
         }
     }
 
@@ -160,7 +179,6 @@ public class StageManager : MonoBehaviour
         }
 
         _currentThemeIndex = targetThemeIndex;
-
         _bgScroller.SetBackgroundSprite(loadedSprite);
     }
 }

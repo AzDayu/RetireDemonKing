@@ -83,8 +83,19 @@ public class CombatManager : MonoBehaviour
     // 몬스터가 사망했을 때 호출
     public void OnMonsterKilled(GameObject monsterObj)
     {
+        if (_activeMonsters.TryGetValue(monsterObj, out string monsterId))
+        {
+            MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
+            int playerLevel = GameManager.Instance.SaveServer?.GetPlayerModel()?.Level ?? 1;
+            if (data != null)
+            {
+                GameManager.Instance.Drop?.ProcessMonsterReward(playerLevel);
+            }
+        }
+
         if (!DespawnMonster(monsterObj)) return;
         Debug.Log($"[CombatManager] 몬스터 사망 처리됨: {monsterObj.name}");
+
         if (_isBossBattle)
         {
             _isTimerRunning = false;
@@ -151,6 +162,7 @@ public class CombatManager : MonoBehaviour
 
     private async void SpawnMonsterById(string monsterId)
     {
+        // 1. MonsterData 데이터 조회
         MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
         if (data == null)
         {
@@ -158,6 +170,7 @@ public class CombatManager : MonoBehaviour
             return;
         }
 
+        // 2. 비동기 프리팹 로드 (예외 처리 없음)
         GameObject prefab = await GameManager.Instance.Resource.LoadPrefab(data.PrefabName);
         if (prefab == null)
         {
@@ -165,6 +178,7 @@ public class CombatManager : MonoBehaviour
             return;
         }
 
+        // 3. 풀링을 통한 실제 소환 처리
         SpawnMonsterFromPool(prefab, data, monsterId);
     }
 

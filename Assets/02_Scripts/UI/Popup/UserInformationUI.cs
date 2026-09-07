@@ -1,4 +1,4 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 public class UserInformationUI : MonoBehaviour
@@ -13,12 +13,12 @@ public class UserInformationUI : MonoBehaviour
     {
         if (GameManager.Instance == null ||
             GameManager.Instance.Growth == null ||
-            GameManager.Instance.Growth.PlayerModel == null)
+            GameManager.Instance.SaveServer.GetPlayerModel() == null)
         {
             return;
         }
 
-        PlayerModel playerModel = GameManager.Instance.Growth.PlayerModel;
+        PlayerModel playerModel = GameManager.Instance.SaveServer.GetPlayerModel();
         long enhanceCurrency = playerModel.EnhanceCurrency;
         int rebirthPoints = playerModel.RebirthPoints;
 

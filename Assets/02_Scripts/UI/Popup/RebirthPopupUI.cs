@@ -48,7 +48,7 @@ public class RebirthPopupUI : UIBase
 
         int currentStage = gameMgr.Stage.CurrentStage; 
         int minStage = gameMgr.Rebirth.MinRebirthStage;
-        float rebirthBonus = gameMgr.Growth.GetStat(StatType.RebirthPointBonus);
+        float rebirthBonus = gameMgr.Growth.GetStatValue(StatType.RebirthPointBonus);
 
         bool canRebirth = gameMgr.Rebirth.CanRebirth(currentStage);
 
