@@ -24,7 +24,7 @@ namespace RetireDemonKing.Network
             }
         }
 
-        [SerializeField] private string _baseUrl = "http://localhost:3000/api";
+        [SerializeField] private string _baseUrl = "https://13.209.41.241/api";
 
         private string _jwtToken = string.Empty;
         private string _currentUserAccountId = string.Empty;

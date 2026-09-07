@@ -93,6 +93,7 @@ GameServer/game.db
 .env
 .env*.local
 GameServer/.env
+*.pem
 
 # 4. npm 디버그 및 에러 로그
 npm-debug.log*

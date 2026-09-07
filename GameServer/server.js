@@ -1,4 +1,9 @@
-﻿// server.js
+﻿require('dotenv').config({
+    path: require('node:path').join(__dirname, '.env'),
+    override: true,
+    quiet: true
+});
+// server.js
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
@@ -7,7 +12,11 @@ const db = require('./database');
 
 const app = express();
 const PORT = 3000;
-const JWT_SECRET = "OzProjectDemonKingHeroSecretJWTTokenKey2026"; // 보안 키
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET || JWT_SECRET.length < 64) {
+    throw new Error('JWT_SECRET is missing or too short.');
+}
 
 app.use(cors());
 app.use(express.json());

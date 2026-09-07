@@ -16,13 +16,9 @@ public class MenuPopupUI : UIBase
     [Header("=== Feedback Text ===")]
     [SerializeField] private TextMeshProUGUI _textStatusMessage;
 
-    private void Awake()
-    {
-        InitUIButton();
-    }
-
     private void OnEnable()
     {
+        InitUIButton();
         SetStatusMessage(string.Empty);
     }
 
@@ -98,10 +94,8 @@ public class MenuPopupUI : UIBase
     {
         if (GameManager.Instance != null && GameManager.Instance.UI != null)
         {
-            GameManager.Instance.UI.CloseContentUI(UIType.MenuPopupUI);
+            GameManager.Instance.UI.CloseMenuPopupUI();
         }
-
-        gameObject.SetActive(false);
     }
 
     private void SetStatusMessage(string message, bool isError = false)
