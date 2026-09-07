@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa9825ecb3b742d29fbb0cabdc91a7b2, type: 3}
+  m_Name: EquipmentGradeFramePalette
+  m_EditorClassIdentifier: Assembly-CSharp::EquipmentGradeFramePalette
+  _commonFrame: {fileID: 3904478201197098008, guid: f354d4e4caa53440c9cb55c5cbc77c7b, type: 3}
+  _rareFrame: {fileID: 1314206488693765989, guid: 34cc2957377bd4a0cb0bb72c094b93b4, type: 3}
+  _epicFrame: {fileID: 1083063194045671506, guid: e4ff74f49a0f74384acc65c2937954fb, type: 3}
+  _legendaryFrame: {fileID: 3862298430854420529, guid: f506b968d3bb54a5e850af854d03b3ab, type: 3}
+  _mythicFrame: {fileID: 5601287646486527723, guid: 1ba586917ac5449448de11ed5410bb6e, type: 3}

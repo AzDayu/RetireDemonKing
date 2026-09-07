@@ -119,7 +119,14 @@ public class MainHUDUI : UIBase
             EquipmentSlotIconUI.ShowEmpty(entry.Value);
 
             if (model == null || data == null || string.IsNullOrEmpty(data.IconId)) continue;
-            LoadEquipmentIconAsync(entry.Key, entry.Value, model, data.IconId, refreshVersion).Forget();
+            LoadEquipmentIconAsync(
+                entry.Key,
+                entry.Value,
+                model,
+                data.IconId,
+                data.Grade,
+                refreshVersion
+            ).Forget();
         }
     }
 
@@ -128,6 +135,7 @@ public class MainHUDUI : UIBase
         Transform slotRoot,
         EquipmentModel model,
         string iconId,
+        EquipmentGrade grade,
         int refreshVersion)
     {
         Sprite sprite = await GameManager.Instance.Resource.LoadSprite(iconId);
@@ -140,7 +148,7 @@ public class MainHUDUI : UIBase
             ?.GetEquippedEquipment(equipmentType, typeIndex);
         if (!ReferenceEquals(currentModel, model)) return;
 
-        if (!EquipmentSlotIconUI.ShowEquipment(slotRoot, sprite, model.Level))
+        if (!EquipmentSlotIconUI.ShowEquipment(slotRoot, sprite, model.Level, grade))
             Debug.LogWarning($"[장비 UI] 메인 HUD 아이콘 표시 실패: {model.ItemDataId} / {iconId}");
     }
 

@@ -253,6 +253,7 @@ public class EquipmentEnhancePanelUI : UIBase
                 slotRoot,
                 model,
                 data.IconId,
+                data.Grade,
                 refreshVersion
             ).Forget();
         }
@@ -263,6 +264,7 @@ public class EquipmentEnhancePanelUI : UIBase
         Transform slotRoot,
         EquipmentModel model,
         string iconId,
+        EquipmentGrade grade,
         int refreshVersion)
     {
         Sprite sprite = await GameManager.Instance.Resource.LoadSprite(iconId);
@@ -276,7 +278,7 @@ public class EquipmentEnhancePanelUI : UIBase
             return;
         }
 
-        if (!EquipmentSlotIconUI.ShowEquipment(slotRoot, sprite, model.Level))
+        if (!EquipmentSlotIconUI.ShowEquipment(slotRoot, sprite, model.Level, grade))
             Debug.LogWarning($"[장비 승급] 슬롯 아이콘 표시 실패: {model.ItemDataId} / {iconId}");
     }
 
@@ -368,7 +370,7 @@ public class EquipmentEnhancePanelUI : UIBase
     {
         if (currentData == null || string.IsNullOrEmpty(currentData.Id)) return null;
 
-        string nextGradeSuffix = GetNextGradeSuffix(currentData.Id);
+        string nextGradeSuffix = GetNextGradeSuffix(currentData.Grade);
         if (nextGradeSuffix == null) return null;
 
         // 예: EQ_WEAPON_SWORD_Common -> EQ_WEAPON_SWORD_RARE
@@ -381,17 +383,16 @@ public class EquipmentEnhancePanelUI : UIBase
         return nextGradeData;
     }
 
-    private string GetNextGradeSuffix(string equipmentId)
+    private static string GetNextGradeSuffix(EquipmentGrade grade)
     {
-        // 현재 장비 데이터는 ID 마지막 접미사로 등급 계열을 구분한다.
-        if (equipmentId.EndsWith("_Common", StringComparison.OrdinalIgnoreCase)) return "RARE";
-        if (equipmentId.EndsWith("_RARE", StringComparison.OrdinalIgnoreCase)) return "EPIC";
-        if (equipmentId.EndsWith("_EPIC", StringComparison.OrdinalIgnoreCase)) return "LEGENDARY";
-        if (equipmentId.EndsWith("_LEGENDARY", StringComparison.OrdinalIgnoreCase)) return "MYTHIC";
-        if (equipmentId.EndsWith("_MYTHIC", StringComparison.OrdinalIgnoreCase)) return null;
-
-        Debug.LogError($"[장비 승급] 장비 ID에서 등급을 확인할 수 없습니다: {equipmentId}");
-        return null;
+        return grade switch
+        {
+            EquipmentGrade.Common => "RARE",
+            EquipmentGrade.Rare => "EPIC",
+            EquipmentGrade.Epic => "LEGENDARY",
+            EquipmentGrade.Legendary => "MYTHIC",
+            _ => null
+        };
     }
 
     private string GetEquipmentFamilyId(string equipmentId)
@@ -401,30 +402,12 @@ public class EquipmentEnhancePanelUI : UIBase
         return separatorIndex > 0 ? equipmentId.Substring(0, separatorIndex) : equipmentId;
     }
 
-    private EquipmentGrade GetGradeFromId(string equipmentId)
-    {
-        if (string.IsNullOrEmpty(equipmentId))
-        {
-            Debug.LogError("[장비 승급] 장비 ID가 비어 있습니다.");
-            return EquipmentGrade.Common;
-        }
-
-        if (equipmentId.EndsWith("_Common", StringComparison.OrdinalIgnoreCase)) return EquipmentGrade.Common;
-        if (equipmentId.EndsWith("_RARE", StringComparison.OrdinalIgnoreCase)) return EquipmentGrade.Rare;
-        if (equipmentId.EndsWith("_EPIC", StringComparison.OrdinalIgnoreCase)) return EquipmentGrade.Epic;
-        if (equipmentId.EndsWith("_LEGENDARY", StringComparison.OrdinalIgnoreCase)) return EquipmentGrade.Legendary;
-        if (equipmentId.EndsWith("_MYTHIC", StringComparison.OrdinalIgnoreCase)) return EquipmentGrade.Mythic;
-
-        Debug.LogError($"[장비 승급] 장비 ID에서 등급을 확인할 수 없습니다: {equipmentId}");
-        return EquipmentGrade.Common;
-    }
-
     private long CalculatePromotionCost()
     {
         if (_selectedEquipmentData == null) return 0;
 
         // 일반부터 등급 순서대로 기본 비용의 1~5배를 적용한다.
-        return BasePromotionCost * ((int)GetGradeFromId(_selectedEquipmentData.Id) + 1);
+        return BasePromotionCost * ((int)_selectedEquipmentData.Grade + 1);
     }
 
     private int GetPromotionSuccessRatePercent()
@@ -432,7 +415,7 @@ public class EquipmentEnhancePanelUI : UIBase
         if (_selectedEquipmentData == null) return 0;
 
         // 다음 등급으로 갈수록 성공 확률이 낮아지며, 최고 등급은 승급할 수 없다.
-        return GetGradeFromId(_selectedEquipmentData.Id) switch
+        return _selectedEquipmentData.Grade switch
         {
             EquipmentGrade.Common => 20,
             EquipmentGrade.Rare => 10,
@@ -453,7 +436,7 @@ public class EquipmentEnhancePanelUI : UIBase
         string statName = GetStatDisplayName(_selectedEquipmentData.MainStatType);
 
         SetText(Text_EquipmentName, _selectedEquipmentData.Name);
-        SetText(Text_Level, GetGradeDisplayName(GetGradeFromId(_selectedEquipmentData.Id)));
+        SetText(Text_Level, GetGradeDisplayName(_selectedEquipmentData.Grade));
         SetText(Text_Stat, $"{statName}: {currentStat:0.##}");
         SetText(Text_Currency, $"승급 재화: {_playerModel.EnhanceCurrency:N0}");
 
@@ -471,7 +454,7 @@ public class EquipmentEnhancePanelUI : UIBase
         float nextStat = CalculateStat(nextGradeData);
         float increaseStat = nextStat - currentStat;
 
-        SetText(Text_NextLevel, GetGradeDisplayName(GetGradeFromId(nextGradeData.Id)));
+        SetText(Text_NextLevel, GetGradeDisplayName(nextGradeData.Grade));
         SetText(Text_NextStat,
             $"{statName}: {nextStat:0.##} <color=#67E480>(+{increaseStat:0.##})</color>");
         long promotionCost = CalculatePromotionCost();
