@@ -4,36 +4,14 @@ using UnityEngine;
 
 public class GrowthManager : MonoBehaviour
 {
+    [Header("=== Sub Managers ===")]
     [SerializeField] private EquipmentManager _equipmentManager;
     [SerializeField] private RelicManager _relicManager;
 
-    [Header("=== 전투 미완성 테스트 장비 ===")]
-    [SerializeField] private bool _useTestEquipmentLoadout = true;
-    [SerializeField]
-    private string[] _testEquipmentDataIds =
-    {
-        "EQ_WEAPON_SWORD_Common",
-        "EQ_CHEST_ICE_Common",
-        "EQ_PANTS_GREEN_Common",
-        "EQ_GLOVE_LEATHER_Common",
-        "EQ_BOOTS_BLACK_Common",
-        "EQ_BELT_TOOL_Common",
-        "EQ_NECK_GREEN_Common",
-        "EQ_RING_ICE_Common",
-        "EQ_RING_FIRE_Common"
-    };
-
-    private const long InitialEnhanceCurrency = 20000;
-
-    private PlayerModel _playerModel = new PlayerModel
-    {
-        EnhanceCurrency = InitialEnhanceCurrency
-    };
-
-    public PlayerModel PlayerModel => _playerModel;
-
     public EquipmentManager Equipment => _equipmentManager;
-    public bool IsInitialized { get; private set; }
+    public RelicManager Relic => _relicManager;
+
+    private PlayerModel _playerModel;
 
     private StatCalculator _calculator = new StatCalculator();
     private Dictionary<StatType, float> _cachedFinalStats = new Dictionary<StatType, float>();
@@ -43,51 +21,14 @@ public class GrowthManager : MonoBehaviour
 
     public void Initialize(PlayerModel playerModel, List<EquipmentModel> savedEquipment = null, List<RelicModel> savedRelics = null)
     {
-        IsInitialized = false;
-        _playerModel = playerModel ?? _playerModel;
+        _playerModel = playerModel ?? new PlayerModel();
 
         ApplyLevelBaseStats();
 
         _equipmentManager?.Initialize(savedEquipment);
-        InitializeTestEquipmentLoadout();
         _relicManager?.Initialize(savedRelics);
 
         RecalculateTotalStats();
-        IsInitialized = true;
-    }
-
-    private void InitializeTestEquipmentLoadout()
-    {
-        if (!_useTestEquipmentLoadout ||
-            _equipmentManager == null ||
-            _testEquipmentDataIds == null ||
-            _equipmentManager.HasEquippedEquipment())
-        {
-            return;
-        }
-
-        int addedEquipmentCount = 0;
-
-        for (int i = 0; i < _testEquipmentDataIds.Length; i++)
-        {
-            EquipmentModel equipmentModel = new EquipmentModel
-            {
-                ItemUniqueId = i + 1,
-                ItemDataId = _testEquipmentDataIds[i],
-                Level = 1,
-                IsEquipped = true
-            };
-
-            if (_equipmentManager.TryAddEquipment(equipmentModel))
-            {
-                addedEquipmentCount++;
-            }
-        }
-
-        Debug.Log(
-            $"[GrowthManager] 테스트 장비 장착 완료: " +
-            $"{addedEquipmentCount}개"
-        );
     }
 
     private void ApplyLevelBaseStats()
@@ -101,22 +42,39 @@ public class GrowthManager : MonoBehaviour
         _calculator.SetBaseStat(StatType.Attack, baseAtk);
         _calculator.SetBaseStat(StatType.MaxHp, baseHp);
         _calculator.SetBaseStat(StatType.Defense, baseDef);
-        _calculator.SetBaseStat(StatType.AttackSpeed, 1f);
+
         _calculator.SetBaseStat(StatType.CriticalDamage, 100f);
         _calculator.SetBaseStat(StatType.Accuracy, 100f);
         _calculator.SetBaseStat(StatType.MoveSpeed, 5f);
     }
 
+    public void RecalculateTotalStats()
+    {
+        Dictionary<StatType, float> flatBonuses = _equipmentManager != null ? _equipmentManager.GetTotalFlatStats() : null;
+        Dictionary<StatType, float> percentBonuses = _relicManager != null ? _relicManager.GetTotalPercentStats() : null;
+
+        _cachedFinalStats = _calculator.CalculateAllStats(flatBonuses, percentBonuses);
+
+        Debug.Log($"[GrowthManager] 최종 스탯 갱신 - ATK: {GetStatValue(StatType.Attack)}, HP: {GetStatValue(StatType.MaxHp)}");
+
+        OnStatsUpdated?.Invoke();
+    }
+
+    public float GetStatValue(StatType statType)
+    {
+        return _cachedFinalStats.TryGetValue(statType, out float value) ? value : 0f;
+    }
+
     public void AddExp(long amount)
     {
-        float expBonus = GetStat(StatType.ExpGainBonus);
+        float expBonus = GetStatValue(StatType.ExpGainBonus);
         long finalExp = Mathf.RoundToInt(amount * (1f + (expBonus / 100f)));
 
         _playerModel.CurrentExp += finalExp;
 
         long requiredExp = GetRequiredExp(_playerModel.Level);
-
         bool isLevelUp = false;
+
         while (_playerModel.CurrentExp >= requiredExp)
         {
             _playerModel.CurrentExp -= requiredExp;
@@ -137,36 +95,10 @@ public class GrowthManager : MonoBehaviour
         }
     }
 
-    public void RecalculateTotalStats()
-    {
-        Dictionary<StatType, float> flatBonuses = _equipmentManager != null ? _equipmentManager.GetTotalFlatStats() : null;
-        Dictionary<StatType, float> percentBonuses = _relicManager != null ? _relicManager.GetTotalPercentStats() : new Dictionary<StatType, float>();
-
-        if (GameManager.Instance.Event != null)
-        {
-            var buffBonuses = GameManager.Instance.Event.GetTotalBuffPercentStats();
-            foreach (var kvp in buffBonuses)
-            {
-                if (percentBonuses.ContainsKey(kvp.Key)) percentBonuses[kvp.Key] += kvp.Value;
-                else percentBonuses[kvp.Key] = kvp.Value;
-            }
-        }
-
-        _cachedFinalStats = _calculator.CalculateAllStats(flatBonuses, percentBonuses);
-        OnStatsUpdated?.Invoke();
-    }
-
-    public float GetStat(StatType statType)
-    {
-        return _cachedFinalStats.TryGetValue(statType, out float value) ? value : 0f;
-    }
-
     private long GetRequiredExp(int level)
     {
         return level * 100L;
     }
 
     public int CurrentLevel => _playerModel != null ? _playerModel.Level : 1;
-
-
 }

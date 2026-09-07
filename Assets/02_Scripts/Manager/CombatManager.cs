@@ -83,8 +83,18 @@ public class CombatManager : MonoBehaviour
     // 몬스터가 사망했을 때 호출
     public void OnMonsterKilled(GameObject monsterObj)
     {
+        if (_activeMonsters.TryGetValue(monsterObj, out string monsterId))
+        {
+            MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
+            if (data != null)
+            {
+                GameManager.Instance.Drop?.ProcessMonsterReward(data);
+            }
+        }
+
         if (!DespawnMonster(monsterObj)) return;
         Debug.Log($"[CombatManager] 몬스터 사망 처리됨: {monsterObj.name}");
+
         if (_isBossBattle)
         {
             _isTimerRunning = false;
@@ -151,21 +161,28 @@ public class CombatManager : MonoBehaviour
 
     private async void SpawnMonsterById(string monsterId)
     {
-        MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
-        if (data == null)
+        try
         {
-            Debug.LogWarning($"[CombatManager] MonsterData를 찾을 수 없음: {monsterId}");
-            return;
-        }
+            MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
+            if (data == null)
+            {
+                Debug.LogWarning($"[CombatManager] MonsterData를 찾을 수 없음: {monsterId}");
+                return;
+            }
 
-        GameObject prefab = await GameManager.Instance.Resource.LoadPrefab(data.PrefabName);
-        if (prefab == null)
+            GameObject prefab = await GameManager.Instance.Resource.LoadPrefab(data.PrefabName);
+            if (prefab == null)
+            {
+                Debug.LogWarning($"[CombatManager] 프리팹 로드 실패: {data.PrefabName}");
+                return;
+            }
+
+            SpawnMonsterFromPool(prefab, data, monsterId);
+        }
+        catch (Exception ex)
         {
-            Debug.LogWarning($"[CombatManager] 프리팹 로드 실패: {data.PrefabName}");
-            return;
+            Debug.LogError($"[CombatManager] 몬스터 스폰 중 예외 발생 (ID: {monsterId}): {ex.Message}");
         }
-
-        SpawnMonsterFromPool(prefab, data, monsterId);
     }
 
     // 몬스터 풀
