@@ -32,3 +32,19 @@ public class DropTableData
     public float MythDropRate;
 }
 
+[Serializable]
+public class DropItemData
+{
+    public string ItemId;
+    public float DropRate;
+    public int MinCount;
+    public int MaxCount;
+
+    public DropItemData(string itemId, float dropRate, int minCount = 1, int maxCount = 1)
+    {
+        ItemId = itemId;
+        DropRate = dropRate;
+        MinCount = minCount;
+        MaxCount = maxCount;
+    }
+}
