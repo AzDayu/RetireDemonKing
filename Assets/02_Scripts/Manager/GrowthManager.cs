@@ -11,6 +11,57 @@ public class GrowthManager : MonoBehaviour
     public EquipmentManager Equipment => _equipmentManager;
     public RelicManager Relic => _relicManager;
 
+    [Header("=== 전투 미완성 테스트 장비 ===")]
+    [SerializeField] private bool _useTestEquipmentLoadout = true;
+    [SerializeField]
+    private string[] _testEquipmentDataIds =
+    {
+    "EQ_WEAPON_SWORD_Common",
+    "EQ_CHEST_ICE_Common",
+    "EQ_PANTS_GREEN_Common",
+    "EQ_GLOVE_LEATHER_Common",
+    "EQ_BOOTS_BLACK_Common",
+    "EQ_BELT_TOOL_Common",
+    "EQ_NECK_GREEN_Common",
+    "EQ_RING_ICE_Common",
+    "EQ_RING_FIRE_Common"
+};
+
+    private void InitializeTestEquipmentLoadout()
+    {
+        if (!_useTestEquipmentLoadout ||
+            _equipmentManager == null ||
+            _testEquipmentDataIds == null ||
+            _equipmentManager.HasEquippedEquipment())
+        {
+            return;
+        }
+
+        int addedEquipmentCount = 0;
+
+        for (int i = 0; i < _testEquipmentDataIds.Length; i++)
+        {
+            EquipmentModel equipmentModel = new EquipmentModel
+            {
+                ItemUniqueId = i + 1,
+                ItemDataId = _testEquipmentDataIds[i],
+                Level = 1,
+                IsEquipped = true
+            };
+
+            if (_equipmentManager.TryAddEquipment(equipmentModel))
+            {
+                addedEquipmentCount++;
+            }
+        }
+
+        Debug.Log(
+            $"[GrowthManager] 테스트 장비 장착 완료: " +
+            $"{addedEquipmentCount}개"
+        );
+    }
+
+
     public bool IsInitialized { get; private set; } = false;
 
     private PlayerModel _playerModel;
@@ -51,6 +102,7 @@ public class GrowthManager : MonoBehaviour
         _calculator.SetBaseStat(StatType.CriticalDamage, 100f);
         _calculator.SetBaseStat(StatType.Accuracy, 100f);
         _calculator.SetBaseStat(StatType.MoveSpeed, 5f);
+        _calculator.SetBaseStat(StatType.AttackSpeed, 1f);
     }
 
     public void RecalculateTotalStats()

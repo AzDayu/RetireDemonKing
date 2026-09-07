@@ -162,28 +162,24 @@ public class CombatManager : MonoBehaviour
 
     private async void SpawnMonsterById(string monsterId)
     {
-        try
+        // 1. MonsterData 데이터 조회
+        MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
+        if (data == null)
         {
-            MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
-            if (data == null)
-            {
-                Debug.LogWarning($"[CombatManager] MonsterData를 찾을 수 없음: {monsterId}");
-                return;
-            }
-
-            GameObject prefab = await GameManager.Instance.Resource.LoadPrefab(data.PrefabName);
-            if (prefab == null)
-            {
-                Debug.LogWarning($"[CombatManager] 프리팹 로드 실패: {data.PrefabName}");
-                return;
-            }
-
-            SpawnMonsterFromPool(prefab, data, monsterId);
+            Debug.LogWarning($"[CombatManager] MonsterData를 찾을 수 없음: {monsterId}");
+            return;
         }
-        catch (Exception ex)
+
+        // 2. 비동기 프리팹 로드 (예외 처리 없음)
+        GameObject prefab = await GameManager.Instance.Resource.LoadPrefab(data.PrefabName);
+        if (prefab == null)
         {
-            Debug.LogError($"[CombatManager] 몬스터 스폰 중 예외 발생 (ID: {monsterId}): {ex.Message}");
+            Debug.LogWarning($"[CombatManager] 프리팹 로드 실패: {data.PrefabName}");
+            return;
         }
+
+        // 3. 풀링을 통한 실제 소환 처리
+        SpawnMonsterFromPool(prefab, data, monsterId);
     }
 
     // 몬스터 풀

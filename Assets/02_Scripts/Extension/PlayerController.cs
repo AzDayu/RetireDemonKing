@@ -92,7 +92,12 @@ public class PlayerController : MonoBehaviour
         if (hasTarget)
         {
             float attackSpeed = GameManager.Instance.Growth.GetStatValue(StatType.AttackSpeed);
+            attackSpeed = attackSpeed > 0f ? attackSpeed : 1f;
             _animationView?.SetAnimationSpeed(attackSpeed);
+        }
+        else
+        {
+            _animationView?.SetAnimationSpeed(1f);
         }
     }
 
