@@ -128,7 +128,7 @@ public class PlayerController : MonoBehaviour
 
         MaxHp = Mathf.Max(
             0f,
-            _subscribedGrowthManager.GetStat(StatType.MaxHp)
+            _subscribedGrowthManager.GetStatValue(StatType.MaxHp)
         );
         CurHp = MaxHp * currentHpRatio;
         NotifyHpChanged();

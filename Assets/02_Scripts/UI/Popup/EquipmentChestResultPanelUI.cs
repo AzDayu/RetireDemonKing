@@ -1,10 +1,16 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EquipmentChestResultPanelUI : MonoBehaviour
+public class EquipmentChestResultPanelUI : UIBase
 {
+    private const float PreferredPanelScale = 1.5f;
+    private const float MinimumPanelScale = 0.75f;
+    private const float HorizontalSafePadding = 64f;
+    private const float VerticalSafePadding = 96f;
+
     private static readonly Color DefaultCardColor =
         new Color(0.16f, 0.14f, 0.2f, 1f);
     private static readonly Color SelectedCardColor =
@@ -20,13 +26,23 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
 
     private EquipmentCardView _currentCard;
     private EquipmentCardView _newCard;
+    private EquipmentCardView _droppedRingCard;
     private TextMeshProUGUI _title;
     private TextMeshProUGUI _guide;
     private Button _equipButton;
     private TextMeshProUGUI _equipButtonText;
+    private Button _currentEquipButton;
+    private Button _newEquipButton;
+    private RectTransform _panelRect;
+    private Vector2 _defaultPanelSize;
 
     private EquipmentModel _selectedModel;
     private Action<EquipmentModel> _onConfirm;
+    private Action<IReadOnlyList<EquipmentModel>> _onRingConfirm;
+    private readonly List<EquipmentModel> _selectedRings =
+        new List<EquipmentModel>();
+    private bool _useImmediateEquipButtons;
+    private bool _isRingSelection;
     private bool _isNotice;
     private bool _isInitialized;
 
@@ -49,19 +65,17 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
             return;
         }
 
-        _isNotice = false;
+        ResetSelectionState();
         _onConfirm = onConfirm;
-        _selectedModel = null;
 
         _title.text = "장비 선택";
         _guide.text =
             "장착할 장비를 선택하세요.\n" +
             "선택하지 않은 장비는 자동으로 분해됩니다.";
-        _currentCard.Button.gameObject.SetActive(true);
-        _newCard.Button.gameObject.SetActive(true);
+        SetSingleEquipmentLayout(false);
 
         SetCard(_currentCard, "현재 장비", currentData, currentModel, newData, newModel);
-        SetCard(_newCard, "획득 장비", newData, newModel, currentData, currentModel);
+        SetCard(_newCard, "드랍 장비", newData, newModel, currentData, currentModel);
 
         _currentCard.Button.interactable = currentData != null && currentModel != null;
         _newCard.Button.interactable = newData != null && newModel != null;
@@ -72,6 +86,67 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
         ShowPanel();
     }
 
+    public void ShowDropSelection(
+        EquipmentItem currentData,
+        EquipmentModel currentModel,
+        EquipmentItem newData,
+        EquipmentModel newModel,
+        Action<EquipmentModel> onConfirm)
+    {
+        if (!Initialize())
+        {
+            return;
+        }
+
+        ResetSelectionState();
+        _useImmediateEquipButtons = true;
+        _onConfirm = onConfirm;
+
+        _title.text = "드랍 장비 선택";
+        _guide.text =
+            "장착할 장비의 착용 버튼을 누르세요.\n" +
+            "선택하지 않은 장비는 자동으로 분해됩니다.";
+        SetSingleEquipmentLayout(true);
+
+        SetCard(_currentCard, "현재 장비", currentData, currentModel, newData, newModel);
+        SetCard(_newCard, "드랍 장비", newData, newModel, currentData, currentModel);
+
+        _currentEquipButton.interactable = currentData != null && currentModel != null;
+        _newEquipButton.interactable = newData != null && newModel != null;
+        RefreshSelection();
+        ShowPanel();
+    }
+
+    public void ShowRingSelection(
+        EquipmentModel firstRing,
+        EquipmentModel secondRing,
+        EquipmentModel droppedRing,
+        Action<IReadOnlyList<EquipmentModel>> onConfirm)
+    {
+        if (!Initialize())
+        {
+            return;
+        }
+
+        ResetSelectionState();
+        _isRingSelection = true;
+        _onRingConfirm = onConfirm;
+
+        _title.text = "반지 선택";
+        _guide.text =
+            "장착할 반지 두 개를 선택한 뒤 확인을 누르세요.\n" +
+            "선택하지 않은 반지는 자동으로 분해됩니다.";
+        SetRingSelectionLayout();
+
+        SetCardFromModel(_currentCard, "반지 1", firstRing);
+        SetCardFromModel(_newCard, "반지 2", secondRing);
+        SetCardFromModel(_droppedRingCard, "드랍 반지", droppedRing);
+
+        RefreshSelection();
+        RefreshRingConfirmButton();
+        ShowPanel();
+    }
+
     public void ShowNotice(string title, string message)
     {
         if (!Initialize())
@@ -79,14 +154,18 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
             return;
         }
 
+        ResetSelectionState();
         _isNotice = true;
-        _selectedModel = null;
-        _onConfirm = null;
 
         _title.text = title;
         _guide.text = message;
+        _panelRect.sizeDelta = _defaultPanelSize;
         _currentCard.Button.gameObject.SetActive(false);
         _newCard.Button.gameObject.SetActive(false);
+        _droppedRingCard.Button.gameObject.SetActive(false);
+        _currentEquipButton.gameObject.SetActive(false);
+        _newEquipButton.gameObject.SetActive(false);
+        _equipButton.gameObject.SetActive(true);
         _equipButton.interactable = true;
         _equipButtonText.text = "확인";
 
@@ -96,9 +175,7 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
     public void Hide()
     {
         gameObject.SetActive(false);
-        _selectedModel = null;
-        _onConfirm = null;
-        _isNotice = false;
+        ResetSelectionState();
     }
 
     private bool Initialize()
@@ -108,6 +185,7 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
             return true;
         }
 
+        _panelRect = transform.Find("Panel") as RectTransform;
         _title = FindText("Panel/Title");
         _guide = FindText("Panel/Guide");
         _currentCard = FindCard("Panel/CurrentEquipment");
@@ -115,10 +193,30 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
         _equipButton = FindButton("Panel/EquipButton");
         _equipButtonText = FindText("Panel/EquipButton/Text");
 
-        if (_title == null || _guide == null || _currentCard == null ||
+        if (_panelRect == null || _title == null || _guide == null || _currentCard == null ||
             _newCard == null || _equipButton == null || _equipButtonText == null)
         {
             Debug.LogError("[EquipmentChestResultPanelUI] 결과창 프리팹 참조를 찾지 못했습니다.");
+            return false;
+        }
+
+        _defaultPanelSize = _panelRect.sizeDelta;
+        _droppedRingCard = CreateDroppedRingCard();
+        _currentEquipButton = CreateChoiceButton(
+            "CurrentEquipButton",
+            new Vector2(0.05f, 0.06f),
+            new Vector2(0.49f, 0.18f)
+        );
+        _newEquipButton = CreateChoiceButton(
+            "NewEquipButton",
+            new Vector2(0.51f, 0.06f),
+            new Vector2(0.95f, 0.18f)
+        );
+
+        if (_droppedRingCard == null || _currentEquipButton == null ||
+            _newEquipButton == null)
+        {
+            Debug.LogError("[EquipmentChestResultPanelUI] 동적 선택 UI를 생성하지 못했습니다.");
             return false;
         }
 
@@ -126,15 +224,154 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
         SetDefaultFont(_guide);
         SetDefaultFont(_currentCard.Text);
         SetDefaultFont(_newCard.Text);
+        SetDefaultFont(_droppedRingCard.Text);
         SetDefaultFont(_equipButtonText);
 
         _currentCard.Button.onClick.AddListener(() => SelectEquipment(_currentCard.Model));
         _newCard.Button.onClick.AddListener(() => SelectEquipment(_newCard.Model));
+        _droppedRingCard.Button.onClick.AddListener(() => SelectEquipment(_droppedRingCard.Model));
+        _currentEquipButton.onClick.AddListener(() => ConfirmEquipment(_currentCard.Model));
+        _newEquipButton.onClick.AddListener(() => ConfirmEquipment(_newCard.Model));
         _equipButton.onClick.AddListener(ConfirmSelection);
 
         _isInitialized = true;
         gameObject.SetActive(false);
         return true;
+    }
+
+    private EquipmentCardView CreateDroppedRingCard()
+    {
+        GameObject cardObject = Instantiate(
+            _newCard.Button.gameObject,
+            _newCard.Button.transform.parent,
+            false
+        );
+        cardObject.name = "DroppedRing";
+
+        Button button = cardObject.GetComponent<Button>();
+        Image background = cardObject.GetComponent<Image>();
+        Transform textTransform = cardObject.transform.Find("OptionText");
+        TextMeshProUGUI text = textTransform != null
+            ? textTransform.GetComponent<TextMeshProUGUI>()
+            : null;
+
+        if (button == null || background == null || text == null)
+        {
+            Destroy(cardObject);
+            return null;
+        }
+
+        return new EquipmentCardView
+        {
+            Button = button,
+            Background = background,
+            Text = text
+        };
+    }
+
+    private Button CreateChoiceButton(
+        string buttonName,
+        Vector2 anchorMin,
+        Vector2 anchorMax)
+    {
+        GameObject buttonObject = Instantiate(
+            _equipButton.gameObject,
+            _equipButton.transform.parent,
+            false
+        );
+        buttonObject.name = buttonName;
+
+        RectTransform rectTransform =
+            buttonObject.GetComponent<RectTransform>();
+        Button button = buttonObject.GetComponent<Button>();
+        Transform textTransform = buttonObject.transform.Find("Text");
+        TextMeshProUGUI text = textTransform != null
+            ? textTransform.GetComponent<TextMeshProUGUI>()
+            : null;
+
+        if (rectTransform == null || button == null || text == null)
+        {
+            Destroy(buttonObject);
+            return null;
+        }
+
+        rectTransform.anchorMin = anchorMin;
+        rectTransform.anchorMax = anchorMax;
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
+        text.text = "착용";
+        SetDefaultFont(text);
+        return button;
+    }
+
+    private void SetSingleEquipmentLayout(bool useImmediateEquipButtons)
+    {
+        _panelRect.sizeDelta = _defaultPanelSize;
+        SetCardAnchors(
+            _currentCard,
+            new Vector2(0.05f, 0.25f),
+            new Vector2(0.49f, 0.76f)
+        );
+        SetCardAnchors(
+            _newCard,
+            new Vector2(0.51f, 0.25f),
+            new Vector2(0.95f, 0.76f)
+        );
+
+        _currentCard.Button.gameObject.SetActive(true);
+        _newCard.Button.gameObject.SetActive(true);
+        _droppedRingCard.Button.gameObject.SetActive(false);
+        _currentEquipButton.gameObject.SetActive(useImmediateEquipButtons);
+        _newEquipButton.gameObject.SetActive(useImmediateEquipButtons);
+        _equipButton.gameObject.SetActive(!useImmediateEquipButtons);
+    }
+
+    private void SetRingSelectionLayout()
+    {
+        _panelRect.sizeDelta = new Vector2(
+            Mathf.Max(650f, _defaultPanelSize.x),
+            _defaultPanelSize.y
+        );
+        SetCardAnchors(
+            _currentCard,
+            new Vector2(0.03f, 0.25f),
+            new Vector2(0.32f, 0.76f)
+        );
+        SetCardAnchors(
+            _newCard,
+            new Vector2(0.355f, 0.25f),
+            new Vector2(0.645f, 0.76f)
+        );
+        SetCardAnchors(
+            _droppedRingCard,
+            new Vector2(0.68f, 0.25f),
+            new Vector2(0.97f, 0.76f)
+        );
+
+        _currentCard.Button.gameObject.SetActive(true);
+        _newCard.Button.gameObject.SetActive(true);
+        _droppedRingCard.Button.gameObject.SetActive(true);
+        _currentEquipButton.gameObject.SetActive(false);
+        _newEquipButton.gameObject.SetActive(false);
+        _equipButton.gameObject.SetActive(true);
+    }
+
+    private static void SetCardAnchors(
+        EquipmentCardView card,
+        Vector2 anchorMin,
+        Vector2 anchorMax)
+    {
+        RectTransform rectTransform =
+            card.Button.transform as RectTransform;
+        if (rectTransform == null)
+        {
+            return;
+        }
+
+        rectTransform.anchorMin = anchorMin;
+        rectTransform.anchorMax = anchorMax;
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
     }
 
     private EquipmentCardView FindCard(string path)
@@ -177,7 +414,7 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
 
     private void SetDefaultFont(TextMeshProUGUI text)
     {
-        if (text.font == null)
+        if (text != null && text.font == null)
         {
             text.font = TMP_Settings.defaultFontAsset;
         }
@@ -186,7 +423,41 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
     private void ShowPanel()
     {
         gameObject.SetActive(true);
+        ApplyResponsivePanelScale();
         transform.SetAsLastSibling();
+    }
+
+    private void ApplyResponsivePanelScale()
+    {
+        if (_panelRect == null)
+            return;
+
+        RectTransform viewport = transform as RectTransform;
+        if (viewport == null || viewport.rect.width <= 0f || viewport.rect.height <= 0f)
+        {
+            _panelRect.localScale = new Vector3(PreferredPanelScale, PreferredPanelScale, 1f);
+            return;
+        }
+
+        float panelWidth = Mathf.Max(1f, _panelRect.rect.width);
+        float panelHeight = Mathf.Max(1f, _panelRect.rect.height);
+        float widthScale = Mathf.Max(0f, viewport.rect.width - HorizontalSafePadding) / panelWidth;
+        float heightScale = Mathf.Max(0f, viewport.rect.height - VerticalSafePadding) / panelHeight;
+        float availableScale = Mathf.Min(PreferredPanelScale, Mathf.Min(widthScale, heightScale));
+        float scale = Mathf.Clamp(availableScale, MinimumPanelScale, PreferredPanelScale);
+
+        _panelRect.localScale = new Vector3(scale, scale, 1f);
+    }
+
+    private void SetCardFromModel(
+        EquipmentCardView card,
+        string label,
+        EquipmentModel model)
+    {
+        EquipmentItem data = model != null
+            ? GameManager.Instance?.Data?.GetEquipmentData(model.ItemDataId)
+            : null;
+        SetCard(card, label, data, model, null, null);
     }
 
     private void SetCard(
@@ -202,8 +473,11 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
         if (data == null || model == null)
         {
             card.Text.text = $"<b>{label}</b>\n\n장착 중인 장비 없음";
+            card.Button.interactable = false;
             return;
         }
+
+        card.Button.interactable = true;
 
         float statValue = CalculateStat(data, model.Level);
         string statName = GetStatDisplayName(data.MainStatType);
@@ -243,22 +517,80 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
             return;
         }
 
+        if (_isRingSelection)
+        {
+            if (_selectedRings.Contains(equipmentModel))
+            {
+                _selectedRings.Remove(equipmentModel);
+            }
+            else if (_selectedRings.Count < 2)
+            {
+                _selectedRings.Add(equipmentModel);
+            }
+
+            RefreshSelection();
+            RefreshRingConfirmButton();
+            return;
+        }
+
         _selectedModel = equipmentModel;
-        _equipButton.interactable = true;
-        _equipButtonText.text = "장착";
+        if (!_useImmediateEquipButtons)
+        {
+            _equipButton.interactable = true;
+            _equipButtonText.text = "장착";
+        }
         RefreshSelection();
     }
 
     private void RefreshSelection()
     {
         _currentCard.Background.color =
-            _selectedModel != null && ReferenceEquals(_selectedModel, _currentCard.Model)
+            IsSelected(_currentCard.Model)
                 ? SelectedCardColor
                 : DefaultCardColor;
         _newCard.Background.color =
-            _selectedModel != null && ReferenceEquals(_selectedModel, _newCard.Model)
+            IsSelected(_newCard.Model)
                 ? SelectedCardColor
                 : DefaultCardColor;
+        _droppedRingCard.Background.color =
+            IsSelected(_droppedRingCard.Model)
+                ? SelectedCardColor
+                : DefaultCardColor;
+    }
+
+    private bool IsSelected(EquipmentModel equipmentModel)
+    {
+        if (equipmentModel == null)
+        {
+            return false;
+        }
+
+        return _isRingSelection
+            ? _selectedRings.Contains(equipmentModel)
+            : _selectedModel != null &&
+              ReferenceEquals(_selectedModel, equipmentModel);
+    }
+
+    private void RefreshRingConfirmButton()
+    {
+        _equipButton.interactable = _selectedRings.Count == 2;
+        _equipButtonText.text = _selectedRings.Count == 2
+            ? "선택한 반지 장착"
+            : $"반지 선택 ({_selectedRings.Count}/2)";
+    }
+
+    private void ConfirmEquipment(EquipmentModel equipmentModel)
+    {
+        if (_isNotice || _isRingSelection || !_useImmediateEquipButtons ||
+            equipmentModel == null ||
+            _onConfirm == null)
+        {
+            return;
+        }
+
+        Action<EquipmentModel> onConfirm = _onConfirm;
+        Hide();
+        onConfirm.Invoke(equipmentModel);
     }
 
     private void ConfirmSelection()
@@ -269,6 +601,22 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
             return;
         }
 
+        if (_isRingSelection)
+        {
+            if (_selectedRings.Count != 2 || _onRingConfirm == null)
+            {
+                return;
+            }
+
+            Action<IReadOnlyList<EquipmentModel>> onRingConfirm =
+                _onRingConfirm;
+            var selectedRings =
+                new List<EquipmentModel>(_selectedRings);
+            Hide();
+            onRingConfirm.Invoke(selectedRings);
+            return;
+        }
+
         if (_selectedModel == null || _onConfirm == null)
         {
             return;
@@ -276,15 +624,31 @@ public class EquipmentChestResultPanelUI : MonoBehaviour
 
         EquipmentModel selectedModel = _selectedModel;
         Action<EquipmentModel> onConfirm = _onConfirm;
-        _equipButton.interactable = false;
+        Hide();
+        onConfirm.Invoke(selectedModel);
+    }
 
-        try
+    private void ResetSelectionState()
+    {
+        _selectedModel = null;
+        _selectedRings.Clear();
+        _onConfirm = null;
+        _onRingConfirm = null;
+        _useImmediateEquipButtons = false;
+        _isRingSelection = false;
+        _isNotice = false;
+
+        if (_currentCard != null)
         {
-            onConfirm.Invoke(selectedModel);
+            _currentCard.Model = null;
         }
-        finally
+        if (_newCard != null)
         {
-            Hide();
+            _newCard.Model = null;
+        }
+        if (_droppedRingCard != null)
+        {
+            _droppedRingCard.Model = null;
         }
     }
 

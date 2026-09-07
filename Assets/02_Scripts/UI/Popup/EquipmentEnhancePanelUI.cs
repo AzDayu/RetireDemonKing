@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +20,7 @@ public class EquipmentEnhancePanelUI : UIBase
     [SerializeField] private TMP_Text Text_Stat;
     [SerializeField] private TMP_Text Text_Currency;
     [SerializeField] private TMP_Text Text_EnhanceCost;
+    [SerializeField] private TMP_Text Text_EnhanceButtonCost;
     [SerializeField] private UIButton Button_Enhance;
     [SerializeField] private UIButton Button_Close;
 
@@ -47,6 +49,7 @@ public class EquipmentEnhancePanelUI : UIBase
     private PlayerModel _playerModel;
     private Coroutine _initializeCoroutine;
     private GameObject _backgroundOverlay;
+    private int _equipmentIconRefreshVersion;
 
     private void Awake()
     {
@@ -69,9 +72,11 @@ public class EquipmentEnhancePanelUI : UIBase
             GameManager.Instance.SaveServer?.GetPlayerModel() != null &&
             GameManager.Instance.Growth.Equipment != null &&
             GameManager.Instance.Data != null &&
+            GameManager.Instance.Resource != null &&
             GameManager.Instance.Data.GetAllEquipmentDataList().Count > 0);
 
         InitializeEquipmentData();
+        RefreshEquipmentSlotIcons();
         UnbindButtons();
         BindButtons();
 
@@ -94,6 +99,7 @@ public class EquipmentEnhancePanelUI : UIBase
         }
 
         UnbindButtons();
+        _equipmentIconRefreshVersion++;
     }
 
     private void OnDestroy()
@@ -222,6 +228,56 @@ public class EquipmentEnhancePanelUI : UIBase
         yield return (Button_Necklace, EquipmentSlotType.Necklace);
         yield return (Button_Ring1, EquipmentSlotType.Ring1);
         yield return (Button_Ring2, EquipmentSlotType.Ring2);
+    }
+
+    private void RefreshEquipmentSlotIcons()
+    {
+        int refreshVersion = ++_equipmentIconRefreshVersion;
+
+        foreach (var entry in GetSlotButtons())
+        {
+            if (entry.Button == null) continue;
+
+            Transform slotRoot = entry.Button.transform;
+            EquipmentSlotIconUI.ShowEmpty(slotRoot);
+
+            if (!_equipmentModelMap.TryGetValue(entry.Slot, out EquipmentModel model) ||
+                !_equipmentDataMap.TryGetValue(entry.Slot, out EquipmentItem data) ||
+                string.IsNullOrEmpty(data.IconId))
+            {
+                continue;
+            }
+
+            LoadEquipmentIconAsync(
+                entry.Slot,
+                slotRoot,
+                model,
+                data.IconId,
+                refreshVersion
+            ).Forget();
+        }
+    }
+
+    private async UniTaskVoid LoadEquipmentIconAsync(
+        EquipmentSlotType slotType,
+        Transform slotRoot,
+        EquipmentModel model,
+        string iconId,
+        int refreshVersion)
+    {
+        Sprite sprite = await GameManager.Instance.Resource.LoadSprite(iconId);
+
+        if (this == null || !isActiveAndEnabled || refreshVersion != _equipmentIconRefreshVersion)
+            return;
+
+        if (!_equipmentModelMap.TryGetValue(slotType, out EquipmentModel currentModel) ||
+            !ReferenceEquals(currentModel, model))
+        {
+            return;
+        }
+
+        if (!EquipmentSlotIconUI.ShowEquipment(slotRoot, sprite, model.Level))
+            Debug.LogWarning($"[장비 승급] 슬롯 아이콘 표시 실패: {model.ItemDataId} / {iconId}");
     }
 
     private void BindButtons()
@@ -407,6 +463,7 @@ public class EquipmentEnhancePanelUI : UIBase
             SetText(Text_NextLevel, "MAX");
             SetText(Text_NextStat, "최고 등급");
             SetText(Text_EnhanceCost, "승급 비용: -");
+            SetText(Text_EnhanceButtonCost, "-");
             if (Button_Enhance != null) Button_Enhance.gameObject.SetActive(false);
             return;
         }
@@ -417,7 +474,9 @@ public class EquipmentEnhancePanelUI : UIBase
         SetText(Text_NextLevel, GetGradeDisplayName(GetGradeFromId(nextGradeData.Id)));
         SetText(Text_NextStat,
             $"{statName}: {nextStat:0.##} <color=#67E480>(+{increaseStat:0.##})</color>");
-        SetText(Text_EnhanceCost, $"승급 비용: {CalculatePromotionCost():N0}");
+        long promotionCost = CalculatePromotionCost();
+        SetText(Text_EnhanceCost, $"승급 비용: {promotionCost:N0}");
+        SetText(Text_EnhanceButtonCost, $"{promotionCost:N0}");
         if (Button_Enhance != null) Button_Enhance.gameObject.SetActive(true);
     }
 

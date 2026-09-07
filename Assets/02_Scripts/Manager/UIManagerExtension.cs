@@ -30,6 +30,7 @@ public enum UIType
     RebirthPopupUI,
     GrowthPopupUI,
     SkillPopupUI,
+    EquipmentChestResultPanelUI,
 
 }
 

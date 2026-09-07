@@ -89,7 +89,9 @@ public class MonsterController : MonoBehaviour
 
         if (Model.CurHp <= 0f)
         {
-            GameManager.Instance.Combat.OnMonsterKilled(gameObject);
+            EquipmentDropFlow.ProcessMonsterKill(
+                () => GameManager.Instance.Combat.OnMonsterKilled(gameObject)
+            );
         }
     }
 

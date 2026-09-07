@@ -315,6 +315,126 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0334d8b7d13bcb344bcfc1e6de5fee88
+    m_Address: Icon_Ring_03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 11b7ba21a4ddc3343afbb1eb9de5264e
+    m_Address: Icon_Necklace_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 146952c74052c9247bd5838441535e03
+    m_Address: Icon_Gloves_02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 17bb352472f4d434d9ebec170c87afe2
+    m_Address: Icon_Gloves_03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2369c0f0dcc7d08429d1d00ca725c803
+    m_Address: Icon_Belt_03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 291a7c91626570946913d64f0ee7b01c
+    m_Address: Icon_Necklace_02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3f687ae07114f5a4d8c2a9d58af56f0f
+    m_Address: Icon_Ring_02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5340b9bdb95859a45b2760f3b5ca3553
+    m_Address: Icon_Boots_03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 599aa4870498a444881704e54d614675
+    m_Address: Icon_Belt_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6b860328b6548fd45b4308dea5c58a55
+    m_Address: Icon_Boots_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 74c07f1ee7928d347a6d913d21ee480c
+    m_Address: Icon_Weapon_03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 767782627d3fe414cb60b69624a2e4c4
+    m_Address: Icon_Chest_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 839f48533e06daf4a9c2e517edf3472b
+    m_Address: Icon_Pants_02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8c58560a11ec2cc4488e8646fefec475
+    m_Address: Icon_Gloves_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8e06306a536d9c34abc9429bdc30634f
+    m_Address: Icon_Chest_03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aeaf9005e69594f4084d47ca52b5f2c5
+    m_Address: Icon_Ring_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b1218d2a3c5ffd641be54830d34b3143
+    m_Address: Icon_Pants_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ba25d88551ae11745adb433b9880d1f7
+    m_Address: Icon_Necklace_03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ba69f85cba68406438fabf9bf19be0e4
+    m_Address: Icon_Belt_02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d28e56d3b5b5e724096b77f5f6af5c0d
+    m_Address: Icon_Chest_02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d3fdcbae254e12343a42bfe0cf11219b
+    m_Address: Icon_Pants_03
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e9534f42a093b554c979677104b5e07d
+    m_Address: Icon_Boots_02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f0a0deb3f87cf734187740d91bd5cb58
+    m_Address: Icon_Weapon_02
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f6d75948c92354e4586ba0ded052df5f
+    m_Address: Icon_Weapon_01
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 3e85b09c119d68948be180652b4d9b96, type: 2}
   m_SchemaSet:
