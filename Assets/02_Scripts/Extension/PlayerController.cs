@@ -19,8 +19,10 @@ public class PlayerController : MonoBehaviour
     public float CurHp { get; private set; }
     public float MaxHp { get; private set; }
     public bool IsDead => CurHp <= 0f;
+    public event System.Action<float, float> OnHpChanged;
 
     private readonly Collider[] _detectResults = new Collider[1];
+    private GrowthManager _subscribedGrowthManager;
 
     private void Awake()
     {
@@ -32,6 +34,7 @@ public class PlayerController : MonoBehaviour
     public void Initialize()
     {
         ChangeWeapon(_currentWeapon);
+        SubscribeToGrowthStats();
         ResetHp();
         Debug.Log($"[PlayerController] 초기화 완료. MaxHp: {MaxHp}");
     }
@@ -43,6 +46,7 @@ public class PlayerController : MonoBehaviour
             : 100f;
 
         CurHp = MaxHp;
+        NotifyHpChanged();
     }
 
     public void ChangeWeapon(WeaponType newWeapon)
@@ -67,6 +71,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
+        SubscribeToGrowthStats();
+
         if (_animationView != null)
         {
             _animationView.OnAttackHit += HandleAttackHit;
@@ -75,10 +81,62 @@ public class PlayerController : MonoBehaviour
 
     private void OnDisable()
     {
+        UnsubscribeFromGrowthStats();
+
         if (_animationView != null)
         {
             _animationView.OnAttackHit -= HandleAttackHit;
         }
+    }
+
+    private void SubscribeToGrowthStats()
+    {
+        GrowthManager growthManager = GameManager.Instance?.Growth;
+        if (_subscribedGrowthManager == growthManager)
+        {
+            return;
+        }
+
+        UnsubscribeFromGrowthStats();
+        _subscribedGrowthManager = growthManager;
+
+        if (_subscribedGrowthManager != null)
+        {
+            _subscribedGrowthManager.OnStatsUpdated += HandleStatsUpdated;
+        }
+    }
+
+    private void UnsubscribeFromGrowthStats()
+    {
+        if (_subscribedGrowthManager != null)
+        {
+            _subscribedGrowthManager.OnStatsUpdated -= HandleStatsUpdated;
+            _subscribedGrowthManager = null;
+        }
+    }
+
+    private void HandleStatsUpdated()
+    {
+        if (_subscribedGrowthManager == null)
+        {
+            return;
+        }
+
+        float currentHpRatio = MaxHp > 0f
+            ? Mathf.Clamp01(CurHp / MaxHp)
+            : 1f;
+
+        MaxHp = Mathf.Max(
+            0f,
+            _subscribedGrowthManager.GetStat(StatType.MaxHp)
+        );
+        CurHp = MaxHp * currentHpRatio;
+        NotifyHpChanged();
+    }
+
+    private void NotifyHpChanged()
+    {
+        OnHpChanged?.Invoke(CurHp, MaxHp);
     }
 
     private void HandleCombatLogic()
@@ -136,6 +194,7 @@ public class PlayerController : MonoBehaviour
         float finalDamage = Mathf.Max(1f, monsterAttackPower - defense);
 
         CurHp = Mathf.Max(0f, CurHp - finalDamage);
+        NotifyHpChanged();
 
         if (CurHp <= 0f)
         {
