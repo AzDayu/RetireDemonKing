@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _attackRange = 3f;
     [SerializeField] private LayerMask _monsterLayer;
 
+
+
     public float CurHp { get; private set; }
     public float MaxHp { get; private set; }
     public bool IsDead => CurHp <= 0f;
@@ -23,6 +26,7 @@ public class PlayerController : MonoBehaviour
 
     private readonly Collider[] _detectResults = new Collider[1];
     private GrowthManager _subscribedGrowthManager;
+
 
     private void Awake()
     {
@@ -179,10 +183,28 @@ public class PlayerController : MonoBehaviour
 
         if (monster == null || monster.IsDead) return;
 
+
+
         float damage = GameManager.Instance.Growth.GetStatValue(StatType.Attack);
         float accuracy = GameManager.Instance.Growth.GetStatValue(StatType.Accuracy);
+        float criticalChance = GameManager.Instance.Growth.GetStatValue(StatType.CriticalChance);
+        float criticalDamage = GameManager.Instance.Growth.GetStatValue(StatType.CriticalDamage);
 
-        Debug.Log($"[Player 공격 성공] 대상: {monster.name} | 피해량: {damage} | 명중률: {accuracy}");
+        bool isCrit = UnityEngine.Random.Range(0f, 100f) < criticalChance;
+
+        float LifeSteal = GameManager.Instance.Growth.GetStatValue(StatType.LifeSteal);
+
+        if (isCrit == true)
+        {
+            damage *= criticalDamage / 100f;
+        }
+
+        float healAmount = damage * (LifeSteal / 100f);
+
+        CurHp = Mathf.Min(MaxHp, CurHp + healAmount);
+        NotifyHpChanged();
+
+        Debug.Log($"[Player 공격 성공] 대상: {monster.name} | 피해량: {damage} | 치명타 : {isCrit} | 치명타 확률 : {criticalChance}% | 생명력 흡수 : {healAmount}");
 
         monster.TakeDamage(damage, accuracy);
     }
