@@ -16,15 +16,15 @@ public class GrowthManager : MonoBehaviour
     [SerializeField]
     private string[] _testEquipmentDataIds =
     {
-    "EQ_WEAPON_SWORD_Common",
-    "EQ_CHEST_ICE_Common",
-    "EQ_PANTS_GREEN_Common",
-    "EQ_GLOVE_LEATHER_Common",
-    "EQ_BOOTS_BLACK_Common",
-    "EQ_BELT_TOOL_Common",
-    "EQ_NECK_GREEN_Common",
-    "EQ_RING_ICE_Common",
-    "EQ_RING_FIRE_Common"
+    "EQ_WEAPON_SWORD_COMMON",
+    "EQ_CHEST_ICE_COMMON",
+    "EQ_PANTS_GREEN_COMMON",
+    "EQ_GLOVE_LEATHER_COMMON",
+    "EQ_BOOTS_BLACK_COMMON",
+    "EQ_BELT_TOOL_COMMON",
+    "EQ_NECK_GREEN_COMMON",
+    "EQ_RING_ICE_COMMON",
+    "EQ_RING_FIRE_COMMON"
 };
 
     private void InitializeTestEquipmentLoadout()

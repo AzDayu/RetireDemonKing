@@ -10,11 +10,9 @@ public static class EquipmentManagerExtension
         EquipmentType equipmentType)
     {
         var result = new List<EquipmentModel>();
-        List<EquipmentModel> equipmentList =
-            GameManager.Instance?.SaveServer?.GetEquipments();
+        List<EquipmentModel> equipmentList = GameManager.Instance?.SaveServer?.GetEquipments();
 
-        if (equipmentManager == null || equipmentList == null ||
-            GameManager.Instance?.Data == null)
+        if (equipmentManager == null || equipmentList == null || GameManager.Instance?.Data == null)
         {
             return result;
         }
