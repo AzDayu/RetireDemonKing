@@ -45,13 +45,25 @@ public class RebirthManager : MonoBehaviour
 
     private void ResetPlayerData(PlayerModel playerModel)
     {
-        playerModel.CurrentStage = 1;
+        SaveServerManager saveServer = GameManager.Instance.SaveServer;
+        PlayerSaveData saveData = saveServer?.GetSaveData();
+
+        if (playerModel == null || saveData == null)
+        {
+            Debug.LogError("[RebirthManager] 환생 초기화에 필요한 저장 데이터가 없습니다.");
+            return;
+        }
+
         playerModel.Level = 1;
-        playerModel.Gold = 0;
         playerModel.CurrentExp = 0;
+        playerModel.Gold = 0;
+        playerModel.EnhanceCurrency = 0;
+        playerModel.CurrentStage = 1;
+        playerModel.MaxStage = 1;
 
-        GameManager.Instance.SaveServer?.SaveGameData();
+        saveData.Equipments = saveServer.CreateStarterEquipments();
 
+        saveServer.SaveGameData();
         GameManager.Instance.RestartInGameLoop();
     }
 }

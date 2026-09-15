@@ -436,7 +436,7 @@ public class EquipmentEnhancePanelUI : UIBase
         string statName = GetStatDisplayName(_selectedEquipmentData.MainStatType);
 
         SetText(Text_EquipmentName, _selectedEquipmentData.Name);
-        SetText(Text_Level, GetGradeDisplayName(_selectedEquipmentData.Grade));
+        SetText(Text_Level, $"현재\n{GetGradeDisplayName(_selectedEquipmentData.Grade)}");
         SetText(Text_Stat, $"{statName}: {currentStat:0.##}");
         SetText(Text_Currency, $"승급 재화: {_playerModel.EnhanceCurrency:N0}");
 
@@ -454,7 +454,7 @@ public class EquipmentEnhancePanelUI : UIBase
         float nextStat = CalculateStat(nextGradeData);
         float increaseStat = nextStat - currentStat;
 
-        SetText(Text_NextLevel, GetGradeDisplayName(nextGradeData.Grade));
+        SetText(Text_NextLevel, $"승급 후\n{GetGradeDisplayName(nextGradeData.Grade)}");
         SetText(Text_NextStat,
             $"{statName}: {nextStat:0.##} <color=#67E480>(+{increaseStat:0.##})</color>");
         long promotionCost = CalculatePromotionCost();

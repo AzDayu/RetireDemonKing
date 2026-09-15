@@ -1,10 +1,11 @@
-﻿using System;
+﻿using RetireDemonKing.Network;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
-using UnityEngine;
-using RetireDemonKing.Network;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
 
 
 public class SaveServerManager : MonoBehaviour
@@ -246,11 +247,42 @@ public class SaveServerManager : MonoBehaviour
                 CurrentStage = 1,
                 MaxStage = 1
             },
-            Equipments = new System.Collections.Generic.List<EquipmentModel>(),
+            Equipments = CreateStarterEquipments(),
             Relics = new System.Collections.Generic.List<RelicModel>(),
             LastSaveUnixMinutes = GetCurrentUnixMinutes(),
             UserAccountId = NetworkManager.Instance.CurrentUserAccountId
         };
+    }
+
+    public List<EquipmentModel> CreateStarterEquipments()
+    {
+        string[] starterEquipmentIds =
+        {
+        "EQ_WEAPON_SWORD_COMMON",
+        "EQ_CHEST_ICE_COMMON",
+        "EQ_PANTS_GREEN_COMMON",
+        "EQ_GLOVE_LEATHER_COMMON",
+        "EQ_BOOTS_BLACK_COMMON",
+        "EQ_BELT_TOOL_COMMON",
+        "EQ_NECK_GREEN_COMMON",
+        "EQ_RING_PURPLE_COMMON",
+        "EQ_RING_PURPLE_COMMON"
+    };
+
+        var result = new List<EquipmentModel>();
+
+        for (int i = 0; i < starterEquipmentIds.Length; i++)
+        {
+            result.Add(new EquipmentModel
+            {
+                ItemUniqueId = i + 1L,
+                ItemDataId = starterEquipmentIds[i],
+                Level = 1,
+                IsEquipped = true
+            });
+        }
+
+        return result;
     }
 
     public PlayerSaveData GetSaveData() => _cachedSaveData;
