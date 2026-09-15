@@ -163,12 +163,12 @@ public class ShopPopupUI : UIBase
         PlayerModel playerModel =
             GameManager.Instance.SaveServer.GetPlayerModel();
 
-        if (playerModel.EnhanceCurrency < chestPrice)
+        if (playerModel.Gold < chestPrice)
         {
             ShowPurchaseFailure(
                 $"재화가 부족합니다.\n" +
                 $"필요 재화: {chestPrice:N0}\n" +
-                $"보유 재화: {playerModel.EnhanceCurrency:N0}"
+                $"보유 재화: {playerModel.Gold:N0}"
             );
             return;
         }
@@ -215,7 +215,7 @@ public class ShopPopupUI : UIBase
                 )
                 : null;
 
-        playerModel.EnhanceCurrency -= chestPrice;
+        playerModel.Gold -= chestPrice;
 
         _pendingCurrentEquipment = currentEquipment;
         _pendingNewEquipment = newEquipment;

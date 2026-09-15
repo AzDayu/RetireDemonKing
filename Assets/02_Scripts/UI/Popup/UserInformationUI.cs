@@ -6,8 +6,10 @@ public class UserInformationUI : MonoBehaviour
     [SerializeField] private TMP_Text Text_Gold;
     [SerializeField] private TMP_Text Text_RebirthGold;
 
-    private long _lastDisplayedEnhanceCurrency = long.MinValue;
+    private long _lastDisplayedGold = long.MinValue;
     private int _lastDisplayedRebirthPoints = int.MinValue;
+
+    
 
     private void Update()
     {
@@ -19,13 +21,13 @@ public class UserInformationUI : MonoBehaviour
         }
 
         PlayerModel playerModel = GameManager.Instance.SaveServer.GetPlayerModel();
-        long enhanceCurrency = playerModel.EnhanceCurrency;
+        long Gold = playerModel.Gold;
         int rebirthPoints = playerModel.RebirthPoints;
 
-        if (Text_Gold != null && _lastDisplayedEnhanceCurrency != enhanceCurrency)
+        if (Text_Gold != null && _lastDisplayedGold != Gold)
         {
-            _lastDisplayedEnhanceCurrency = enhanceCurrency;
-            Text_Gold.text = enhanceCurrency.ToString("N0");
+            _lastDisplayedGold = Gold;
+            Text_Gold.text = Gold.ToString("N0");
         }
 
         if (Text_RebirthGold != null && _lastDisplayedRebirthPoints != rebirthPoints)

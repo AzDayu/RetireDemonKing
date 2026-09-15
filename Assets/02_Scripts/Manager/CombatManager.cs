@@ -94,7 +94,10 @@ public class CombatManager : MonoBehaviour
             int playerLevel = GameManager.Instance.SaveServer?.GetPlayerModel()?.Level ?? 1;
             if (data != null)
             {
-                GameManager.Instance.Drop?.ProcessMonsterReward(playerLevel);
+                DropManager dropManager = GameManager.Instance.Drop;
+
+                dropManager?.GrantMonsterCurrencyAndExp(data);
+                dropManager?.ProcessMonsterReward(playerLevel);
             }
         }
 

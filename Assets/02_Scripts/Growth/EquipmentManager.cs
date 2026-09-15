@@ -168,9 +168,9 @@ public class EquipmentManager : MonoBehaviour
         int gradeWeight = ((int)staticData.Grade + 1);
         long cost = targetItemModel.Level * 50L * gradeWeight;
 
-        if (playerModel.EnhanceCurrency < cost) return false;
+        if (playerModel.Gold < cost) return false;
 
-        playerModel.EnhanceCurrency -= cost;
+        playerModel.Gold -= cost;
         targetItemModel.Level++;
 
         GameManager.Instance.Growth.RecalculateTotalStats();
@@ -187,9 +187,9 @@ public class EquipmentManager : MonoBehaviour
         int gradeWeight = ((int)staticData.Grade + 1);
         long rewardAmount = targetItemModel.Level * 20L * gradeWeight;
 
-        playerModel.EnhanceCurrency += rewardAmount;
+        playerModel.Gold += rewardAmount;
         _ownedEquipmentList.Remove(targetItemModel);
 
-        Debug.Log($"[EquipmentManager] 장비 분해 완료! 획득한 육성 재화: {rewardAmount}");
+        Debug.Log($"[EquipmentManager] 장비 분해 완료! 획득한 골드: {rewardAmount}");
     }
 }

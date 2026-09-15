@@ -109,16 +109,15 @@ public class MonsterController : MonoBehaviour
             return;
         }
 
-       //float distance = Vector3.Distance(transform.position,player.transform.position);
-       //
-       //// 공격 애니메이션 도중 플레이어가 멀어진 경우 피해 방지
-       //if (distance > _attackRange)
-       //{
-       //    return;
-       //}
+        //float distance = Vector3.Distance(transform.position,player.transform.position);
+        //
+        //// 공격 애니메이션 도중 플레이어가 멀어진 경우 피해 방지
+        //if (distance > _attackRange)
+        //{
+        //    return;
+        //}
 
-        float attackPower = 10f;
-        //float attackPower =_data != null ? _data.AttackPower : 10f;
+        float attackPower = Mathf.Max(0f, Model.AttackPower);
 
         player.TakeDamage(attackPower);
 

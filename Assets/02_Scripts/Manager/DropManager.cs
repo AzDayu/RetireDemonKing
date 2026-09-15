@@ -85,4 +85,46 @@ public class DropManager : MonoBehaviour
 
         return EquipmentGrade.Common;
     }
+
+    public void GrantMonsterCurrencyAndExp(MonsterData monsterData)
+    {
+        if (monsterData == null)
+        {
+            return;
+        }
+
+        GameManager gameManager = GameManager.Instance;
+        PlayerModel player = gameManager?.SaveServer?.GetPlayerModel();
+        GrowthManager growth = gameManager?.Growth;
+
+        if (player == null || growth == null || !growth.IsInitialized)
+        {
+            Debug.LogError(
+                "[DropManager] 플레이어 초기화가 완료되지 않아 보상을 지급하지 못했습니다."
+            );
+            return;
+        }
+
+        double goldMultiplier = Math.Max(
+            0d,
+            1d + growth.GetStatValue(StatType.GoldGainBonus) / 100d
+        );
+
+        long goldReward = (long)Math.Floor(
+            Math.Max(0, monsterData.DropCoins) * goldMultiplier
+        );
+
+        long baseExp = (long)Math.Floor(
+            Math.Max(0d, monsterData.DropExp)
+        );
+
+        player.Gold += goldReward;
+
+        growth.AddExp(baseExp);
+
+        Debug.Log(
+            $"[DropManager] 처치 보상: " +
+            $"골드 +{goldReward}, 기본 경험치 +{baseExp}"
+        );
+    }
 }

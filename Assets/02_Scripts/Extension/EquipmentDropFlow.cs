@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -395,9 +395,9 @@ public static class EquipmentDropFlow
         equipment.IsEquipped = false;
         List<EquipmentModel> equipmentList =
             GameManager.Instance?.SaveServer?.GetEquipments();
-        long currencyBefore = playerModel.EnhanceCurrency;
+        long currencyBefore = playerModel.Gold;
         equipmentManager.DismantleItem(equipment, playerModel);
-        long gainedCurrency = playerModel.EnhanceCurrency - currencyBefore;
+        long gainedCurrency = playerModel.Gold - currencyBefore;
 
         if (equipmentList != null && equipmentList.Contains(equipment))
         {
@@ -445,5 +445,15 @@ public static class EquipmentDropFlow
         SaveResolvedDrop();
         _isResolvingDrop = false;
         TryResolveNextDrop();
+    }
+
+    public static void CancelPendingDrops()
+    {
+        PendingDrops.Clear();
+        _isResolvingDrop = false;
+
+        GameManager.Instance?.UI?.ClosePopupUI(
+            UIType.EquipmentChestResultPanelUI
+        );
     }
 }

@@ -57,9 +57,10 @@ public class RebirthManager : MonoBehaviour
         playerModel.Level = 1;
         playerModel.CurrentExp = 0;
         playerModel.Gold = 0;
-        playerModel.EnhanceCurrency = 0;
         playerModel.CurrentStage = 1;
         playerModel.MaxStage = 1;
+
+        EquipmentDropFlow.CancelPendingDrops();
 
         saveData.Equipments = saveServer.CreateStarterEquipments();
 

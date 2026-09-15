@@ -7,7 +7,6 @@ public class PlayerModel
     public long CurrentExp = 0;
 
     public long Gold = 0;
-    public long EnhanceCurrency = 0;
     public int RebirthPoints = 0;
 
     public int CurrentStage = 1;

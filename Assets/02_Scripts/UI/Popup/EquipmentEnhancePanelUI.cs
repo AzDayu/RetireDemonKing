@@ -337,14 +337,14 @@ public class EquipmentEnhancePanelUI : UIBase
         }
 
         long promotionCost = CalculatePromotionCost();
-        if (_playerModel.EnhanceCurrency < promotionCost)
+        if (_playerModel.Gold < promotionCost)
         {
             Debug.Log("[장비 승급] 승급 재화가 부족합니다.");
             return;
         }
 
         // 승급 성공 여부와 관계없이 도전 비용은 먼저 차감한다.
-        _playerModel.EnhanceCurrency -= promotionCost;
+        _playerModel.Gold -= promotionCost;
 
         int successRatePercent = GetPromotionSuccessRatePercent();
         int randomValue = UnityEngine.Random.Range(0, 100);
@@ -438,7 +438,7 @@ public class EquipmentEnhancePanelUI : UIBase
         SetText(Text_EquipmentName, _selectedEquipmentData.Name);
         SetText(Text_Level, $"현재\n{GetGradeDisplayName(_selectedEquipmentData.Grade)}");
         SetText(Text_Stat, $"{statName}: {currentStat:0.##}");
-        SetText(Text_Currency, $"승급 재화: {_playerModel.EnhanceCurrency:N0}");
+        SetText(Text_Currency, $"승급 재화: {_playerModel.Gold:N0}");
 
         if (nextGradeData == null)
         {
