@@ -139,18 +139,20 @@ public static class EquipmentDropFlow
         EquipmentItem currentData =
             gameManager.Data.GetEquipmentData(currentEquipment.ItemDataId);
 
+        bool compared = gameManager.Growth.TryCompareEquipmentPower(currentEquipment, droppedEquipment, out double currentPower, out double nextPower);
+
+        if (compared && EquipmentPowerUtility.IsStrictlyLower(nextPower, currentPower))
+        {
+            DismantleWithLog(equipmentManager, droppedEquipment, playerModel, $"전투력 감소: {currentPower:F2} → {nextPower:F2}");
+            SaveResolvedDrop();
+            return false;
+        }
+
         EquipmentChestResultPanelUI popup = OpenDropPopup();
         if (popup == null)
         {
-            Debug.LogError(
-                "[EquipmentDrop] 장비 선택 팝업을 열지 못해 드랍 장비를 분해합니다."
-            );
-            DismantleWithLog(
-                equipmentManager,
-                droppedEquipment,
-                playerModel,
-                "팝업 생성 실패"
-            );
+            Debug.LogError("[EquipmentDrop] 장비 선택 팝업을 열지 못해 드랍 장비를 분해합니다.");
+            DismantleWithLog(equipmentManager, droppedEquipment, playerModel, "팝업 생성 실패");
             SaveResolvedDrop();
             return false;
         }
@@ -201,6 +203,25 @@ public static class EquipmentDropFlow
 
         EquipmentModel firstRing = equippedRings[0];
         EquipmentModel secondRing = equippedRings[1];
+
+        GrowthManager growth = GameManager.Instance.Growth;
+
+        bool comparedFirst = growth.TryCompareEquipmentPower(firstRing, droppedEquipment, out double currentPower, out double powerReplacingFirst);
+
+        bool comparedSecond = growth.TryCompareEquipmentPower(secondRing, droppedEquipment, out _, out double powerReplacingSecond);
+
+        if (comparedFirst && comparedSecond)
+        {
+            double bestPower = Math.Max(powerReplacingFirst, powerReplacingSecond);
+
+            if (EquipmentPowerUtility.IsStrictlyLower(bestPower, currentPower))
+            {
+                DismantleWithLog(equipmentManager, droppedEquipment, playerModel, $"두 반지 슬롯 모두 전투력 감소: " + $"{currentPower:F2} → 최대 {bestPower:F2}");
+                SaveResolvedDrop();
+                return false;
+            }
+        }
+
         EquipmentChestResultPanelUI popup = OpenDropPopup();
 
         if (popup == null)
@@ -411,7 +432,7 @@ public static class EquipmentDropFlow
         Debug.Log(
             $"[EquipmentDrop] 분해 완료 | {reason} | " +
             $"ID: {equipment.ItemDataId} | Lv.{equipment.Level} | " +
-            $"EnhanceCurrency +{gainedCurrency}"
+            $"Gold +{gainedCurrency}"
         );
     }
 
@@ -455,5 +476,32 @@ public static class EquipmentDropFlow
         GameManager.Instance?.UI?.ClosePopupUI(
             UIType.EquipmentChestResultPanelUI
         );
+    }
+
+    public static bool IsBusy => _isResolvingDrop || PendingDrops.Count > 0;
+
+    public static void ProcessPurchasedEquipment(EquipmentModel equipment)
+    {
+        var owned =
+            GameManager.Instance?.SaveServer?.GetEquipments();
+
+        if (equipment == null ||
+            equipment.IsEquipped ||
+            owned == null ||
+            !owned.Contains(equipment))
+        {
+            Debug.LogError(
+                "[EquipmentDrop] 구매 장비 처리에 필요한 데이터가 없습니다."
+            );
+            return;
+        }
+
+        if (PendingDrops.Contains(equipment))
+        {
+            return;
+        }
+
+        PendingDrops.Enqueue(equipment);
+        TryResolveNextDrop();
     }
 }

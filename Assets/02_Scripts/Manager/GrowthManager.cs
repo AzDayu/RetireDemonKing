@@ -108,5 +108,106 @@ public class GrowthManager : MonoBehaviour
         return level * 100L;
     }
 
+    public bool TryCompareEquipmentPower(
+    EquipmentModel currentEquipment,
+    EquipmentModel droppedEquipment,
+    out double currentPower,
+    out double nextPower)
+    {
+        currentPower = 0d;
+        nextPower = 0d;
+
+        if (!IsInitialized ||
+            currentEquipment == null ||
+            droppedEquipment == null ||
+            ReferenceEquals(currentEquipment, droppedEquipment))
+        {
+            return false;
+        }
+
+        var gameManager = GameManager.Instance;
+        var owned = gameManager?.SaveServer?.GetEquipments();
+
+        if (owned == null ||
+            !owned.Contains(currentEquipment) ||
+            !owned.Contains(droppedEquipment) ||
+            !currentEquipment.IsEquipped ||
+            droppedEquipment.IsEquipped)
+        {
+            return false;
+        }
+
+        var currentData =
+            gameManager.Data.GetEquipmentData(currentEquipment.ItemDataId);
+
+        var droppedData =
+            gameManager.Data.GetEquipmentData(droppedEquipment.ItemDataId);
+
+        if (currentData == null ||
+            droppedData == null ||
+            currentData.Type != droppedData.Type)
+        {
+            return false;
+        }
+
+        var currentLoadout = new List<EquipmentModel>();
+
+        foreach (var equipment in owned)
+        {
+            if (equipment != null && equipment.IsEquipped)
+            {
+                currentLoadout.Add(equipment);
+            }
+        }
+
+        var nextLoadout = new List<EquipmentModel>(currentLoadout);
+        nextLoadout.Remove(currentEquipment);
+        nextLoadout.Add(droppedEquipment);
+
+        return
+            TryCalculateLoadoutPower(currentLoadout, out currentPower) &&
+            TryCalculateLoadoutPower(nextLoadout, out nextPower);
+    }
+
+    private bool TryCalculateLoadoutPower(
+        List<EquipmentModel> loadout,
+        out double power)
+    {
+        power = 0d;
+
+        var flatStats = new Dictionary<StatType, float>();
+
+        foreach (var equipment in loadout)
+        {
+            var data = GameManager.Instance.Data.GetEquipmentData(
+                equipment.ItemDataId
+            );
+
+            if (data == null)
+            {
+                return false;
+            }
+
+            float value = EquipmentPowerUtility.CalculateEquipmentStat(
+                data,
+                equipment.Level
+            );
+
+            flatStats.TryGetValue(data.MainStatType, out float previous);
+            flatStats[data.MainStatType] = previous + value;
+        }
+
+        var relicBonuses = _relicManager != null
+            ? _relicManager.GetTotalPercentStats()
+            : null;
+
+        var stats = _calculator.CalculateAllStats(flatStats, relicBonuses);
+
+        power = EquipmentPowerUtility.CalculatePower(stats);
+
+        return !double.IsNaN(power) && !double.IsInfinity(power);
+    }
+
+
     public int CurrentLevel => _playerModel != null ? _playerModel.Level : 1;
 }

@@ -122,8 +122,7 @@ public class EquipmentManager : MonoBehaviour
             EquipmentItem staticData = GameManager.Instance.Data.GetEquipmentData(itemModel.ItemDataId);
             if (staticData == null) continue;
 
-            float levelBonus = (itemModel.Level - 1) * staticData.StatValuePerLevel;
-            float finalStatValue = (staticData.BaseStatValue + levelBonus) * staticData.GradeMultiplier;
+            float finalStatValue = EquipmentPowerUtility.CalculateEquipmentStat(staticData, itemModel.Level);
 
             if (flatStatsMap.ContainsKey(staticData.MainStatType))
             {

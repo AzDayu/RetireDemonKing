@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 public enum SkillEnhanceResult
 {
@@ -67,13 +67,13 @@ public sealed class SkillEnhanceService
             return SkillEnhanceResult.MaxLevel;
         }
 
-        if (_saveData.Player.EnhanceCurrency <
+        if (_saveData.Player.Gold <
             currentData.EnhanceCost)
         {
             return SkillEnhanceResult.InsufficientCurrency;
         }
 
-        _saveData.Player.EnhanceCurrency -=
+        _saveData.Player.Gold -=
             currentData.EnhanceCost;
         model.Level = nextData.Level;
 

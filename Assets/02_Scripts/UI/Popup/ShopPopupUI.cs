@@ -7,14 +7,16 @@ public class ShopPopupUI : UIBase
 {
     private const long EquipmentLowChestPrice = 100;
     private const long EquipmentHighChestPrice = 10000;
+
     private const int RelicLowChestPrice = 50;
     private const int RelicHighChestPrice = 300;
+
     private const int UniqueIdRetryCount = 8;
 
     private enum ChestTier
     {
         Low,
-        High,
+        High
     }
 
     [Header("Buttons")]
@@ -26,9 +28,7 @@ public class ShopPopupUI : UIBase
 
     private EquipmentChestResultPanelUI _equipmentResultPanel;
     private RelicChestResultPanelUI _relicResultPanel;
-    private EquipmentModel _pendingCurrentEquipment;
-    private EquipmentModel _pendingNewEquipment;
-    private bool _isResolvingEquipment;
+
     private GameObject _backgroundOverlay;
 
     private void Awake()
@@ -42,10 +42,8 @@ public class ShopPopupUI : UIBase
         SetBackgroundOverlayActive(true);
 
         Button_Close?.BindOnClickButtonEvent(OnClickClose);
-
         Button_EquipmentLowChest?.BindOnClickButtonEvent(() => OnClickEquipmentChest(ChestTier.Low));
         Button_EquipmentHighChest?.BindOnClickButtonEvent(() => OnClickEquipmentChest(ChestTier.High));
-
         Button_RelicLowChest?.BindOnClickButtonEvent(() => OnClickRelicChest(ChestTier.Low));
         Button_RelicHighChest?.BindOnClickButtonEvent(() => OnClickRelicChest(ChestTier.High));
     }
@@ -60,7 +58,6 @@ public class ShopPopupUI : UIBase
         Button_RelicLowChest?.UnBindAllOnClickButtonEvent();
         Button_RelicHighChest?.UnBindAllOnClickButtonEvent();
 
-        ResolvePendingEquipmentOnDisable();
         _equipmentResultPanel?.Hide();
         _relicResultPanel?.Hide();
     }
@@ -87,9 +84,11 @@ public class ShopPopupUI : UIBase
             typeof(Image),
             typeof(Button)
         );
+
         overlay.layer = gameObject.layer;
 
         RectTransform rectTransform = overlay.GetComponent<RectTransform>();
+
         rectTransform.SetParent(transform.parent, false);
         rectTransform.anchorMin = Vector2.zero;
         rectTransform.anchorMax = Vector2.one;
@@ -105,6 +104,7 @@ public class ShopPopupUI : UIBase
         button.onClick.AddListener(OnClickClose);
 
         overlay.transform.SetSiblingIndex(transform.GetSiblingIndex());
+
         overlay.SetActive(false);
         _backgroundOverlay = overlay;
     }
@@ -122,122 +122,104 @@ public class ShopPopupUI : UIBase
         }
     }
 
+    private bool IsShopResultVisible()
+    {
+        return (_equipmentResultPanel != null && _equipmentResultPanel.IsVisible) || (_relicResultPanel != null && _relicResultPanel.IsVisible);
+    }
+
     private void OnClickClose()
     {
-        if ((_equipmentResultPanel != null &&
-             _equipmentResultPanel.IsVisible) ||
-            (_relicResultPanel != null &&
-             _relicResultPanel.IsVisible))
+        if (EquipmentDropFlow.IsBusy || IsShopResultVisible())
         {
             return;
         }
 
-        GameManager.Instance.UI.ClosePopupUI(UIType.ShopPopupUI);
+        GameManager.Instance?.UI?.ClosePopupUI(UIType.ShopPopupUI);
     }
 
     private void OnClickEquipmentChest(ChestTier tier)
     {
+        if (EquipmentDropFlow.IsBusy || IsShopResultVisible())
+        {
+            return;
+        }
+
         EnsureEquipmentResultPanel();
 
-        if (_equipmentResultPanel.IsVisible ||
-            _pendingNewEquipment != null)
+        if (_equipmentResultPanel == null)
         {
+            Debug.LogError("[ShopPopupUI] 결과창을 생성하지 못했습니다.");
             return;
         }
 
-        if (GameManager.Instance == null ||
-            GameManager.Instance.Growth == null ||
-            GameManager.Instance.Data == null ||
-            GameManager.Instance.Growth.Equipment == null ||
-            GameManager.Instance.SaveServer.GetPlayerModel() == null)
+        GameManager gameManager = GameManager.Instance;
+        GrowthManager growth = gameManager?.Growth;
+        SaveServerManager saveServer = gameManager?.SaveServer;
+        PlayerModel playerModel = saveServer?.GetPlayerModel();
+
+        if (gameManager == null ||
+            gameManager.Data == null ||
+            growth == null ||
+            !growth.IsInitialized ||
+            growth.Equipment == null ||
+            saveServer == null ||
+            playerModel == null ||
+            saveServer.GetEquipments() == null)
         {
-            ShowPurchaseFailure(
-                "상점 데이터를 불러오지 못했습니다."
-            );
+            ShowPurchaseFailure("상점 데이터를 불러오지 못했습니다.");
             return;
         }
 
-        long chestPrice = tier == ChestTier.Low
-            ? EquipmentLowChestPrice
-            : EquipmentHighChestPrice;
-        PlayerModel playerModel =
-            GameManager.Instance.SaveServer.GetPlayerModel();
+        long chestPrice = tier == ChestTier.Low ? EquipmentLowChestPrice : EquipmentHighChestPrice;
 
         if (playerModel.Gold < chestPrice)
         {
-            ShowPurchaseFailure(
-                $"재화가 부족합니다.\n" +
-                $"필요 재화: {chestPrice:N0}\n" +
-                $"보유 재화: {playerModel.Gold:N0}"
-            );
+            ShowPurchaseFailure($"골드가 부족합니다.\n" + $"필요 골드: {chestPrice:N0}\n" + $"보유 골드: {playerModel.Gold:N0}");
             return;
         }
 
         List<EquipmentItem> equipmentList = GetAllEquipmentItems();
-        List<EquipmentItem> candidates =
-            GetEquipmentItemsByTier(equipmentList, tier);
-        EquipmentItem selectedEquipment =
-            GetRandomEquipment(candidates);
+
+        List<EquipmentItem> candidates = GetEquipmentItemsByTier(equipmentList, tier);
+
+        EquipmentItem selectedEquipment = GetRandomEquipment(candidates);
 
         if (selectedEquipment == null)
         {
-            ShowPurchaseFailure(
-                "추첨 가능한 장비가 없습니다."
-            );
+            ShowPurchaseFailure("추첨 가능한 장비가 없습니다.");
             return;
         }
 
-        EquipmentManager equipmentManager =
-            GameManager.Instance.Growth.Equipment;
-        EquipmentModel newEquipment =
-            TryCreateAndAddEquipment(
-                equipmentManager,
-                selectedEquipment
-            );
+        EquipmentModel newEquipment = TryCreateAndAddEquipment(growth.Equipment, selectedEquipment);
 
         if (newEquipment == null)
         {
-            ShowPurchaseFailure(
-                "획득 장비를 보유 목록에 추가하지 못했습니다.\n" +
-                "재화는 차감되지 않았습니다."
-            );
+            ShowPurchaseFailure("획득 장비를 등록하지 못했습니다.\n" + "골드는 차감되지 않았습니다.");
             return;
         }
 
-        EquipmentModel currentEquipment =
-            equipmentManager.GetEquippedEquipment(
-                selectedEquipment.Type
-            );
-        EquipmentItem currentEquipmentData =
-            currentEquipment != null
-                ? GameManager.Instance.Data.GetEquipmentData(
-                    currentEquipment.ItemDataId
-                )
-                : null;
-
         playerModel.Gold -= chestPrice;
 
-        _pendingCurrentEquipment = currentEquipment;
-        _pendingNewEquipment = newEquipment;
+        saveServer.SaveGameData();
 
-        GameManager.Instance.SaveServer?.SaveGameData();
-
-        _equipmentResultPanel.Show(
-            currentEquipmentData,
-            currentEquipment,
-            selectedEquipment,
-            newEquipment,
-            OnConfirmEquipmentSelection
+        Debug.Log(
+            $"[ShopPopupUI] 장비 상자 구매 완료 | " +
+            $"비용: {chestPrice:N0} Gold | " +
+            $"ID: {newEquipment.ItemDataId} | " +
+            $"Lv.{newEquipment.Level}"
         );
+
+        EquipmentDropFlow.ProcessPurchasedEquipment(newEquipment);
     }
 
-    private EquipmentModel TryCreateAndAddEquipment(
-        EquipmentManager equipmentManager,
-        EquipmentItem equipmentData)
+    private EquipmentModel TryCreateAndAddEquipment(EquipmentManager equipmentManager, EquipmentItem equipmentData)
     {
-        for (int attempt = 0;
-             attempt < UniqueIdRetryCount;
-             attempt++)
+        if (equipmentManager == null || equipmentData == null)
+        {
+            return null;
+        }
+
+        for (int attempt = 0; attempt < UniqueIdRetryCount; attempt++)
         {
             EquipmentModel equipmentModel = new EquipmentModel
             {
@@ -258,113 +240,9 @@ public class ShopPopupUI : UIBase
 
     private long CreateEquipmentUniqueId()
     {
-        long uniqueId = BitConverter.ToInt64(
-            Guid.NewGuid().ToByteArray(),
-            0
-        ) & long.MaxValue;
+        long uniqueId = BitConverter.ToInt64(Guid.NewGuid().ToByteArray(), 0) & long.MaxValue;
 
         return uniqueId == 0 ? 1 : uniqueId;
-    }
-
-    private void OnConfirmEquipmentSelection(
-        EquipmentModel selectedEquipment)
-    {
-        if (_pendingNewEquipment == null ||
-            GameManager.Instance == null ||
-            GameManager.Instance.Growth == null ||
-            GameManager.Instance.Growth.Equipment == null ||
-            GameManager.Instance.SaveServer.GetPlayerModel() == null)
-        {
-            ClearPendingEquipment();
-            return;
-        }
-
-        bool selectedNewEquipment = ReferenceEquals(
-            selectedEquipment,
-            _pendingNewEquipment
-        );
-        bool selectedCurrentEquipment =
-            _pendingCurrentEquipment != null &&
-            ReferenceEquals(
-                selectedEquipment,
-                _pendingCurrentEquipment
-            );
-
-        if (!selectedNewEquipment &&
-            !selectedCurrentEquipment)
-        {
-            return;
-        }
-
-        _isResolvingEquipment = true;
-
-        EquipmentManager equipmentManager =
-            GameManager.Instance.Growth.Equipment;
-        PlayerModel playerModel =
-            GameManager.Instance.SaveServer.GetPlayerModel();
-
-        if (selectedNewEquipment)
-        {
-            equipmentManager.EquipItem(_pendingNewEquipment);
-
-            if (_pendingCurrentEquipment != null)
-            {
-                equipmentManager.DismantleItem(
-                    _pendingCurrentEquipment,
-                    playerModel
-                );
-            }
-        }
-        else
-        {
-            equipmentManager.DismantleItem(
-                _pendingNewEquipment,
-                playerModel
-            );
-        }
-
-        GameManager.Instance.SaveServer?.SaveGameData();
-        ClearPendingEquipment();
-        _isResolvingEquipment = false;
-    }
-
-    private void ResolvePendingEquipmentOnDisable()
-    {
-        if (_isResolvingEquipment ||
-            _pendingNewEquipment == null ||
-            GameManager.Instance == null ||
-            GameManager.Instance.Growth == null ||
-            GameManager.Instance.Growth.Equipment == null ||
-            GameManager.Instance.SaveServer.GetPlayerModel() == null)
-        {
-            return;
-        }
-
-        EquipmentManager equipmentManager =
-            GameManager.Instance.Growth.Equipment;
-        PlayerModel playerModel =
-            GameManager.Instance.SaveServer.GetPlayerModel();
-
-        if (_pendingCurrentEquipment != null)
-        {
-            equipmentManager.DismantleItem(
-                _pendingNewEquipment,
-                playerModel
-            );
-        }
-        else
-        {
-            equipmentManager.EquipItem(_pendingNewEquipment);
-        }
-
-        GameManager.Instance.SaveServer?.SaveGameData();
-        ClearPendingEquipment();
-    }
-
-    private void ClearPendingEquipment()
-    {
-        _pendingCurrentEquipment = null;
-        _pendingNewEquipment = null;
     }
 
     private void EnsureEquipmentResultPanel()
@@ -374,25 +252,27 @@ public class ShopPopupUI : UIBase
             return;
         }
 
-        GameObject resultPanelPrefab = Resources.Load<GameObject>(
-            "PopupUI/EquipmentChestResultPanelUI"
-        );
+        GameObject resultPanelPrefab = Resources.Load<GameObject>("PopupUI/EquipmentChestResultPanelUI");
 
         if (resultPanelPrefab == null)
         {
-            Debug.LogError(
-                "[ShopPopupUI] 결과창 프리팹을 찾지 못했습니다."
-            );
+            Debug.LogError("[ShopPopupUI] 결과창 프리팹을 찾지 못했습니다.");
             return;
         }
 
-        GameObject resultPanelObject = Instantiate(
-            resultPanelPrefab,
-            transform,
-            false
-        );
-        _equipmentResultPanel =
-            resultPanelObject.GetComponent<EquipmentChestResultPanelUI>();
+        GameObject resultPanelObject = Instantiate(resultPanelPrefab, transform, false);
+
+        _equipmentResultPanel = resultPanelObject.GetComponent<EquipmentChestResultPanelUI>();
+
+        if (_equipmentResultPanel == null)
+        {
+            Debug.LogError(
+                "[ShopPopupUI] 결과창 프리팹에 " +
+                "EquipmentChestResultPanelUI가 없습니다."
+            );
+
+            Destroy(resultPanelObject);
+        }
     }
 
     private void EnsureRelicResultPanel()
@@ -402,25 +282,27 @@ public class ShopPopupUI : UIBase
             return;
         }
 
-        GameObject resultPanelPrefab = Resources.Load<GameObject>(
-            "PopupUI/RelicChestResultPanelUI"
-        );
+        GameObject resultPanelPrefab = Resources.Load<GameObject>("PopupUI/RelicChestResultPanelUI");
 
         if (resultPanelPrefab == null)
         {
-            Debug.LogError(
-                "[ShopPopupUI] 유물 결과창 프리팹을 찾지 못했습니다."
-            );
+            Debug.LogError("[ShopPopupUI] 유물 결과창 프리팹을 찾지 못했습니다.");
             return;
         }
 
-        GameObject resultPanelObject = Instantiate(
-            resultPanelPrefab,
-            transform,
-            false
-        );
-        _relicResultPanel =
-            resultPanelObject.GetComponent<RelicChestResultPanelUI>();
+        GameObject resultPanelObject = Instantiate(resultPanelPrefab, transform, false);
+
+        _relicResultPanel = resultPanelObject.GetComponent<RelicChestResultPanelUI>();
+
+        if (_relicResultPanel == null)
+        {
+            Debug.LogError(
+                "[ShopPopupUI] 유물 결과창 프리팹에 " +
+                "RelicChestResultPanelUI가 없습니다."
+            );
+
+            Destroy(resultPanelObject);
+        }
     }
 
     private void ShowPurchaseFailure(string message)
@@ -436,29 +318,30 @@ public class ShopPopupUI : UIBase
         {
             _equipmentResultPanel.ShowNotice(title, message);
         }
+        else
+        {
+            Debug.LogWarning(
+                $"[ShopPopupUI] {title}: {message}"
+            );
+        }
     }
 
     private List<EquipmentItem> GetAllEquipmentItems()
     {
-        if (GameManager.Instance == null)
+        GameManager gameManager = GameManager.Instance;
+
+        if (gameManager == null || gameManager.Data == null)
         {
-            Debug.LogWarning("GameManager가 없습니다.");
+            Debug.LogWarning("[ShopPopupUI] 장비 데이터 관리자가 없습니다.");
 
             return new List<EquipmentItem>();
         }
 
-        if (GameManager.Instance.Data == null)
-        {
-            Debug.LogWarning("GameDataManager가 없습니다.");
-
-            return new List<EquipmentItem>();
-        }
-
-        List<EquipmentItem> equipmentList = GameManager.Instance.Data.GetAllEquipmentDataList();
+        List<EquipmentItem> equipmentList = gameManager.Data.GetAllEquipmentDataList();
 
         if (equipmentList == null)
         {
-            Debug.LogWarning("장비 목록을 가져오지 못했습니다.");
+            Debug.LogWarning("[ShopPopupUI] 장비 목록을 가져오지 못했습니다.");
 
             return new List<EquipmentItem>();
         }
@@ -486,10 +369,10 @@ public class ShopPopupUI : UIBase
 
             if (tier == ChestTier.Low)
             {
-                isTargetGrade = equipment.Grade == EquipmentGrade.Common || equipment.Grade == EquipmentGrade.Rare;
+                isTargetGrade =
+                    equipment.Grade == EquipmentGrade.Common ||
+                    equipment.Grade == EquipmentGrade.Rare;
             }
-
-
             else
             {
                 isTargetGrade =
@@ -511,8 +394,7 @@ public class ShopPopupUI : UIBase
     {
         if (candidates == null || candidates.Count == 0)
         {
-            Debug.LogWarning("추첨 가능한 장비가 없습니다.");
-
+            Debug.LogWarning("[ShopPopupUI] 추첨 가능한 장비가 없습니다.");
             return null;
         }
 
@@ -530,10 +412,7 @@ public class ShopPopupUI : UIBase
 
         if (totalWeight <= 0)
         {
-            int randomIndex = UnityEngine.Random.Range(
-                0,
-                candidates.Count
-            );
+            int randomIndex = UnityEngine.Random.Range(0, candidates.Count);
 
             return candidates[randomIndex];
         }
@@ -562,29 +441,37 @@ public class ShopPopupUI : UIBase
 
     private void OnClickRelicChest(ChestTier tier)
     {
+        if (EquipmentDropFlow.IsBusy || IsShopResultVisible())
+        {
+            return;
+        }
+
         EnsureRelicResultPanel();
 
         if (_relicResultPanel == null)
         {
-            ShowPurchaseFailure("유물 결과창 프리팹을 찾지 못했습니다.");
+            ShowPurchaseFailure(
+                "유물 결과창 프리팹을 찾지 못했습니다."
+            );
             return;
         }
 
-        if (_relicResultPanel.IsVisible)
-        {
-            return;
-        }
+        GameManager gameManager = GameManager.Instance;
+        GrowthManager growth = gameManager?.Growth;
+        SaveServerManager saveServer = gameManager?.SaveServer;
+        PlayerModel playerModel = saveServer?.GetPlayerModel();
 
-        if (GameManager.Instance == null ||
-            GameManager.Instance.Growth == null ||
-            GameManager.Instance.SaveServer.GetPlayerModel() == null)
+        if (gameManager == null ||
+            growth == null ||
+            !growth.IsInitialized ||
+            saveServer == null ||
+            playerModel == null)
         {
             ShowPurchaseFailure("유물 데이터를 불러오지 못했습니다.");
             return;
         }
 
-        RelicManager relicManager =
-            FindFirstObjectByType<RelicManager>();
+        RelicManager relicManager = FindFirstObjectByType<RelicManager>();
 
         if (relicManager == null)
         {
@@ -592,10 +479,7 @@ public class ShopPopupUI : UIBase
             return;
         }
 
-        int chestPrice = tier == ChestTier.Low
-            ? RelicLowChestPrice
-            : RelicHighChestPrice;
-        PlayerModel playerModel = GameManager.Instance.SaveServer.GetPlayerModel();
+        int chestPrice = tier == ChestTier.Low ? RelicLowChestPrice : RelicHighChestPrice;
 
         if (playerModel.RebirthPoints < chestPrice)
         {
@@ -607,9 +491,18 @@ public class ShopPopupUI : UIBase
             return;
         }
 
-        EquipmentGrade[] availableGrades = tier == ChestTier.Low
-            ? new[] { EquipmentGrade.Common, EquipmentGrade.Rare }
-            : new[] { EquipmentGrade.Epic, EquipmentGrade.Legendary };
+        EquipmentGrade[] availableGrades =
+            tier == ChestTier.Low
+                ? new[]
+                {
+                    EquipmentGrade.Common,
+                    EquipmentGrade.Rare
+                }
+                : new[]
+                {
+                    EquipmentGrade.Epic,
+                    EquipmentGrade.Legendary
+                };
 
         if (!relicManager.TryDrawRelic(
                 playerModel,
@@ -621,10 +514,8 @@ public class ShopPopupUI : UIBase
             return;
         }
 
-        GameManager.Instance.SaveServer?.SaveGameData();
+        saveServer.SaveGameData();
 
         _relicResultPanel.Show(result);
     }
-
-
 }

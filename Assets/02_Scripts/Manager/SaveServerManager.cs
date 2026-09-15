@@ -242,7 +242,6 @@ public class SaveServerManager : MonoBehaviour
                 Level = 1,
                 CurrentExp = 0,
                 Gold = 0,
-                EnhanceCurrency = 0,
                 RebirthPoints = 0,
                 CurrentStage = 1,
                 MaxStage = 1
