@@ -102,14 +102,22 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Rebirth:
-                Rebirth.TryExecuteRebirth(SaveServer.GetPlayerModel(), SaveServer.GetPlayerModel().CurrentStage, SaveServer.GetPlayerModel().RebirthPoints);
-                if (Combat != null)
                 {
-                    Combat.ResetBattle();
-                }
-                ChangeState(GameState.Init);
+                    PlayerModel player = SaveServer.GetPlayerModel();
 
-                break;
+                    if (player == null)
+                    {
+                        Debug.LogError("[GameManager] 환생할 플레이어 데이터가 없습니다.");
+                        break;
+                    }
+
+                    float rebirthBonus = Growth.GetStatValue(StatType.RebirthPointBonus);
+
+                    Combat?.ResetBattle();
+
+                    Rebirth.TryExecuteRebirth(player, player.CurrentStage, rebirthBonus);
+                    break;
+                }
         }
     }
 
