@@ -3,6 +3,9 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using RetireDemonKing.Network;
+using System.Security.Cryptography;
+using System.Text;
+
 
 public class SaveServerManager : MonoBehaviour
 {
@@ -17,9 +20,32 @@ public class SaveServerManager : MonoBehaviour
         _localSavePath = Path.Combine(Application.persistentDataPath, "SaveData.dat");
     }
 
+    private string GetLocalSavePath(string accountId)
+    {
+        string source = string.IsNullOrEmpty(accountId)? "guest": accountId;
+
+        string accountKey;
+
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(source);
+            byte[] hash = sha256.ComputeHash(bytes);
+
+            accountKey = BitConverter.ToString(hash).Replace("-", string.Empty).Substring(0, 16);
+        }
+
+        return Path.Combine(Application.persistentDataPath,$"SaveData_{accountKey}.dat");
+    }
+
     public async Task<bool> LoadGameDataAsync()
     {
+        string accountId = NetworkManager.Instance.CurrentUserAccountId;
+
+        bool attemptedServerLoad = _useServerSync && NetworkManager.Instance.IsLoggedIn;
+
         bool isLoadedFromServer = false;
+
+        _cachedSaveData = null;
 
         if (_useServerSync && NetworkManager.Instance.IsLoggedIn) 
         {
@@ -31,10 +57,25 @@ public class SaveServerManager : MonoBehaviour
                 {
                     try
                     {
-                        _cachedSaveData = JsonUtility.FromJson<PlayerSaveData>(response.saveJson);
-                        _cachedSaveData.LastSaveUnixMinutes = response.lastSaveTicks;
-                        isLoadedFromServer = true;
-                        Debug.Log("[SaveServerManager] 서버 DB로부터 최신 세이브 데이터를 동기화했습니다.");
+                        PlayerSaveData loadedData = JsonUtility.FromJson<PlayerSaveData>(response.saveJson);
+
+                        bool isSameAccount =loadedData != null && (string.IsNullOrEmpty
+                        (loadedData.UserAccountId) || string.Equals(
+                                 loadedData.UserAccountId,
+                                 accountId,
+                                 StringComparison.Ordinal)
+                        );
+
+                        if (isSameAccount)
+                        {
+                            loadedData.UserAccountId = accountId;
+                            loadedData.LastSaveUnixMinutes = response.lastSaveTicks;
+
+                            NormalizeSaveData(loadedData);
+
+                            _cachedSaveData = loadedData;
+                            isLoadedFromServer = true;
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -50,12 +91,19 @@ public class SaveServerManager : MonoBehaviour
         if (!isLoadedFromServer)
         {
             Debug.LogWarning("[SaveServerManager] 서버 데이터를 불러오지 못해 로컬 세이브를 확인합니다.");
-            _cachedSaveData = LoadLocalAES();
+            _cachedSaveData = LoadLocalAES(accountId);
         }
 
         if (_cachedSaveData == null)
         {
-            Debug.Log("[SaveServerManager] 세이브 데이터가 없어 신규 유저 기본 데이터를 생성합니다.");
+            if (attemptedServerLoad)
+            {
+                Debug.LogError(
+                    "[SaveServerManager] 서버와 현재 계정의 로컬 세이브를 " + "모두 불러오지 못했습니다. 기본 데이터로 덮어쓰지 않습니다.");
+                return false;
+            }
+
+            Debug.Log("[SaveServerManager] 신규 유저 기본 데이터를 생성합니다.");
             _cachedSaveData = CreateDefaultData();
             SaveGameData();
         }
@@ -70,7 +118,7 @@ public class SaveServerManager : MonoBehaviour
         _cachedSaveData.LastSaveUnixMinutes = GetCurrentUnixMinutes();
         string rawJson = JsonUtility.ToJson(_cachedSaveData, true);
 
-        SaveLocalAES(rawJson);
+        SaveLocalAES(rawJson,_cachedSaveData.UserAccountId);
 
         if (_useServerSync && NetworkManager.Instance.IsLoggedIn)
         {
@@ -89,30 +137,99 @@ public class SaveServerManager : MonoBehaviour
         return DateTimeOffset.UtcNow.ToUnixTimeSeconds() / 60;
     }
 
-    private void SaveLocalAES(string json)
+    private bool SaveLocalAES(string json, string accountId)
     {
-        string encrypted = AESCryptoUtil.Encrypt(json);
-        if (!string.IsNullOrEmpty(encrypted))
+        try
         {
-            File.WriteAllText(_localSavePath, encrypted);
+            string encrypted = AESCryptoUtil.Encrypt(json);
+            if (string.IsNullOrEmpty(encrypted))
+            {
+                return false;
+            }
+
+            string savePath = GetLocalSavePath(accountId);
+            File.WriteAllText(savePath, encrypted);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[SaveServerManager] 로컬 저장 실패: {ex.Message}");
+            return false;
         }
     }
 
-    private PlayerSaveData LoadLocalAES()
+    private PlayerSaveData LoadLocalAES(string accountId)
     {
-        if (!File.Exists(_localSavePath)) return null;
+        string savePath = GetLocalSavePath(accountId);
+
+        if (!File.Exists(savePath))
+        {
+            string legacyPath = Path.Combine(Application.persistentDataPath,"SaveData.dat");
+
+            if (!File.Exists(legacyPath))
+            {
+                return null;
+            }
+
+            savePath = legacyPath;
+        }
 
         try
         {
-            string encrypted = File.ReadAllText(_localSavePath);
+            string encrypted = File.ReadAllText(savePath);
             string decryptedJson = AESCryptoUtil.Decrypt(encrypted);
-            return string.IsNullOrEmpty(decryptedJson) ? null : JsonUtility.FromJson<PlayerSaveData>(decryptedJson);
+
+            if (string.IsNullOrEmpty(decryptedJson))
+            {
+                return null;
+            }
+
+            PlayerSaveData saveData = JsonUtility.FromJson<PlayerSaveData>(decryptedJson);
+
+            if (saveData == null)
+            {
+                return null;
+            }
+
+            if (!string.IsNullOrEmpty(accountId) && string.IsNullOrEmpty(saveData.UserAccountId))
+            {
+                Debug.LogWarning(
+                    "[SaveServerManager] 계정 정보가 없는 로컬 세이브를 무시합니다.");
+                return null;
+            }
+
+            if (!string.Equals(saveData.UserAccountId,accountId,StringComparison.Ordinal))
+            {
+                Debug.LogWarning("[SaveServerManager] 다른 계정의 로컬 세이브를 차단했습니다.");
+                return null;
+            }
+
+            NormalizeSaveData(saveData);
+            return saveData;
         }
         catch (Exception ex)
         {
             Debug.LogError($"[SaveServerManager] 로컬 복호화 실패: {ex.Message}");
             return null;
         }
+    }
+
+    private void NormalizeSaveData(PlayerSaveData saveData)
+    {
+        if (saveData == null)
+        {
+            return;
+        }
+
+        saveData.Player ??= new PlayerModel();
+        saveData.Equipments ??= new System.Collections.Generic.List<EquipmentModel>();
+        saveData.Relics ??= new System.Collections.Generic.List<RelicModel>();
+        saveData.Skills ??= new System.Collections.Generic.List<SkillModel>();
+
+        saveData.Player.CurrentStage = Math.Max(1, saveData.Player.CurrentStage);
+
+        saveData.Player.MaxStage = Math.Max(saveData.Player.CurrentStage,saveData.Player.MaxStage);
     }
 
     private PlayerSaveData CreateDefaultData()

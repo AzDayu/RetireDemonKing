@@ -28,6 +28,7 @@ public class CombatManager : MonoBehaviour
 
     private int _currentKillCount = 0;
     private int _currentWaveTotal = 0;
+    private int _battleVersion = 0;
 
     private void Update()
     {
@@ -47,6 +48,8 @@ public class CombatManager : MonoBehaviour
 
     public void StartNormalBattle(int stageIndex)
     {
+        ResetBattle();
+
         _isBossBattle = false;
         _isTimerRunning = false;
         _currentKillCount = 0;
@@ -60,6 +63,8 @@ public class CombatManager : MonoBehaviour
 
     public void StartBossBattle(int stageIndex)
     {
+        ResetBattle();
+
         _isBossBattle = true;
         _currentBossTimer = _maxBossTime;
         _isTimerRunning = true;
@@ -68,7 +73,7 @@ public class CombatManager : MonoBehaviour
         string bossId = _monsterSpawnTable.GetBossMonsterId(theme);
         if (bossId == null) return;
 
-        SpawnMonsterById(bossId);
+        SpawnMonsterById(bossId, _battleVersion);
     }
 
     public MonsterController GetActiveMonster()
@@ -157,10 +162,10 @@ public class CombatManager : MonoBehaviour
             return;
         }
         string monsterId = _waveQueue.Dequeue();
-        SpawnMonsterById(monsterId);
+        SpawnMonsterById(monsterId, _battleVersion);
     }
 
-    private async void SpawnMonsterById(string monsterId)
+    private async void SpawnMonsterById(string monsterId, int battleVersion)
     {
         // 1. MonsterData 데이터 조회
         MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
@@ -172,9 +177,15 @@ public class CombatManager : MonoBehaviour
 
         // 2. 비동기 프리팹 로드 (예외 처리 없음)
         GameObject prefab = await GameManager.Instance.Resource.LoadPrefab(data.PrefabName);
+        if (battleVersion != _battleVersion)
+        {
+            return;
+        }
+
         if (prefab == null)
         {
-            Debug.LogWarning($"[CombatManager] 프리팹 로드 실패: {data.PrefabName}");
+            Debug.LogWarning(
+                $"[CombatManager] 프리팹 로드 실패: {data.PrefabName}");
             return;
         }
 
@@ -250,5 +261,20 @@ public class CombatManager : MonoBehaviour
         _isTimerRunning = false;
         DespawnAllActiveMonsters();
         OnBattleFailed?.Invoke();
+    }
+
+    public void ResetBattle()
+    {
+        _battleVersion++;
+
+        _isTimerRunning = false;
+        _isBossBattle = false;
+        _currentBossTimer = 0f;
+        _currentKillCount = 0;
+        _currentWaveTotal = 0;
+
+        _waveQueue.Clear();
+        DespawnAllActiveMonsters();
+        OnWaveUpdated?.Invoke(0, 0);
     }
 }

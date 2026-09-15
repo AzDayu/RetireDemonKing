@@ -90,13 +90,11 @@ public class GameManager : MonoBehaviour
                 }
                 if (_uiManager != null)
                 {
-                    //OnLoginSuccessAndStartGame();
                     _uiManager.OpenLoginPopupUI();
                 }
                 break;
 
             case GameState.IdleStage:
-                Debug.Log("[GameManager] 방치 모드 시작");
                 _uiManager.OpenMainHUDUI();
                 break;
 
@@ -104,6 +102,11 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Rebirth:
+                Rebirth.TryExecuteRebirth(SaveServer.GetPlayerModel(), SaveServer.GetPlayerModel().CurrentStage, SaveServer.GetPlayerModel().RebirthPoints);
+                if (Combat != null)
+                {
+                    Combat.ResetBattle();
+                }
                 ChangeState(GameState.Init);
 
                 break;
@@ -120,6 +123,7 @@ public class GameManager : MonoBehaviour
             if (!isLoaded)
             {
                 Debug.LogError("[GameManager] 세이브 데이터를 불러오지 못했습니다.");
+                _uiManager?.OpenLoginPopupUI();
                 return;
             }
         }

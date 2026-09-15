@@ -1,5 +1,4 @@
-﻿using RetireDemonKing.Network;
-using System;
+﻿using System;
 using System.Collections;
 using System.Text;
 using UnityEngine;
@@ -187,5 +186,13 @@ namespace RetireDemonKing.Network
                 }
             }
         }
+        public void Logout()
+        {
+            _jwtToken = string.Empty;
+            _currentUserAccountId = string.Empty;
+
+            Debug.Log("[NetworkManager] 로그인 정보가 초기화되었습니다.");
+        }
     }
+
 }

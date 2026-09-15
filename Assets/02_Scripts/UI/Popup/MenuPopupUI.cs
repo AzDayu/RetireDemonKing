@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using RetireDemonKing.Network;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -70,12 +72,30 @@ public class MenuPopupUI : UIBase
 
     private void OnClickLogout()
     {
+        GameManager gameManager = GameManager.Instance;
+        if (gameManager == null)
+        {
+            return;
+        }
+
+        gameManager.SaveServer?.SaveGameData();
+
+        gameManager.ChangeState(GameState.Pause);
+
+        gameManager.Combat?.ResetBattle();
+
+        NetworkManager.Instance.Logout();
+
         OnClickClose();
 
-        if (GameManager.Instance != null && GameManager.Instance.UI != null)
+        if (gameManager.UI != null)
         {
-            GameManager.Instance.UI.CloseMenuPopupUI();
-            GameManager.Instance.UI.OpenLoginPopupUI();
+            gameManager.UI.CloseMainHUDUI();
+            gameManager.UI.CloseBackgroundUI(UIType.StageProgressUI);
+            gameManager.UI.CloseBackgroundUI(UIType.StageInfoUI);
+            gameManager.UI.CloseBackgroundUI(UIType.BossTimerUI);
+            gameManager.UI.CloseBackgroundUI(UIType.BossHudUI);
+            gameManager.UI.OpenLoginPopupUI();
         }
 
         Debug.Log("로그아웃 되었습니다. 로그인 화면으로 이동합니다.");
