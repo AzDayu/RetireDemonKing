@@ -7,24 +7,39 @@ public class CombatManager : MonoBehaviour
 {
     [Header("Boss Timer Settings")]
     [SerializeField] private float _maxBossTime = 30f;
+
     private float _currentBossTimer;
     private bool _isTimerRunning;
 
     [Header("Monster Spawn Settings")]
     [SerializeField] private Transform[] _monsterSpawnPoints;
     [SerializeField] private MonsterSpawnTable _monsterSpawnTable;
+
     private bool _isBossBattle = false;
 
-    // StageManager 및 UI에서 구독할 이벤트들
+    [Header("=== 스테이지별 몬스터 성장 ===")]
+    [SerializeField, Min(0f)]
+    private float _monsterHpIncreasePerStage = 0.15f;
+
+    [SerializeField, Min(0f)]
+    private float _monsterAttackIncreasePerStage = 0.10f;
+
+    private int _battleStageIndex = 1;
+
     public event Action OnBattleCleared;
     public event Action OnBattleFailed;
     public event Action<int, int> OnWaveUpdated;
     public event Action<float, float> OnBossTimerUpdated;
     public event Action<MonsterController> OnBossSpawned;
 
-    private Queue<string> _waveQueue = new Queue<string>();
-    private Dictionary<string, Queue<GameObject>> _monsterPool = new Dictionary<string, Queue<GameObject>>();
-    private Dictionary<GameObject, string> _activeMonsters = new Dictionary<GameObject, string>();
+    private Queue<string> _waveQueue =
+        new Queue<string>();
+
+    private Dictionary<string, Queue<GameObject>> _monsterPool =
+        new Dictionary<string, Queue<GameObject>>();
+
+    private Dictionary<GameObject, string> _activeMonsters =
+        new Dictionary<GameObject, string>();
 
     private int _currentKillCount = 0;
     private int _currentWaveTotal = 0;
@@ -35,11 +50,13 @@ public class CombatManager : MonoBehaviour
         if (_isBossBattle && _isTimerRunning)
         {
             _currentBossTimer -= Time.deltaTime;
+
             OnBossTimerUpdated?.Invoke(_currentBossTimer, _maxBossTime);
 
             if (_currentBossTimer <= 0f)
             {
                 _isTimerRunning = false;
+
                 DespawnAllActiveMonsters();
                 OnBattleFailed?.Invoke();
             }
@@ -50,14 +67,18 @@ public class CombatManager : MonoBehaviour
     {
         ResetBattle();
 
+        _battleStageIndex = Mathf.Max(1, stageIndex);
+
         _isBossBattle = false;
         _isTimerRunning = false;
         _currentKillCount = 0;
 
-        StageTheme theme = stageIndex.GetTheme(GameManager.Instance.Stage.StagesForChange);
+        StageTheme theme = _battleStageIndex.GetTheme(GameManager.Instance.Stage.StagesForChange);
+
         BuildWaveQueue(theme);
 
         OnWaveUpdated?.Invoke(_currentKillCount, _currentWaveTotal);
+
         SpawnNextWaveMonster();
     }
 
@@ -65,13 +86,21 @@ public class CombatManager : MonoBehaviour
     {
         ResetBattle();
 
+        _battleStageIndex = Mathf.Max(1, stageIndex);
+
         _isBossBattle = true;
         _currentBossTimer = _maxBossTime;
         _isTimerRunning = true;
 
-        StageTheme theme = stageIndex.GetTheme(GameManager.Instance.Stage.StagesForChange);
+        StageTheme theme = _battleStageIndex.GetTheme(GameManager.Instance.Stage.StagesForChange);
+
         string bossId = _monsterSpawnTable.GetBossMonsterId(theme);
-        if (bossId == null) return;
+
+        if (bossId == null)
+        {
+            _isTimerRunning = false;
+            return;
+        }
 
         SpawnMonsterById(bossId, _battleVersion);
     }
@@ -82,27 +111,34 @@ public class CombatManager : MonoBehaviour
         {
             return kv.Key.GetComponent<MonsterController>();
         }
+
         return null;
     }
 
-    // 몬스터가 사망했을 때 호출
     public void OnMonsterKilled(GameObject monsterObj)
     {
         if (_activeMonsters.TryGetValue(monsterObj, out string monsterId))
         {
             MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
+
             int playerLevel = GameManager.Instance.SaveServer?.GetPlayerModel()?.Level ?? 1;
+
             if (data != null)
             {
                 DropManager dropManager = GameManager.Instance.Drop;
 
                 dropManager?.GrantMonsterCurrencyAndExp(data);
+
                 dropManager?.ProcessMonsterReward(playerLevel);
             }
         }
 
-        if (!DespawnMonster(monsterObj)) return;
-        Debug.Log($"[CombatManager] 몬스터 사망 처리됨: {monsterObj.name}");
+        if (!DespawnMonster(monsterObj))
+        {
+            return;
+        }
+
+        Debug.Log($"[CombatManager] 몬스터 사망 처리됨: " + $"{monsterObj.name}");
 
         if (_isBossBattle)
         {
@@ -112,11 +148,13 @@ public class CombatManager : MonoBehaviour
         else
         {
             _currentKillCount++;
+
             OnWaveUpdated?.Invoke(_currentKillCount, _currentWaveTotal);
 
             if (_currentKillCount >= _currentWaveTotal)
             {
-                Debug.Log($"[CombatManager] 웨이브 전체 처치 완료 ({_currentKillCount}/{_currentWaveTotal}) -> 전투 클리어");
+                Debug.Log($"[CombatManager] 웨이브 전체 처치 완료 " + $"({_currentKillCount}/{_currentWaveTotal}) " + $"-> 전투 클리어");
+
                 OnBattleCleared?.Invoke();
             }
             else
@@ -131,6 +169,7 @@ public class CombatManager : MonoBehaviour
         _waveQueue.Clear();
 
         List<MonsterSpawnEntry> entries = _monsterSpawnTable.GetMonsters(theme);
+
         List<string> expanded = new List<string>();
 
         foreach (var entry in entries)
@@ -143,11 +182,12 @@ public class CombatManager : MonoBehaviour
 
         if (expanded.Count == 0)
         {
-            Debug.LogWarning($"[CombatManager] 테마 {theme}에 등록된 몬스터가 없습니다. MonsterSpawnTable 설정을 확인하세요.");
+            Debug.LogWarning($"[CombatManager] 테마 {theme}에 등록된 " + $"몬스터가 없습니다. " + $"MonsterSpawnTable 설정을 확인하세요.");
+
             return;
         }
 
-        GameUtil.Shuffle(expanded); //셔플
+        GameUtil.Shuffle(expanded);
 
         foreach (var id in expanded)
         {
@@ -161,25 +201,29 @@ public class CombatManager : MonoBehaviour
     {
         if (_waveQueue.Count == 0)
         {
-            Debug.LogWarning("[CombatManager] 웨이브 큐가 비어있는데 스폰이 호출되었습니다.");
+            Debug.LogWarning("[CombatManager] 웨이브 큐가 비어있는데 " + "스폰이 호출되었습니다.");
+
             return;
         }
+
         string monsterId = _waveQueue.Dequeue();
+
         SpawnMonsterById(monsterId, _battleVersion);
     }
 
     private async void SpawnMonsterById(string monsterId, int battleVersion)
     {
-        // 1. MonsterData 데이터 조회
         MonsterData data = GameManager.Instance.Data.GetMonsterData(monsterId);
+
         if (data == null)
         {
-            Debug.LogWarning($"[CombatManager] MonsterData를 찾을 수 없음: {monsterId}");
+            Debug.LogWarning($"[CombatManager] MonsterData를 찾을 수 없음: " + $"{monsterId}");
+
             return;
         }
 
-        // 2. 비동기 프리팹 로드 (예외 처리 없음)
         GameObject prefab = await GameManager.Instance.Resource.LoadPrefab(data.PrefabName);
+
         if (battleVersion != _battleVersion)
         {
             return;
@@ -187,16 +231,14 @@ public class CombatManager : MonoBehaviour
 
         if (prefab == null)
         {
-            Debug.LogWarning(
-                $"[CombatManager] 프리팹 로드 실패: {data.PrefabName}");
+            Debug.LogWarning($"[CombatManager] 프리팹 로드 실패: " + $"{data.PrefabName}");
+
             return;
         }
 
-        // 3. 풀링을 통한 실제 소환 처리
         SpawnMonsterFromPool(prefab, data, monsterId);
     }
 
-    // 몬스터 풀
     private void SpawnMonsterFromPool(GameObject prefab, MonsterData data, string monsterId)
     {
         if (!_monsterPool.ContainsKey(monsterId))
@@ -205,6 +247,7 @@ public class CombatManager : MonoBehaviour
         }
 
         GameObject monster;
+
         if (_monsterPool[monsterId].Count > 0)
         {
             monster = _monsterPool[monsterId].Dequeue();
@@ -214,15 +257,19 @@ public class CombatManager : MonoBehaviour
             monster = Instantiate(prefab, transform);
         }
 
-        Transform spawnPoint = GameUtil.GetRandomElement(_monsterSpawnPoints);
+        Transform spawnPoint =
+            GameUtil.GetRandomElement(_monsterSpawnPoints);
+
         monster.transform.position = spawnPoint != null ? spawnPoint.position : Vector3.zero;
+
         monster.transform.rotation = Quaternion.identity;
         monster.SetActive(true);
 
         _activeMonsters[monster] = monsterId;
 
         MonsterController controller = monster.GetComponent<MonsterController>();
-        controller?.Setup(data);
+
+        controller?.Setup(data, _battleStageIndex, _monsterHpIncreasePerStage, _monsterAttackIncreasePerStage);
 
         if (_isBossBattle)
         {
@@ -234,7 +281,8 @@ public class CombatManager : MonoBehaviour
     {
         if (!_activeMonsters.TryGetValue(monsterObj, out string key))
         {
-            Debug.LogWarning($"[CombatManager] 활성 목록에 없는 몬스터 디스폰 시도: {monsterObj.name}");
+            Debug.LogWarning($"[CombatManager] 활성 목록에 없는 몬스터 " + $"디스폰 시도: {monsterObj.name}");
+
             return false;
         }
 
@@ -245,6 +293,7 @@ public class CombatManager : MonoBehaviour
         {
             _monsterPool[key] = new Queue<GameObject>();
         }
+
         _monsterPool[key].Enqueue(monsterObj);
 
         return true;
@@ -253,6 +302,7 @@ public class CombatManager : MonoBehaviour
     private void DespawnAllActiveMonsters()
     {
         var monsters = new List<GameObject>(_activeMonsters.Keys);
+
         foreach (var monster in monsters)
         {
             DespawnMonster(monster);
@@ -262,6 +312,7 @@ public class CombatManager : MonoBehaviour
     public void TriggerBattleFailed()
     {
         _isTimerRunning = false;
+
         DespawnAllActiveMonsters();
         OnBattleFailed?.Invoke();
     }
@@ -278,6 +329,7 @@ public class CombatManager : MonoBehaviour
 
         _waveQueue.Clear();
         DespawnAllActiveMonsters();
+
         OnWaveUpdated?.Invoke(0, 0);
     }
 }

@@ -1,16 +1,17 @@
-﻿using System.Threading;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MonsterController : MonoBehaviour
 {
     [Header("=== 컴포넌트 참조 ===")]
-    [SerializeField] private CharacterAnimationView _animationView;
+    [SerializeField]
+    private CharacterAnimationView _animationView;
 
     [Header("=== 전투 설정 ===")]
     [SerializeField] private float _attackRange = 1.5f;
     [SerializeField] private float _moveSpeed = 2f;
 
     public MonsterModel Model { get; private set; }
+
     public bool IsDead => Model == null || Model.CurHp <= 0f;
 
     private MonsterData _data;
@@ -18,7 +19,9 @@ public class MonsterController : MonoBehaviour
     private void Awake()
     {
         if (_animationView == null)
+        {
             _animationView = GetComponent<CharacterAnimationView>();
+        }
     }
 
     private void OnEnable()
@@ -37,18 +40,53 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    public void Setup(MonsterData data)
+    public void Setup(MonsterData data, int stageIndex, float hpIncreasePerStage, float attackIncreasePerStage)
     {
+        if (data == null)
+        {
+            _data = null;
+            Model = null;
+
+            Debug.LogError("[MonsterController] 몬스터 데이터가 없습니다.");
+
+            return;
+        }
+
         _data = data;
+
         Model = new MonsterModel(data);
+
+        int safeStage = Mathf.Max(1, stageIndex);
+        int stageOffset = safeStage - 1;
+
+        float hpMultiplier = 1f + stageOffset * Mathf.Max(0f, hpIncreasePerStage);
+
+        float attackMultiplier = 1f + stageOffset * Mathf.Max(0f, attackIncreasePerStage);
+
+        Model.MaxHp = Mathf.Max(1f, data.MaxHp * hpMultiplier);
+
+        Model.CurHp = Model.MaxHp;
+
+        Model.AttackPower = Mathf.Max(0f, data.AttackPower * attackMultiplier);
+
+        Debug.Log(
+            $"[MonsterController] 몬스터 생성 | " +
+            $"Stage: {safeStage} | " +
+            $"ID: {data.MonsterId} | " +
+            $"HP: {Model.MaxHp:F1} | " +
+            $"ATK: {Model.AttackPower:F1}"
+        );
     }
 
     private void Update()
     {
-        if (IsDead) return;
+        if (IsDead)
+        {
+            return;
+        }
 
         PlayerController player = PlayerController.Instance;
-        
+
         if (player == null || player.IsDead)
         {
             _animationView?.PlayAttack(false);
@@ -64,34 +102,41 @@ public class MonsterController : MonoBehaviour
             _animationView?.PlayMove(true);
 
             Vector3 dir = (player.transform.position - transform.position).normalized;
+
             dir.y = 0f;
+
             transform.position += dir * (_moveSpeed * Time.deltaTime);
 
             if (dir.sqrMagnitude > 0.001f)
+            {
                 transform.rotation = Quaternion.LookRotation(dir);
+            }
         }
         else
         {
             _animationView?.PlayMove(false);
             _animationView?.PlayAttack(true);
 
-            float attackSpeed =_data != null && _data.AttackSpeed > 0f? _data.AttackSpeed: 1f;
+            float attackSpeed = _data != null && _data.AttackSpeed > 0f ? _data.AttackSpeed : 1f;
 
             _animationView?.SetAnimationSpeed(attackSpeed);
         }
     }
 
-    public void TakeDamage(float incomingDamage, float attackerAccuracy = 100f)
+    public void TakeDamage(
+        float incomingDamage,
+        float attackerAccuracy = 100f)
     {
-        if (IsDead) return;
+        if (IsDead)
+        {
+            return;
+        }
 
         Model.ChangeCurHp(-incomingDamage);
 
         if (Model.CurHp <= 0f)
         {
-            EquipmentDropFlow.ProcessMonsterKill(
-                () => GameManager.Instance.Combat.OnMonsterKilled(gameObject)
-            );
+            EquipmentDropFlow.ProcessMonsterKill(() => GameManager.Instance.Combat.OnMonsterKilled(gameObject));
         }
     }
 
@@ -109,18 +154,15 @@ public class MonsterController : MonoBehaviour
             return;
         }
 
-        //float distance = Vector3.Distance(transform.position,player.transform.position);
-        //
-        //// 공격 애니메이션 도중 플레이어가 멀어진 경우 피해 방지
-        //if (distance > _attackRange)
-        //{
-        //    return;
-        //}
-
         float attackPower = Mathf.Max(0f, Model.AttackPower);
 
         player.TakeDamage(attackPower);
 
-        Debug.Log($"[Monster 공격 성공] 대상: {player.name} | 피해량: {attackPower} | {player.CurHp}");
+        Debug.Log(
+            $"[Monster 공격 성공] " +
+            $"대상: {player.name} | " +
+            $"공격력: {attackPower:F1} | " +
+            $"플레이어 남은 HP: {player.CurHp:F1}"
+        );
     }
 }
