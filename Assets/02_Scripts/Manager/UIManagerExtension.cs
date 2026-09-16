@@ -31,6 +31,7 @@ public enum UIType
     GrowthPopupUI,
     SkillPopupUI,
     EquipmentChestResultPanelUI,
+    OfflineRewardPopupUI,
 
 }
 
@@ -46,7 +47,7 @@ public static class UIManagerExtension
 
     public static void ShowStartupUIOnGameStart(this UIManager uiManager)
     {
-        
+
     }
 
 
@@ -67,7 +68,7 @@ public static class UIManagerExtension
     public static void OpenLoginPopupUI(this UIManager uiManager)
     {
         uiManager.OpenUI(UIRootType.VeryFrontUI, UIType.LoginPopupUI);
-       
+
     }
     public static void CloseLoginPopupUI(this UIManager uiManager)
     {
@@ -132,5 +133,29 @@ public static class UIManagerExtension
     public static void CloseRebirthPopupUI(this UIManager uiManager)
     {
         uiManager.CloseUI(UIRootType.PopupUI, UIType.RebirthPopupUI);
+    }
+
+    public static void OpenOfflineRewardPopupUI(this UIManager uiManager, OfflineRewardResult reward)
+    {
+        if (reward == null)
+        {
+            return;
+        }
+
+        UIBase uiBase = uiManager.OpenUI(UIRootType.PopupUI, UIType.OfflineRewardPopupUI);
+
+        if (uiBase is OfflineRewardPopupUI popupUI)
+        {
+            popupUI.SetUI(reward);
+        }
+        else
+        {
+            Debug.LogError("[UIManager] OfflineRewardPopupUI 프리팹의 " + "스크립트 연결을 확인해주세요.");
+        }
+    }
+
+    public static void CloseOfflineRewardPopupUI(this UIManager uiManager)
+    {
+        uiManager.CloseUI(UIRootType.PopupUI, UIType.OfflineRewardPopupUI);
     }
 }

@@ -73,7 +73,7 @@ public class GrowthManager : MonoBehaviour
         return _cachedFinalStats.TryGetValue(statType, out float value) ? value : 0f;
     }
 
-    public void AddExp(long amount)
+    public long AddExp(long amount)
     {
         float expBonus = GetStatValue(StatType.ExpGainBonus);
         long finalExp = Mathf.RoundToInt(amount * (1f + (expBonus / 100f)));
@@ -101,6 +101,8 @@ public class GrowthManager : MonoBehaviour
 
             OnLevelUpdated?.Invoke(_playerModel.Level);
         }
+
+        return finalExp;
     }
 
     private long GetRequiredExp(int level)

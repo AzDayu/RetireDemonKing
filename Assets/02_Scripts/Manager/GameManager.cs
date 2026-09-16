@@ -125,26 +125,53 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("[GameManager] 로그인 성공 -> 세이브 데이터 로드 시작");
 
-        if (SaveServer != null)
+        if (SaveServer == null)
         {
-            bool isLoaded = await SaveServer.LoadGameDataAsync();
-            if (!isLoaded)
-            {
-                Debug.LogError("[GameManager] 세이브 데이터를 불러오지 못했습니다.");
-                _uiManager?.OpenLoginPopupUI();
-                return;
-            }
+            Debug.LogError("[GameManager] SaveServerManager 참조가 없습니다.");
+            _uiManager?.OpenLoginPopupUI();
+            return;
         }
 
-        PlayerModel playerModel = SaveServer?.GetPlayerModel();
+        bool isLoaded = await SaveServer.LoadGameDataAsync();
 
-        if (_offlineManager != null && playerModel != null && SaveServer != null)
+        if (!isLoaded)
         {
-            long lastSaveTicks = SaveServer.GetLastSaveUnixMinutes();
-            _offlineManager.ProcessOfflineReward(lastSaveTicks, playerModel.CurrentStage);
+            Debug.LogError("[GameManager] 세이브 데이터를 불러오지 못했습니다.");
+            _uiManager?.OpenLoginPopupUI();
+            return;
+        }
+
+        PlayerModel playerModel = SaveServer.GetPlayerModel();
+
+        if (playerModel == null)
+        {
+            Debug.LogError("[GameManager] 플레이어 데이터가 없습니다.");
+            _uiManager?.OpenLoginPopupUI();
+            return;
+        }
+
+        _uiManager?.CloseOfflineRewardPopupUI();
+
+        if (_offlineManager != null)
+        {
+            long lastSaveUnixMinutes = SaveServer.GetLastSaveUnixMinutes();
+
+            _offlineManager.ProcessOfflineReward(lastSaveUnixMinutes, playerModel.CurrentStage);
         }
 
         RestartInGameLoop();
+
+        if (_offlineManager == null || !_offlineManager.HasPendingReward)
+        {
+            return;
+        }
+
+        OfflineRewardResult grantedReward = _offlineManager.ClaimPendingReward(playerModel);
+
+        if (grantedReward != null)
+        {
+            _uiManager?.OpenOfflineRewardPopupUI(grantedReward);
+        }
     }
 
     public void RestartInGameLoop()

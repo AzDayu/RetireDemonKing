@@ -89,24 +89,57 @@ public class OfflineManager : MonoBehaviour
         }
     }
 
-    public void ClaimPendingReward(PlayerModel playerModel)
+    public OfflineRewardResult ClaimPendingReward(PlayerModel playerModel)
     {
-        if (!HasPendingReward || playerModel == null) return;
-
-        playerModel.Gold += PendingReward.Gold;
-
-        if (GameManager.Instance != null && GameManager.Instance.Growth != null)
+        if (!HasPendingReward || playerModel == null)
         {
-            GameManager.Instance.Growth.AddExp(PendingReward.Experience);
+            return null;
         }
 
-        Debug.Log($"[OfflineManager] 오프라인 보상 지급 완료 - Gold: {PendingReward.Gold}, Exp: {PendingReward.Experience}");
+        GameManager gameManager = GameManager.Instance;
+
+        if (gameManager == null ||
+            gameManager.Growth == null ||
+            !gameManager.Growth.IsInitialized ||
+            gameManager.SaveServer == null)
+        {
+            Debug.LogWarning("[OfflineManager] 보상 지급에 필요한 초기화가 완료되지 않았습니다.");
+            return null;
+        }
+
+        if (!ReferenceEquals(playerModel, gameManager.SaveServer.GetPlayerModel()))
+        {
+            Debug.LogWarning("[OfflineManager] 현재 로그인한 계정의 데이터가 아닙니다.");
+            return null;
+        }
+
+        OfflineRewardResult reward = PendingReward;
 
         PendingReward = null;
         _currentState = OfflineManagerState.Ready;
+
+        playerModel.Gold += reward.Gold;
+
+        long grantedExperience = gameManager.Growth.AddExp(reward.Experience);
+
+        var grantedReward = new OfflineRewardResult
+        {
+            ElapsedMinutes = reward.ElapsedMinutes,
+            Gold = reward.Gold,
+            Experience = grantedExperience,
+            WasTimeCapped = reward.WasTimeCapped
+        };
+
+        gameManager.SaveServer.SaveGameData();
+
+        Debug.Log(
+            $"[OfflineManager] 오프라인 보상 지급 완료 - " +
+            $"Gold: {grantedReward.Gold}, " +
+            $"Exp: {grantedReward.Experience}");
+
         RewardClaimed?.Invoke();
 
-        GameManager.Instance.SaveServer?.SaveGameData();
+        return grantedReward;
     }
 }
 

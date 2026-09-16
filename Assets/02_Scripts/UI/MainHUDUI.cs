@@ -18,15 +18,14 @@ public class MainHUDUI : UIBase
     private int _equipmentIconRefreshVersion;
     private readonly Dictionary<EquipmentSlotType, Transform> _equipmentSlotMap = new();
 
-    private void Awake()
-    {
-        InitUIButton();
-    }
-
     private void OnEnable()
     {
+        InitUIButton();
+
         BindPlayerHealth();
-        _equipmentInitializeCoroutine = StartCoroutine(InitializeEquipmentUIWhenReady());
+
+        _equipmentInitializeCoroutine =
+            StartCoroutine(InitializeEquipmentUIWhenReady());
     }
 
     private void OnDisable()
