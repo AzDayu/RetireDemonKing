@@ -190,7 +190,7 @@ public class ShopPopupUI : UIBase
             return;
         }
 
-        EquipmentModel newEquipment = TryCreateAndAddEquipment(growth.Equipment, selectedEquipment);
+        EquipmentModel newEquipment = TryCreateAndAddEquipment(growth.Equipment, selectedEquipment, playerModel.Level);
 
         if (newEquipment == null)
         {
@@ -212,22 +212,37 @@ public class ShopPopupUI : UIBase
         EquipmentDropFlow.ProcessPurchasedEquipment(newEquipment);
     }
 
-    private EquipmentModel TryCreateAndAddEquipment(EquipmentManager equipmentManager, EquipmentItem equipmentData)
+    private EquipmentModel TryCreateAndAddEquipment(
+        EquipmentManager equipmentManager,
+        EquipmentItem equipmentData,
+        int playerLevel)
     {
         if (equipmentManager == null || equipmentData == null)
         {
             return null;
         }
 
-        for (int attempt = 0; attempt < UniqueIdRetryCount; attempt++)
+        int safePlayerLevel = Mathf.Max(1, playerLevel);
+
+        int minLevel = Mathf.Max(1, safePlayerLevel - 2);
+        int maxLevel = safePlayerLevel + 1;
+
+        int equipmentLevel = UnityEngine.Random.Range(
+            minLevel,
+            maxLevel + 1);
+
+        for (int attempt = 0;
+             attempt < UniqueIdRetryCount;
+             attempt++)
         {
-            EquipmentModel equipmentModel = new EquipmentModel
-            {
-                ItemUniqueId = CreateEquipmentUniqueId(),
-                ItemDataId = equipmentData.Id,
-                Level = 1,
-                IsEquipped = false
-            };
+            EquipmentModel equipmentModel =
+                new EquipmentModel
+                {
+                    ItemUniqueId = CreateEquipmentUniqueId(),
+                    ItemDataId = equipmentData.Id,
+                    Level = equipmentLevel,
+                    IsEquipped = false
+                };
 
             if (equipmentManager.TryAddEquipment(equipmentModel))
             {
